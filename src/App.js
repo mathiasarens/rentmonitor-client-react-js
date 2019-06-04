@@ -7,22 +7,18 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
-  Redirect,
-  withRouter
+  Switch
 } from "react-router-dom";
+import { Redirect } from 'react-router'
 
 function App() {
   return (
     <Router>
-      <div>
-      <Link to="/welcome">Welcome</Link>
-      </div>
-      <div>
-      <Link to="/signup">Signup</Link>
-      </div>
+      <Switch>
+      <Redirect exact from="/" to="/welcome" />
       <Route path="/welcome" component={Welcome} />
       <Route path="/signup" component={Signup} />
+      </Switch>
     </Router>
   );
 }
