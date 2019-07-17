@@ -3,6 +3,7 @@ import React from 'react';
 
 import Welcome from './welcome/Welcome'
 import Signup from './signup/Signup'
+import Tenant from './tenant/Tenant'
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -18,6 +19,7 @@ function App() {
       <Redirect exact from="/" to="/welcome" />
       <Route path="/welcome" component={Welcome} />
       <Route path="/signup" component={Signup} />
+      <Route path="/tenant" component={Tenant} />
       </Switch>
     </Router>
   );
