@@ -47,7 +47,6 @@ class TenantEditor extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log("handleSubmit");
     event.preventDefault();
     if (!event.target.checkValidity()) {
       this.setState({ displayErrors: true });
@@ -60,14 +59,18 @@ class TenantEditor extends React.Component {
       res: stringifyFormData(data),
     });
 
-    fetch('localhost:3001/api/tenants', {
+    fetch('http://localhost:3001/tenants', {
       method: 'POST',
-      body: data,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: stringifyFormData(data),
     }).then(function(response) {
       let json = response.json();
       console.log(json);
     }).catch(function(error) {
-      console.log(error);
+      console.error(error);
     });
   }
 
