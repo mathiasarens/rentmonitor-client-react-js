@@ -49,7 +49,7 @@ const LoginLink = React.forwardRef((props, ref) => (
   <RLink innerRef={ref} to="/signup" {...props} />
 ));
 
-export default function Welcome() {
+export default function Home() {
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="xs">
