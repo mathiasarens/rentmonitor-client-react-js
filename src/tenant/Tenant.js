@@ -1,11 +1,23 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import React from "react";
+import { openSnackbar } from "../notifier/Notifier";
+import { Link } from "react-router-dom";
+
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+
+import RefershIcon from "@material-ui/icons/Refresh";
+import AddIcon from "@material-ui/icons/Add";
 
 const styles = theme => ({
   "@global": {
@@ -14,17 +26,23 @@ const styles = theme => ({
     }
   },
   paper: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(4)
   }
 });
-
+const TenantEditLink = React.forwardRef((props, ref) => (
+  <Link innerRef={ref} to="/tenant/edit" {...props} />
+));
 class Tenant extends React.Component {
-  constructor(props) {
+  constructor() {
     super();
-    this.state = { tenants: [], connectionError: false };
+    this.state = { tenants: [] };
   }
 
   componentDidMount() {
+    this.load();
+  }
+
+  load() {
     fetch("http://localhost:3001/tenants", {
       method: "GET",
       headers: {
@@ -39,21 +57,50 @@ class Tenant extends React.Component {
         console.log(data);
         this.setState({ tenants: data });
       })
-      .catch(error => {
-        this.setState({ connectionError: true });
-        console.error(error);
+      .catch(() => {
+        openSnackbar({
+          message: "Connection Error. Please try again later.",
+          variant: "error"
+        });
       });
   }
 
+
   render() {
-    const { tenants, connectionError } = this.state;
+    const { tenants } = this.state;
     return (
       <Container component="main">
         <CssBaseline />
         <div className={this.props.classes.paper}>
-          <Typography component="h1" variant="h5">
-            Tenants
-          </Typography>
+          <Grid container justify="space-between" alignItems="flex-end">
+            <Grid item>
+              <Typography component="h1" variant="h5">
+                Tenants
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Grid container spacing={1}>
+                <Grid item>
+                  <IconButton
+                    size="small"
+                    aria-label="add"
+                    component={TenantEditLink}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    size="small"
+                    aria-label="refresh"
+                    onClick={this.load}
+                  >
+                    <RefershIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
           <Table>
             <TableHead>
               <TableRow>
