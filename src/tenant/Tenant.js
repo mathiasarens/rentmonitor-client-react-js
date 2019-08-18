@@ -53,15 +53,16 @@ class Tenant extends React.Component {
         Accept: "application/json"
       }
     })
-      .then(response => {
+      .then((response) => {
         console.log(response.statusText);
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         console.log(data);
         this.setState({ tenants: data });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error)
         openSnackbar({
           message: "Connection Error. Please try again later.",
           variant: "error"
@@ -99,7 +100,7 @@ class Tenant extends React.Component {
                   <IconButton
                     size="small"
                     aria-label="refresh"
-                    onClick={this.load}
+                    onClick={() => {this.load()}}
                   >
                     <RefershIcon />
                   </IconButton>
