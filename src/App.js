@@ -12,10 +12,12 @@ import { Redirect } from "react-router";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import Notifier from "./notifier/Notifier";
+import { useTranslation } from 'react-i18next';
 
 const theme = createMuiTheme();
 
 export default function App() {
+  const {t} = useTranslation();
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
@@ -29,9 +31,9 @@ export default function App() {
                   value={location.pathname}
                   aria-label="simple tabs example"
                 >
-                  <Tab label="Home" component={Link} to="/home" value="/home" />
+                  <Tab label={t('home')} component={Link} to="/home" value="/home" />
                   <Tab
-                    label="Tenant"
+                    label={t('tenants')}
                     component={Link}
                     to="/tenant"
                     value="/tenant"
@@ -43,7 +45,7 @@ export default function App() {
                     value="/tenant/edit"
                   />
                   <Tab
-                    label="Accounts"
+                    label={t('accounts')}
                     component={Link}
                     to="/accounts"
                     value="/accounts"

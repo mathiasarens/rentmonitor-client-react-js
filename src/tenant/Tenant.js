@@ -19,6 +19,8 @@ import IconButton from "@material-ui/core/IconButton";
 import RefershIcon from "@material-ui/icons/Refresh";
 import AddIcon from "@material-ui/icons/Add";
 
+import { withTranslation } from 'react-i18next';
+
 const styles = theme => ({
   "@global": {
     body: {
@@ -29,9 +31,11 @@ const styles = theme => ({
     marginTop: theme.spacing(4)
   }
 });
+
 const TenantEditLink = React.forwardRef((props, ref) => (
   <Link innerRef={ref} to="/tenant/edit" {...props} />
-));
+  ));
+
 class Tenant extends React.Component {
   constructor() {
     super();
@@ -68,6 +72,8 @@ class Tenant extends React.Component {
 
   render() {
     const { tenants } = this.state;
+    const { t } = this.props;
+
     return (
       <Container component="main">
         <CssBaseline />
@@ -75,7 +81,7 @@ class Tenant extends React.Component {
           <Grid container justify="space-between" alignItems="flex-end">
             <Grid item>
               <Typography component="h1" variant="h5">
-                Tenants
+                {t('tenants')}
               </Typography>
             </Grid>
             <Grid item>
@@ -105,8 +111,8 @@ class Tenant extends React.Component {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
+                <TableCell>{t('email')}</TableCell>
+                <TableCell>{t('phone')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -125,4 +131,4 @@ class Tenant extends React.Component {
   }
 }
 
-export default withStyles(styles)(Tenant);
+export default withTranslation()(withStyles(styles)(Tenant));

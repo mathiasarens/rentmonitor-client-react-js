@@ -49,7 +49,6 @@ class TenantEditor extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     if (!event.target.checkValidity()) {
-      this.setState({ displayErrors: true });
       return;
     }
     const data = new FormData(event.target);
@@ -76,7 +75,6 @@ class TenantEditor extends React.Component {
 
 
   render() {
-    const { displayErrors } = this.state;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
