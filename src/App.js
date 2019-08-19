@@ -5,13 +5,14 @@ import Tab from "@material-ui/core/Tab";
 import Home from "./home/Home";
 import Signup from "./signup/Signup";
 import Tenant from "./tenant/Tenant";
+import Accounts from "./accounts/Accounts";
 import TenantEditor from "./tenant/TenantEditor";
+import Notifier from "./notifier/Notifier";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import Notifier from "./notifier/Notifier";
 import { useTranslation } from 'react-i18next';
 
 const theme = createMuiTheme();
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/signup" component={Signup} />
           <Route exact path="/tenant" component={Tenant} />
           <Route path="/tenant/edit" component={TenantEditor} />
+          <Route exact path="/accounts" component={Accounts} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
