@@ -36,7 +36,7 @@ const styles = theme => ({
 });
 
 
-class TenantEditor extends React.Component {
+class AccountEditor extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -63,7 +63,7 @@ class TenantEditor extends React.Component {
       res: stringifyFormData(data),
     });
 
-    fetch('http://localhost:3001/tenants', {
+    fetch('http://localhost:3001/account-settings', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -73,7 +73,7 @@ class TenantEditor extends React.Component {
     }).then(function(response) {
       let json = response.json();
       console.log(json);
-    }).catch(function(error) {
+    }).catch((error) => {
       openSnackbar({
         message: this.props.t('connectionError'),
         variant: "error"
@@ -88,7 +88,7 @@ class TenantEditor extends React.Component {
         <CssBaseline />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            {t('newTenant')}
+            {t('newAccountSettings')}
           </Typography>
           <form onSubmit={this.handleSubmit} className={classes.form} noValidate>
             <TextField
@@ -107,11 +107,9 @@ class TenantEditor extends React.Component {
               variant="outlined"
               margin="normal"
               fullWidth
-              name="email"
-              label={t('email')}
-              type="email"
-              id="email"
-              autoComplete="your@email.com"
+              name="fintsBlz"
+              label={t('fintsBlz')}
+              id="fintsBlz"
               className={classes.input}
               required
             />
@@ -119,12 +117,32 @@ class TenantEditor extends React.Component {
               variant="outlined"
               margin="normal"
               fullWidth
-              name="phone"
-              label={t('phone')}
-              type="phone"
-              id="phone"
-              autoComplete="+49 170 123456789"
+              name="fintsUrl"
+              label={t('fintsUrl')}
+              id="fintsUrl"
               className={classes.input}
+              required
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="fintsUser"
+              label={t('fintsUser')}
+              id="fintsUser"
+              className={classes.input}
+              required
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="fintsPassword"
+              label={t('fintsPassword')}
+              id="fintsPassword"
+              type="password"
+              className={classes.input}
+              required
             />
 
             <Button
@@ -145,7 +163,7 @@ class TenantEditor extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(TenantEditor));
+export default withTranslation()(withStyles(styles)(AccountEditor));
 
 function stringifyFormData(fd) {
   const data = {};

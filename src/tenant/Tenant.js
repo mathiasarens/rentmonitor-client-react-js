@@ -62,9 +62,8 @@ class Tenant extends React.Component {
         this.setState({ tenants: data });
       })
       .catch((error) => {
-        console.error(error)
         openSnackbar({
-          message: "Connection Error. Please try again later.",
+          message: this.props.t('connectionError'),
           variant: "error"
         });
       });
@@ -73,12 +72,12 @@ class Tenant extends React.Component {
 
   render() {
     const { tenants } = this.state;
-    const { t } = this.props;
+    const { t, classes } = this.props;
 
     return (
       <Container component="main">
         <CssBaseline />
-        <div className={this.props.classes.paper}>
+        <div className={classes.paper}>
           <Grid container justify="space-between" alignItems="flex-end">
             <Grid item>
               <Typography component="h1" variant="h5">

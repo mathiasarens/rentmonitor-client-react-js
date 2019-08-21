@@ -36,7 +36,7 @@ const AccountEditLink = React.forwardRef((props, ref) => (
   <Link innerRef={ref} to="/account/edit" {...props} />
   ));
 
-class Accounts extends React.Component {
+class Account extends React.Component {
   constructor() {
     super();
     this.state = { accountSettingsList: [] };
@@ -59,12 +59,12 @@ class Accounts extends React.Component {
       })
       .then((data) => {
         console.log(data);
-        this.setState({ accocuntSettingsList: data });
+        this.setState({ accountSettingsList: data });
       })
       .catch((error) => {
         console.error(error)
         openSnackbar({
-          message: "Connection Error. Please try again later.",
+          message: this.props.t('connectionError'),
           variant: "error"
         });
       });
@@ -72,7 +72,7 @@ class Accounts extends React.Component {
 
 
   render() {
-    const { accountSettingsList } = this.state;
+    const {accountSettingsList} = this.state;
     const { t } = this.props;
 
     return (
@@ -120,7 +120,7 @@ class Accounts extends React.Component {
             <TableBody>
               {accountSettingsList.map(accountSettingsItem => (
                 <TableRow key={accountSettingsItem.id}>
-                  <TableCell></TableCell>
+                  <TableCell>{accountSettingsItem.name}</TableCell>
                   <TableCell>{accountSettingsItem.fintsBlz}</TableCell>
                   <TableCell>{accountSettingsItem.fintsUrl}</TableCell>
                   <TableCell>{accountSettingsItem.fintsUser}</TableCell>
@@ -134,4 +134,4 @@ class Accounts extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles)(Accounts));
+export default withTranslation()(withStyles(styles)(Account));

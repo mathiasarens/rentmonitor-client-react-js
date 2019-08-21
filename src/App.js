@@ -5,8 +5,9 @@ import Tab from "@material-ui/core/Tab";
 import Home from "./home/Home";
 import Signup from "./signup/Signup";
 import Tenant from "./tenant/Tenant";
-import Accounts from "./accounts/Accounts";
+import Account from "./account/Account";
 import TenantEditor from "./tenant/TenantEditor";
+import AccountEditor from "./account/AccountEditor";
 import Notifier from "./notifier/Notifier";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
@@ -16,6 +17,12 @@ import { ThemeProvider } from "@material-ui/styles";
 import { useTranslation } from 'react-i18next';
 
 const theme = createMuiTheme();
+
+function getFirstPathElement(path) {
+  let pathelements = path.split('/');
+  let firstPathelement = "/" + pathelements[1];
+  return firstPathelement;
+}
 
 export default function App() {
   const {t} = useTranslation();
@@ -29,7 +36,7 @@ export default function App() {
               <Notifier />
               <AppBar position="static">
                 <Tabs
-                  value={location.pathname}
+                  value={getFirstPathElement(location.pathname)}
                   aria-label="simple tabs example"
                 >
                   <Tab label={t('home')} component={Link} to="/home" value="/home" />
@@ -39,17 +46,11 @@ export default function App() {
                     to="/tenant"
                     value="/tenant"
                   />
-                   <Tab
-                    label="New Tenant"
-                    component={Link}
-                    to="/tenant/edit"
-                    value="/tenant/edit"
-                  />
                   <Tab
                     label={t('accounts')}
                     component={Link}
-                    to="/accounts"
-                    value="/accounts"
+                    to="/account"
+                    value="/account"
                   />
                 </Tabs>
               </AppBar>
@@ -62,7 +63,8 @@ export default function App() {
           <Route path="/signup" component={Signup} />
           <Route exact path="/tenant" component={Tenant} />
           <Route path="/tenant/edit" component={TenantEditor} />
-          <Route exact path="/accounts" component={Accounts} />
+          <Route exact path="/account" component={Account} />
+          <Route path="/account/edit" component={AccountEditor} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>

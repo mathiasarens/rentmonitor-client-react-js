@@ -11,7 +11,16 @@ const resources = {
       tenants: "Tenants",
       accounts: "Accounts",
       email: "Email",
-      phone: "Phone"
+      phone: "Phone",
+      newTenant:"New Tenant",
+      createTenant: "Create",
+      connectionError: "Connection Error. Please try again later.",
+      formValidationFailed: "Please correct your inputs",
+      newAccountSettings: "New account settings",
+      fintsBlz: "FinTs BLZ",
+      fintsUrl: "FinTs URL",
+      fintsUser: "FinTs User",
+      fintsPassword: "FinTs Password"
     }
   },
   de: {
@@ -20,7 +29,16 @@ const resources = {
       tenants: "Mieter",
       accounts: "Konten",
       email: "E-Mail",
-      phone: "Telefon"
+      phone: "Telefon",
+      newTenant:"Neuer Mieter",
+      createTenant: "Anlegen",
+      connectionError: "Verbindungsfehler. Bitte versuchen Sie es später noch einmal.",
+      formValidationFailed: "Bitte korrigieren Sie Ihre Eingaben",
+      newAccountSettings: "Neue Kontoeinstellungen",
+      fintsBlz: "FinTs BLZ",
+      fintsUrl: "FinTs URL",
+      fintsUser: "FinTs Benutzer",
+      fintsPassword: "FinTs Passwort"
     }
   }
 };
