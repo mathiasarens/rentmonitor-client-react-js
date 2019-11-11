@@ -27,6 +27,11 @@ const resources = {
       signupButton: "Sign up",
       signupHeadline: "Sign up",
       signupSignin: "Already registered? Sign in",
+      signinHeadline: "Sign in",
+      signinButton: "Sign in",
+      signinSignup: "Don't have an account? Sign Up",
+      signinRemmeberMe: "Remember me",
+      forgotPassword: "Forgot password?",
       homeHeadline: "Welcome to Rent Monitor"
     }
   },
@@ -52,6 +57,11 @@ const resources = {
       signupButton: "Konto erstellen",
       signupHeadline: "Konto erstellen",
       signupSignin: "Schon registriert? Hier einloggen",
+      signinHeadline: "Einloggen",
+      signinButton: "Einloggen",
+      signinSignup: "Noch kein Konto erstellt? Dann lege hier eines an.",
+      signinRemmeberMe: "Angemeldet bleiben",
+      forgotPassword: "Passwort vergessen?",
       homeHeadline: "Willkommen bei Rent Monitor"
     }
   }

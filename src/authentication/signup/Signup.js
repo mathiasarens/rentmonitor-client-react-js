@@ -13,9 +13,7 @@ import Container from '@material-ui/core/Container';
 import { useTranslation } from 'react-i18next';
 import { openSnackbar } from "../../notifier/Notifier";
 import { AUTH_TOKEN } from '../../Constants';
-import {
-  useHistory
-} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 
 function MadeWithLove() {
