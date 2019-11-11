@@ -11,6 +11,9 @@ const resources = {
       tenants: "Tenants",
       accounts: "Accounts",
       email: "Email",
+      emailAddress:"Email Address",
+      password: "Password",
+      projectName: "Project Name",
       phone: "Phone",
       newTenant:"New Tenant",
       createTenant: "Create",
@@ -20,7 +23,11 @@ const resources = {
       fintsBlz: "FinTs BLZ",
       fintsUrl: "FinTs URL",
       fintsUser: "FinTs User",
-      fintsPassword: "FinTs Password"
+      fintsPassword: "FinTs Password",
+      signupButton: "Sign up",
+      signupHeadline: "Sign up",
+      signupSignin: "Already registered? Sign in",
+      homeHeadline: "Welcome to Rent Monitor"
     }
   },
   de: {
@@ -29,6 +36,9 @@ const resources = {
       tenants: "Mieter",
       accounts: "Konten",
       email: "E-Mail",
+      emailAddress:"E-Mail-Addresse",
+      password: "Passwort",
+      projectName: "Projektname",
       phone: "Telefon",
       newTenant:"Neuer Mieter",
       createTenant: "Anlegen",
@@ -38,7 +48,11 @@ const resources = {
       fintsBlz: "FinTs BLZ",
       fintsUrl: "FinTs URL",
       fintsUser: "FinTs Benutzer",
-      fintsPassword: "FinTs Passwort"
+      fintsPassword: "FinTs Passwort",
+      signupButton: "Konto erstellen",
+      signupHeadline: "Konto erstellen",
+      signupSignin: "Schon registriert? Hier einloggen",
+      homeHeadline: "Willkommen bei Rent Monitor"
     }
   }
 };

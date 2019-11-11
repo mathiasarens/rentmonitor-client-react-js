@@ -1,5 +1,6 @@
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
@@ -8,7 +9,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import React from "react";
-import { useTranslation } from 'react-i18next';
+import { Link as RLink } from "react-router-dom";
+
 function MadeWithLove() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -39,9 +41,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Home() {
+const SignUpLink = React.forwardRef((props, ref) => (
+  <RLink innerRef={ref} to="/signup" {...props} />
+));
+
+const SignInLink = React.forwardRef((props, ref) => (
+  <RLink innerRef={ref} to="/signin" {...props} />
+));
+
+export default function Welcome() {
   const classes = useStyles();
-  const [t] = useTranslation();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -52,11 +61,18 @@ export default function Home() {
         <Typography component="h1" variant="h5">
           Rent Monitor
         </Typography>
+        <Typography component="h3" variant="h6">
+          Backend {process.env.REACT_APP_BACKEND_URL_PREFIX}
+        </Typography>
+
       </div>
       <Grid container>
-        <Typography component="p">
-        {t('homeHeadline')}
-        </Typography>
+        <Grid item xs style={{textAlign: "center"}}>
+          <Button component={SignInLink}>SignIn</Button>
+        </Grid>
+        <Grid item xs style={{textAlign: "center"}}>
+          <Button component={SignUpLink}>SignUp</Button>
+        </Grid>
       </Grid>
       <Box mt={5}>
         <MadeWithLove />

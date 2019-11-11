@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import { useTranslation } from 'react-i18next';
 
 function MadeWithLove() {
   return (
@@ -52,8 +52,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function Signup() {
+export default function Signin() {
   const classes = useStyles();
+  const { t } = useTranslation();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -71,7 +72,7 @@ export default function Signup() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label={t('emailAddress')}
             name="email"
             autoComplete="email"
             autoFocus
@@ -82,7 +83,7 @@ export default function Signup() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t('password')}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -107,7 +108,7 @@ export default function Signup() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

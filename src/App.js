@@ -3,12 +3,15 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Home from "./home/Home";
-import Signup from "./signup/Signup";
+import Welcome from "./welcome/Welcome";
+import Signup from "./authentication/signup/Signup";
+import Signin from "./authentication/signin/Signin";
 import Tenant from "./tenant/Tenant";
 import Account from "./account/Account";
 import TenantEditor from "./tenant/TenantEditor";
 import AccountEditor from "./account/AccountEditor";
 import Notifier from "./notifier/Notifier";
+import PrivateRoute from "./authentication/PrivateRoute";
 import "./App.css";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { Redirect } from "react-router";
@@ -25,7 +28,7 @@ function getFirstPathElement(path) {
 }
 
 export default function App() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
@@ -58,13 +61,27 @@ export default function App() {
           )}
         />
         <Switch>
-          <Redirect exact from="/" to="/home" />
-          <Route path="/home" component={Home} />
+          <Redirect exact from="/" to="/welcome" />
+          <Route path="/welcome">
+            <Welcome />
+          </Route>
           <Route path="/signup" component={Signup} />
-          <Route exact path="/tenant" component={Tenant} />
-          <Route path="/tenant/edit" component={TenantEditor} />
-          <Route exact path="/account" component={Account} />
-          <Route path="/account/edit" component={AccountEditor} />
+          <Route path="/signin" component={Signin} />
+          <PrivateRoute path="/home">
+            <Home />
+          </PrivateRoute>
+          <PrivateRoute exact path="/tenant">
+            <Tenant />
+          </PrivateRoute>
+          <PrivateRoute path="/tenant/edit">
+            <TenantEditor />
+          </PrivateRoute>
+          <PrivateRoute exact path="/account">
+            <Account />
+          </PrivateRoute>
+          <PrivateRoute path="/account/edit">
+            <AccountEditor />
+          </PrivateRoute>
         </Switch>
       </BrowserRouter>
     </ThemeProvider>

@@ -20,6 +20,7 @@ import RefershIcon from "@material-ui/icons/Refresh";
 import AddIcon from "@material-ui/icons/Add";
 
 import { withTranslation } from 'react-i18next';
+import { filterResponseCodes } from "../authentication/filterResponseCodes";
 
 const styles = theme => ({
   "@global": {
@@ -54,6 +55,7 @@ class Account extends React.Component {
       }
     })
       .then((response) => {
+        response = filterResponseCodes(response)
         console.log(response.statusText);
         return response.json();
       })
