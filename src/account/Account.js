@@ -10,7 +10,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React, { useState, useEffect } from "react";
-import { openSnackbar } from "../notifier/Notifier";
 import { Link, useHistory } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
@@ -19,7 +18,8 @@ import IconButton from "@material-ui/core/IconButton";
 import RefershIcon from "@material-ui/icons/Refresh";
 import AddIcon from "@material-ui/icons/Add";
 import { useTranslation } from 'react-i18next';
-import { filterResponseCodes } from "../authentication/filterResponseCodes";
+import { authenticatedFetch, handleAuthenticationError } from "../authentication/authenticatedFetch";
+import { openSnackbar } from "../notifier/Notifier"; 
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -47,28 +47,20 @@ export default function Account() {
   });
 
   const load = (evt) => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL_PREFIX}/account-settings`, {
+    authenticatedFetch('/account-settings', history, {
       method: "GET",
       headers: {
         Accept: "application/json"
       }
-    })
-      .then((response) => {
-        response = filterResponseCodes(response, history)
-        console.log(response.statusText);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setAccountSettingsList(data);
-      })
-      .catch((error) => {
-        console.error(error)
-        openSnackbar({
-          message: t('connectionError'),
-          variant: "error"
-        });
+    }).then((data) => {
+      console.log(data);
+      setAccountSettingsList(data);
+    }).catch((error) => {
+      openSnackbar({
+        message: t(handleAuthenticationError(error)),
+        variant: "error"
       });
+    });
   }
 
   return (

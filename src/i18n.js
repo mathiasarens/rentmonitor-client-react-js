@@ -17,7 +17,6 @@ const resources = {
       phone: "Phone",
       newTenant:"New Tenant",
       createTenant: "Create",
-      connectionError: "Connection Error. Please try again later.",
       formValidationFailed: "Please correct your inputs",
       newAccountSettings: "New account settings",
       fintsBlz: "FinTs BLZ",
@@ -32,7 +31,9 @@ const resources = {
       signinSignup: "Don't have an account? Sign Up",
       signinRemmeberMe: "Remember me",
       forgotPassword: "Forgot password?",
-      homeHeadline: "Welcome to Rent Monitor"
+      homeHeadline: "Welcome to Rent Monitor",
+      connectionError: "Connection Error. Please try again later.",
+      unauthenticatedError: "You were logged out"
     }
   },
   de: {
@@ -47,7 +48,6 @@ const resources = {
       phone: "Telefon",
       newTenant:"Neuer Mieter",
       createTenant: "Anlegen",
-      connectionError: "Verbindungsfehler. Bitte versuchen Sie es später noch einmal.",
       formValidationFailed: "Bitte korrigieren Sie Ihre Eingaben",
       newAccountSettings: "Neue Kontoeinstellungen",
       fintsBlz: "FinTs BLZ",
@@ -62,7 +62,9 @@ const resources = {
       signinSignup: "Noch kein Konto erstellt? Dann lege hier eines an.",
       signinRemmeberMe: "Angemeldet bleiben",
       forgotPassword: "Passwort vergessen?",
-      homeHeadline: "Willkommen bei Rent Monitor"
+      homeHeadline: "Willkommen bei Rent Monitor",
+      connectionError: "Verbindungsfehler. Bitte versuchen Sie es später noch einmal.",
+      unauthenticatedError: "Sie wurden ausgeloggt."
     }
   }
 };
