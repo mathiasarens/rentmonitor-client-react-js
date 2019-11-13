@@ -44,7 +44,7 @@ export default function Account() {
 
   useEffect(() => {
     load();
-  });
+  }, []);
 
   const load = (evt) => {
     authenticatedFetch('/account-settings', history, {
