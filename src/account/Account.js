@@ -9,7 +9,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
@@ -19,7 +19,7 @@ import RefershIcon from "@material-ui/icons/Refresh";
 import AddIcon from "@material-ui/icons/Add";
 import { useTranslation } from 'react-i18next';
 import { authenticatedFetch, handleAuthenticationError } from "../authentication/authenticatedFetch";
-import { openSnackbar } from "../notifier/Notifier"; 
+import { openSnackbar } from "../notifier/Notifier";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -41,27 +41,27 @@ export default function Account() {
   const classes = useStyles();
   const [accountSettingsList, setAccountSettingsList] = useState([])
   const history = useHistory();
+  
+  const load = useCallback(() => {
+      authenticatedFetch('/account-settings', history, {
+        method: "GET",
+        headers: {
+          Accept: "application/json"
+        }
+      }).then((data) => {
+        console.log(data);
+        setAccountSettingsList(data);
+      }).catch((error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: "error"
+        });
+      });
+  }, [t, history]);
 
   useEffect(() => {
     load();
-  }, []);
-
-  const load = (evt) => {
-    authenticatedFetch('/account-settings', history, {
-      method: "GET",
-      headers: {
-        Accept: "application/json"
-      }
-    }).then((data) => {
-      console.log(data);
-      setAccountSettingsList(data);
-    }).catch((error) => {
-      openSnackbar({
-        message: t(handleAuthenticationError(error)),
-        variant: "error"
-      });
-    });
-  }
+  }, [load])
 
   return (
     <Container component="main">
