@@ -3,13 +3,15 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { red } from "@material-ui/core/colors";
-import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { openSnackbar } from "../notifier/Notifier";
+import { authenticatedFetch, handleAuthenticationError } from "../authentication/authenticatedFetch";
+import { useHistory } from "react-router-dom";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
       backgroundColor: theme.palette.common.white
@@ -33,56 +35,42 @@ const styles = theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2)
   }
-});
+}));
 
+export default function AccountEditor() {
+  const classes = useStyles();
+  const {t} = useTranslation();
+  const history = useHistory();
 
-class AccountEditor extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({ displayErrors: false });
-  }
-
-  handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (!event.target.checkValidity()) {
       openSnackbar({
-        message: this.props.t('formValidationFailed'),
+        message: t('formValidationFailed'),
         variant: "error"
       });
       return;
     }
     const data = new FormData(event.target);
-    
-    
-    this.setState({
-      res: stringifyFormData(data),
-    });
 
-    fetch('http://localhost:3001/account-settings', {
+    authenticatedFetch('/account-settings', history, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: stringifyFormData(data),
-    }).then(function(response) {
-      let json = response.json();
+    }).then((json) => {
       console.log(json);
+      history.push('/accounts');
     }).catch((error) => {
       openSnackbar({
-        message: this.props.t('connectionError'),
+        message: t(handleAuthenticationError(error)),
         variant: "error"
       });
     });
-  }
+  };
 
-  render() {
-    const {t, classes} = this.props;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -90,7 +78,7 @@ class AccountEditor extends React.Component {
           <Typography component="h1" variant="h5">
             {t('newAccountSettings')}
           </Typography>
-          <form onSubmit={this.handleSubmit} className={classes.form} noValidate>
+          <form onSubmit={handleSubmit} className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -160,10 +148,7 @@ class AccountEditor extends React.Component {
         </div>
       </Container>
     );
-  }
-}
-
-export default withTranslation()(withStyles(styles)(AccountEditor));
+    }
 
 function stringifyFormData(fd) {
   const data = {};
