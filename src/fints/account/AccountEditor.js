@@ -7,8 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { red } from "@material-ui/core/colors";
 import { useTranslation } from 'react-i18next';
-import { openSnackbar } from "../notifier/Notifier";
-import { authenticatedFetch, handleAuthenticationError } from "../authentication/authenticatedFetch";
+import { openSnackbar } from "../../notifier/Notifier";
+import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({

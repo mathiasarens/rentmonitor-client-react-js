@@ -33,7 +33,16 @@ const resources = {
       forgotPassword: "Forgot password?",
       homeHeadline: "Welcome to Rent Monitor",
       connectionError: "Connection Error. Please try again later.",
-      unauthenticatedError: "You were logged out"
+      unauthenticatedError: "You were logged out",
+      fintsAccountSynchronisationTitle: "FinTS Synchronisation",
+      fintsAccountSynchronisationButton: "Start",
+      fintsAccountTransactionTitle: "Fints Account Transactions",
+      fintsAccountTransactionDate:"Date",
+      fintsAccountTransactionName:"Name",
+      fintsAccountTransactionIban:"IBAN",
+      fintsAccountTransactionBic:"BIC",
+      fintsAccountTransactionText:"Comment",
+      fintsAccountTransactionAmount:"Amount",
     }
   },
   de: {
@@ -64,7 +73,17 @@ const resources = {
       forgotPassword: "Passwort vergessen?",
       homeHeadline: "Willkommen bei Rent Monitor",
       connectionError: "Verbindungsfehler. Bitte versuchen Sie es später noch einmal.",
-      unauthenticatedError: "Sie wurden ausgeloggt."
+      unauthenticatedError: "Sie wurden ausgeloggt.",
+      fintsAccountSynchronisationTitle: "FinTS Kontoabgleich",
+      fintsAccountSynchronisationButton: "Start",
+      fintsAccountTransactionTitle: "Fints Konto Transaktionen",
+      fintsAccountTransactionDate:"Datum",
+      fintsAccountTransactionName:"Name",
+      fintsAccountTransactionIban:"IBAN",
+      fintsAccountTransactionBic:"BIC",
+      fintsAccountTransactionText:"Verwendungszweck",
+      fintsAccountTransactionAmount:"Betrag",
+
     }
   }
 };

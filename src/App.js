@@ -7,9 +7,11 @@ import Welcome from "./welcome/Welcome";
 import Signup from "./authentication/signup/Signup";
 import Signin from "./authentication/signin/Signin";
 import Tenant from "./tenant/Tenant";
-import Account from "./account/Account";
+import Account from "./fints/account/Account";
 import TenantEditor from "./tenant/TenantEditor";
-import AccountEditor from "./account/AccountEditor";
+import AccountEditor from "./fints/account/AccountEditor";
+import FintsAccountSynchronisation from "./fints/synchronisation/FintsAccountSynchronisation";
+import FintsAccountTransaction from "./fints/transaction/FintsAccountTransaction";
 import Notifier from "./notifier/Notifier";
 import PrivateRoute from "./authentication/PrivateRoute";
 import "./App.css";
@@ -52,8 +54,8 @@ export default function App() {
                   <Tab
                     label={t('accounts')}
                     component={Link}
-                    to="/account"
-                    value="/account"
+                    to="/fints/account"
+                    value="/fints/account"
                   />
                 </Tabs>
               </AppBar>
@@ -76,11 +78,17 @@ export default function App() {
           <PrivateRoute path="/tenant/edit">
             <TenantEditor />
           </PrivateRoute>
-          <PrivateRoute exact path="/account">
+          <PrivateRoute exact path="/fints/account">
             <Account />
           </PrivateRoute>
-          <PrivateRoute path="/account/edit">
+          <PrivateRoute path="/fints/account/edit">
             <AccountEditor />
+          </PrivateRoute>
+          <PrivateRoute path="/fints/synchronisation">
+            <FintsAccountSynchronisation />
+          </PrivateRoute>
+          <PrivateRoute path="/fints/transaction">
+            <FintsAccountTransaction />
           </PrivateRoute>
         </Switch>
       </BrowserRouter>

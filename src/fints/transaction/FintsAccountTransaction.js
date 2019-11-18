@@ -18,8 +18,8 @@ import IconButton from "@material-ui/core/IconButton";
 import RefershIcon from "@material-ui/icons/Refresh";
 import AddIcon from "@material-ui/icons/Add";
 import { useTranslation } from 'react-i18next';
-import { authenticatedFetch, handleAuthenticationError } from "../authentication/authenticatedFetch";
-import { openSnackbar } from "../notifier/Notifier";
+import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
+import { openSnackbar } from "../../notifier/Notifier";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -36,21 +36,21 @@ const AccountEditLink = React.forwardRef((props, ref) => (
   <Link innerRef={ref} to="/account/edit" {...props} />
 ));
 
-export default function Account() {
+export default function FintsAccountTransaction() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const [accountSettingsList, setAccountSettingsList] = useState([])
+  const [accountTransactionList, setAccountTransactionList] = useState([])
   const history = useHistory();
   
   const load = useCallback(() => {
-      authenticatedFetch('/account-settings', history, {
+      authenticatedFetch('/account-transactions', history, {
         method: "GET",
         headers: {
           Accept: "application/json"
         }
       }).then((data) => {
         console.log(data);
-        setAccountSettingsList(data);
+        setAccountTransactionList(data);
       }).catch((error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
@@ -70,7 +70,7 @@ export default function Account() {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography component="h1" variant="h5">
-              {t('accounts')}
+              {t('fintsAccountTransactionTitle')}
             </Typography>
           </Grid>
           <Grid item>
@@ -100,18 +100,23 @@ export default function Account() {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>{t('fintsBlz')}</TableCell>
-              <TableCell>{t('fintsUrl')}</TableCell>
-              <TableCell>{t('fintsUser')}</TableCell>
+              <TableCell>{t('fintsAccountTransactionDate')}</TableCell>
+              <TableCell>{t('fintsAccountTransactionName')}</TableCell>
+              <TableCell>{t('fintsAccountTransactionIban')}</TableCell>
+              <TableCell>{t('fintsAccountTransactionBic')}</TableCell>
+              <TableCell>{t('fintsAccountTransactionText')}</TableCell>
+              <TableCell>{t('fintsAccountTransactionAmount')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {accountSettingsList.map(accountSettingsItem => (
-              <TableRow key={accountSettingsItem.id}>
-                <TableCell>{accountSettingsItem.name}</TableCell>
-                <TableCell>{accountSettingsItem.fintsBlz}</TableCell>
-                <TableCell>{accountSettingsItem.fintsUrl}</TableCell>
-                <TableCell>{accountSettingsItem.fintsUser}</TableCell>
+            {accountTransactionList.map(accountTransactionItem => (
+              <TableRow key={accountTransactionItem.id}>
+                <TableCell>{accountTransactionItem.date}</TableCell>
+                <TableCell>{accountTransactionItem.name}</TableCell>
+                <TableCell>{accountTransactionItem.iban}</TableCell>
+                <TableCell>{accountTransactionItem.bic}</TableCell>
+                <TableCell>{accountTransactionItem.text}</TableCell>
+                <TableCell>{accountTransactionItem.amount}</TableCell>
               </TableRow>
             ))}
           </TableBody>
