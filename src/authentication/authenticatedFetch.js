@@ -13,7 +13,7 @@ export function authenticatedFetch(urlSuffix, history, options) {
                 }
                 return Promise.reject(response);
             } else {
-                return response.json();
+                return response;
             }
         });
 }

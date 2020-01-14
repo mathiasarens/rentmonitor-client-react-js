@@ -1,25 +1,19 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from "@material-ui/core";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import React, { useState, useCallback, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
-
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-
-import RefershIcon from "@material-ui/icons/Refresh";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
+import RefershIcon from "@material-ui/icons/Refresh";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from "react-router-dom";
 import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
 import { openSnackbar } from "../../notifier/Notifier";
+
+
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -41,22 +35,30 @@ export default function FintsAccountTransaction() {
   const classes = useStyles();
   const [accountTransactionList, setAccountTransactionList] = useState([])
   const history = useHistory();
-  
+
   const load = useCallback(() => {
-      authenticatedFetch('/account-transactions', history, {
-        method: "GET",
-        headers: {
-          Accept: "application/json"
-        }
-      }).then((data) => {
-        console.log(data);
-        setAccountTransactionList(data);
-      }).catch((error) => {
+    authenticatedFetch('/account-transactions?filter[order]=date%20DESC', history, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    }).then(response => {
+      response.json().then(json => {
+        console.log(json);
+        setAccountTransactionList(json);
+      }).catch(error => {
+        console.log(error);
         openSnackbar({
-          message: t(handleAuthenticationError(error)),
+          message: t('connectionError'),
           variant: "error"
-        });
+        })
       });
+    }).catch((error) => {
+      openSnackbar({
+        message: t(handleAuthenticationError(error)),
+        variant: "error"
+      });
+    });
   }, [t, history]);
 
   useEffect(() => {
@@ -99,11 +101,8 @@ export default function FintsAccountTransaction() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
               <TableCell>{t('fintsAccountTransactionDate')}</TableCell>
               <TableCell>{t('fintsAccountTransactionName')}</TableCell>
-              <TableCell>{t('fintsAccountTransactionIban')}</TableCell>
-              <TableCell>{t('fintsAccountTransactionBic')}</TableCell>
               <TableCell>{t('fintsAccountTransactionText')}</TableCell>
               <TableCell>{t('fintsAccountTransactionAmount')}</TableCell>
             </TableRow>
@@ -113,10 +112,8 @@ export default function FintsAccountTransaction() {
               <TableRow key={accountTransactionItem.id}>
                 <TableCell>{accountTransactionItem.date}</TableCell>
                 <TableCell>{accountTransactionItem.name}</TableCell>
-                <TableCell>{accountTransactionItem.iban}</TableCell>
-                <TableCell>{accountTransactionItem.bic}</TableCell>
                 <TableCell>{accountTransactionItem.text}</TableCell>
-                <TableCell>{accountTransactionItem.amount}</TableCell>
+                <TableCell>{accountTransactionItem.amount / 100}</TableCell>
               </TableRow>
             ))}
           </TableBody>

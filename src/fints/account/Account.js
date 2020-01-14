@@ -1,25 +1,19 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from "@material-ui/core";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import React, { useState, useCallback, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
-
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-
-import RefershIcon from "@material-ui/icons/Refresh";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
+import RefershIcon from "@material-ui/icons/Refresh";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from "react-router-dom";
 import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
 import { openSnackbar } from "../../notifier/Notifier";
+
+
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -32,31 +26,29 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AccountEditLink = React.forwardRef((props, ref) => (
-  <Link innerRef={ref} to="/account/edit" {...props} />
-));
-
 export default function Account() {
   const { t } = useTranslation();
   const classes = useStyles();
   const [accountSettingsList, setAccountSettingsList] = useState([])
   const history = useHistory();
-  
+
   const load = useCallback(() => {
-      authenticatedFetch('/account-settings', history, {
-        method: "GET",
-        headers: {
-          Accept: "application/json"
-        }
-      }).then((data) => {
+    authenticatedFetch('/account-settings', history, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    }).then((response) => {
+      response.json().then(data => {
         console.log(data);
         setAccountSettingsList(data);
-      }).catch((error) => {
-        openSnackbar({
-          message: t(handleAuthenticationError(error)),
-          variant: "error"
-        });
       });
+    }).catch((error) => {
+      openSnackbar({
+        message: t(handleAuthenticationError(error)),
+        variant: "error"
+      });
+    });
   }, [t, history]);
 
   useEffect(() => {
@@ -79,7 +71,8 @@ export default function Account() {
                 <IconButton
                   size="small"
                   aria-label="add"
-                  component={AccountEditLink}
+                  component={Link}
+                  to="/fints/account/edit"
                 >
                   <AddIcon />
                 </IconButton>
@@ -103,6 +96,8 @@ export default function Account() {
               <TableCell>{t('fintsBlz')}</TableCell>
               <TableCell>{t('fintsUrl')}</TableCell>
               <TableCell>{t('fintsUser')}</TableCell>
+              <TableCell>{t('iban')}</TableCell>
+              <TableCell>{t('bic')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -112,6 +107,8 @@ export default function Account() {
                 <TableCell>{accountSettingsItem.fintsBlz}</TableCell>
                 <TableCell>{accountSettingsItem.fintsUrl}</TableCell>
                 <TableCell>{accountSettingsItem.fintsUser}</TableCell>
+                <TableCell>{accountSettingsItem.iban}</TableCell>
+                <TableCell>{accountSettingsItem.bic}</TableCell>
               </TableRow>
             ))}
           </TableBody>

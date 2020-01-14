@@ -1,25 +1,25 @@
-import React, { Fragment } from "react";
+import { createMuiTheme } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Home from "./home/Home";
-import Welcome from "./welcome/Welcome";
-import Signup from "./authentication/signup/Signup";
+import Tabs from "@material-ui/core/Tabs";
+import { ThemeProvider } from "@material-ui/styles";
+import React, { Fragment } from "react";
+import { useTranslation } from 'react-i18next';
+import { Redirect } from "react-router";
+import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
+import "./App.css";
+import PrivateRoute from "./authentication/PrivateRoute";
 import Signin from "./authentication/signin/Signin";
-import Tenant from "./tenant/Tenant";
+import Signup from "./authentication/signup/Signup";
 import Account from "./fints/account/Account";
-import TenantEditor from "./tenant/TenantEditor";
-import AccountEditor from "./fints/account/AccountEditor";
+import AccountEditorWizard from "./fints/account/AccountEditorWizard";
 import FintsAccountSynchronisation from "./fints/synchronisation/FintsAccountSynchronisation";
 import FintsAccountTransaction from "./fints/transaction/FintsAccountTransaction";
+import Home from "./home/Home";
 import Notifier from "./notifier/Notifier";
-import PrivateRoute from "./authentication/PrivateRoute";
-import "./App.css";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
-import { Redirect } from "react-router";
-import { createMuiTheme } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
-import { useTranslation } from 'react-i18next';
+import Tenant from "./tenant/Tenant";
+import TenantEditor from "./tenant/TenantEditor";
+import Welcome from "./welcome/Welcome";
 
 const theme = createMuiTheme();
 
@@ -82,7 +82,7 @@ export default function App() {
             <Account />
           </PrivateRoute>
           <PrivateRoute path="/fints/account/edit">
-            <AccountEditor />
+            <AccountEditorWizard />
           </PrivateRoute>
           <PrivateRoute path="/fints/synchronisation">
             <FintsAccountSynchronisation />

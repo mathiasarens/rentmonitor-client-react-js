@@ -11,8 +11,6 @@ import { useHistory } from "react-router-dom";
 import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
 import { openSnackbar } from "../../notifier/Notifier";
 
-
-
 const useStyles = makeStyles(theme => ({
     "@global": {
         body: {
@@ -55,7 +53,7 @@ export default function FintsAccountSynchronisation() {
                     </Grid>
                 </Grid>
                 <Grid container justify="space-between" alignItems="flex-end">
-                    <Grid item spacing={1}>
+                    <Grid item>
                         <Button onClick={synchroniseAccounts}>{t('fintsAccountSynchronisationTitle')}</Button>
                     </Grid>
                 </Grid>

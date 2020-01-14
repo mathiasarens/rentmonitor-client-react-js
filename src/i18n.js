@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 import LngDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -11,11 +11,12 @@ const resources = {
       tenants: "Tenants",
       accounts: "Accounts",
       email: "Email",
-      emailAddress:"Email Address",
+      emailAddress: "Email Address",
       password: "Password",
       projectName: "Project Name",
       phone: "Phone",
-      newTenant:"New Tenant",
+      newTenant: "New Tenant",
+      connectFints: "Connect",
       createTenant: "Create",
       formValidationFailed: "Please correct your inputs",
       newAccountSettings: "New account settings",
@@ -37,12 +38,15 @@ const resources = {
       fintsAccountSynchronisationTitle: "FinTS Synchronisation",
       fintsAccountSynchronisationButton: "Start",
       fintsAccountTransactionTitle: "Fints Account Transactions",
-      fintsAccountTransactionDate:"Date",
-      fintsAccountTransactionName:"Name",
-      fintsAccountTransactionIban:"IBAN",
-      fintsAccountTransactionBic:"BIC",
-      fintsAccountTransactionText:"Comment",
-      fintsAccountTransactionAmount:"Amount",
+      fintsAccountTransactionDate: "Date",
+      fintsAccountTransactionName: "Name",
+      fintsAccountTransactionIban: "IBAN",
+      fintsAccountTransactionBic: "BIC",
+      fintsAccountTransactionText: "Comment",
+      fintsAccountTransactionAmount: "Amount",
+      fintsAccountSelectionHead: "Select an account",
+      iban: "IBAN",
+      bic: "BIC"
     }
   },
   de: {
@@ -51,11 +55,12 @@ const resources = {
       tenants: "Mieter",
       accounts: "Konten",
       email: "E-Mail",
-      emailAddress:"E-Mail-Addresse",
+      emailAddress: "E-Mail-Addresse",
       password: "Passwort",
       projectName: "Projektname",
       phone: "Telefon",
-      newTenant:"Neuer Mieter",
+      newTenant: "Neuer Mieter",
+      connectFints: "Verbinden",
       createTenant: "Anlegen",
       formValidationFailed: "Bitte korrigieren Sie Ihre Eingaben",
       newAccountSettings: "Neue Kontoeinstellungen",
@@ -77,13 +82,15 @@ const resources = {
       fintsAccountSynchronisationTitle: "FinTS Kontoabgleich",
       fintsAccountSynchronisationButton: "Start",
       fintsAccountTransactionTitle: "Fints Konto Transaktionen",
-      fintsAccountTransactionDate:"Datum",
-      fintsAccountTransactionName:"Name",
-      fintsAccountTransactionIban:"IBAN",
-      fintsAccountTransactionBic:"BIC",
-      fintsAccountTransactionText:"Verwendungszweck",
-      fintsAccountTransactionAmount:"Betrag",
-
+      fintsAccountTransactionDate: "Datum",
+      fintsAccountTransactionName: "Name",
+      fintsAccountTransactionIban: "IBAN",
+      fintsAccountTransactionBic: "BIC",
+      fintsAccountTransactionText: "Verwendungszweck",
+      fintsAccountTransactionAmount: "Betrag",
+      fintsAccountSelectionHead: "Wählen Sie ein Konto aus",
+      iban: "IBAN",
+      bic: "BIC"
     }
   }
 };
