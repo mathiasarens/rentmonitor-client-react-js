@@ -5,11 +5,10 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
 import RefershIcon from "@material-ui/icons/Refresh";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
 import { openSnackbar } from "../../notifier/Notifier";
 
@@ -23,12 +22,11 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     marginTop: theme.spacing(4)
+  },
+  right: {
+    textAlign: 'right'
   }
 }));
-
-const AccountEditLink = React.forwardRef((props, ref) => (
-  <Link innerRef={ref} to="/account/edit" {...props} />
-));
 
 export default function FintsAccountTransaction() {
   const { t } = useTranslation();
@@ -80,15 +78,6 @@ export default function FintsAccountTransaction() {
               <Grid item>
                 <IconButton
                   size="small"
-                  aria-label="add"
-                  component={AccountEditLink}
-                >
-                  <AddIcon />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  size="small"
                   aria-label="refresh"
                   onClick={load}
                 >
@@ -110,10 +99,19 @@ export default function FintsAccountTransaction() {
           <TableBody>
             {accountTransactionList.map(accountTransactionItem => (
               <TableRow key={accountTransactionItem.id}>
-                <TableCell>{accountTransactionItem.date}</TableCell>
+                <TableCell>{new Intl.DateTimeFormat("de-DE", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit"
+                }).format(new Date(accountTransactionItem.date))}</TableCell>
                 <TableCell>{accountTransactionItem.name}</TableCell>
                 <TableCell>{accountTransactionItem.text}</TableCell>
-                <TableCell>{accountTransactionItem.amount / 100}</TableCell>
+                <TableCell className={classes.right}>{new Intl.NumberFormat("de-DE", {
+                  style: "currency",
+                  currency: "EUR",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }).format(accountTransactionItem.amount / 100)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

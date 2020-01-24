@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import React from "react";
 import { useTranslation } from 'react-i18next';
 import { useHistory } from "react-router-dom";
-import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
+import { authenticatedFetch, handleAuthenticationError, stringifyFormData } from "../../authentication/authenticatedFetch";
 import { openSnackbar } from "../../notifier/Notifier";
 
 const useStyles = makeStyles(theme => ({
@@ -54,10 +54,10 @@ export default function AccountEditorStepInitial() {
         const state = Object.assign({}, { form: formDataClone }, { accounts: json })
         switch (response.status) {
           case 209:
-            history.push('/fints/account/edit/step2', state);
+            history.push('/account/edit/step2', state);
             break;
           case 210:
-            history.push('/fints/account/edit/stepTan', state);
+            history.push('/account/edit/stepTan', state);
             break;
           default:
             console.error(response);
@@ -152,14 +152,6 @@ export default function AccountEditorStepInitial() {
       </Button>
     </form>
   );
-}
-
-function stringifyFormData(fd) {
-  const data = {};
-  for (let key of fd.keys()) {
-    data[key] = fd.get(key);
-  }
-  return JSON.stringify(data, null, 2);
 }
 
 function convertToJavaScriptObject(formData) {

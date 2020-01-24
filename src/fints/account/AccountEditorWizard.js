@@ -30,10 +30,10 @@ export default function AccountEditorWizard() {
       <CssBaseline />
       <div className={classes.paper}>
         <Switch>
-          <Redirect from="/fints/account/edit" exact to="/fints/account/edit/step1" />
-          <Route path="/fints/account/edit/step1" component={AccountEditorStepInitial} />
-          <Route path="/fints/account/edit/step2" component={AccountEditorStepAccountSelection} />
-          <Route path="/fints/account/edit/stepTan" component={AccountEditorStepTan} />
+          <Redirect from="/account/edit" exact to="/account/edit/step1" />
+          <Route path="/account/edit/step1" component={AccountEditorStepInitial} />
+          <Route path="/account/edit/step2" component={AccountEditorStepAccountSelection} />
+          <Route path="/account/edit/stepTan" component={AccountEditorStepTan} />
         </Switch>
       </div>
     </Container>

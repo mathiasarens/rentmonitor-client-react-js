@@ -10,6 +10,7 @@ import RefershIcon from "@material-ui/icons/Refresh";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from "react-router-dom";
+import { ACCOUNT_PATH } from "../../App";
 import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
 import { openSnackbar } from "../../notifier/Notifier";
 
@@ -72,7 +73,7 @@ export default function Account() {
                   size="small"
                   aria-label="add"
                   component={Link}
-                  to="/fints/account/edit"
+                  to={`${ACCOUNT_PATH}/edit`}
                 >
                   <AddIcon />
                 </IconButton>
@@ -93,9 +94,6 @@ export default function Account() {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>{t('fintsBlz')}</TableCell>
-              <TableCell>{t('fintsUrl')}</TableCell>
-              <TableCell>{t('fintsUser')}</TableCell>
               <TableCell>{t('iban')}</TableCell>
               <TableCell>{t('bic')}</TableCell>
             </TableRow>
@@ -104,9 +102,6 @@ export default function Account() {
             {accountSettingsList.map(accountSettingsItem => (
               <TableRow key={accountSettingsItem.id}>
                 <TableCell>{accountSettingsItem.name}</TableCell>
-                <TableCell>{accountSettingsItem.fintsBlz}</TableCell>
-                <TableCell>{accountSettingsItem.fintsUrl}</TableCell>
-                <TableCell>{accountSettingsItem.fintsUser}</TableCell>
                 <TableCell>{accountSettingsItem.iban}</TableCell>
                 <TableCell>{accountSettingsItem.bic}</TableCell>
               </TableRow>

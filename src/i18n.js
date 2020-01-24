@@ -10,11 +10,15 @@ const resources = {
       home: "Home",
       tenants: "Tenants",
       accounts: "Accounts",
+      account: "Account",
       email: "Email",
       emailAddress: "Email Address",
       password: "Password",
       projectName: "Project Name",
       phone: "Phone",
+      iban: "IBAN",
+      bic: "BIC",
+
       newTenant: "New Tenant",
       connectFints: "Connect",
       createTenant: "Create",
@@ -45,8 +49,10 @@ const resources = {
       fintsAccountTransactionText: "Comment",
       fintsAccountTransactionAmount: "Amount",
       fintsAccountSelectionHead: "Select an account",
-      iban: "IBAN",
-      bic: "BIC"
+      fintsAccountSyncronisationFrom: "from",
+      fintsAccountSyncronisationTo: "to",
+      fintsAccountSyncronisationSuccess: "Synchronisation: New: {{newBookingsCount}} Unmatched: {{unmatchedTransactions}}",
+      transactions: "Transactions"
     }
   },
   de: {
@@ -54,11 +60,15 @@ const resources = {
       home: "Übersicht",
       tenants: "Mieter",
       accounts: "Konten",
+      account: "Konto",
       email: "E-Mail",
       emailAddress: "E-Mail-Addresse",
       password: "Passwort",
       projectName: "Projektname",
       phone: "Telefon",
+      iban: "IBAN",
+      bic: "BIC",
+
       newTenant: "Neuer Mieter",
       connectFints: "Verbinden",
       createTenant: "Anlegen",
@@ -79,9 +89,9 @@ const resources = {
       homeHeadline: "Willkommen bei Rent Monitor",
       connectionError: "Verbindungsfehler. Bitte versuchen Sie es später noch einmal.",
       unauthenticatedError: "Sie wurden ausgeloggt.",
-      fintsAccountSynchronisationTitle: "FinTS Kontoabgleich",
-      fintsAccountSynchronisationButton: "Start",
-      fintsAccountTransactionTitle: "Fints Konto Transaktionen",
+      fintsAccountSynchronisationTitle: "Kontoabgleich mit der Bank",
+      fintsAccountSynchronisationButton: "Starten",
+      fintsAccountTransactionTitle: "Umsätze",
       fintsAccountTransactionDate: "Datum",
       fintsAccountTransactionName: "Name",
       fintsAccountTransactionIban: "IBAN",
@@ -89,8 +99,10 @@ const resources = {
       fintsAccountTransactionText: "Verwendungszweck",
       fintsAccountTransactionAmount: "Betrag",
       fintsAccountSelectionHead: "Wählen Sie ein Konto aus",
-      iban: "IBAN",
-      bic: "BIC"
+      fintsAccountSyncronisationFrom: "von",
+      fintsAccountSyncronisationTo: "bis",
+      fintsAccountSyncronisationSuccess: "Kontoabgleich erfolgreich: Neu: {{newBookingsCount}} Nicht zuordenbar: {{unmatchedTransactions}}",
+      transactions: "Umsätze"
     }
   }
 };

@@ -63,7 +63,7 @@ export default function AccountEditorStepAccountSelection(props) {
       body: JSON.stringify(data, null, 2),
     }).then((json) => {
       console.log(json);
-      history.push('/fints/account');
+      history.push('/account');
     }).catch((error) => {
       openSnackbar({
         message: t(handleAuthenticationError(error)),
