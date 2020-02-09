@@ -44,7 +44,6 @@ const useStyles = makeStyles(theme => ({
 export default function FintsAccountSynchronisationSingle() {
     const SET_LABEL_WIDTH = 'SET_LABEL_WIDTH';
     const SET_ACCOUNT_SETTINGS_LIST = 'SET_ACCOUNT_SETTINGS_LIST';
-    const SET_TRANSACTION_REFERENCE = 'SET_TRANSACTION_REFERENCE';
     const SET_CHALLENGE_TEXT = 'SET_CHALLENGE_TEXT';
     const SET_ACCOUNT_ID = 'SET_ACCOUNT_ID';
     const SET_FROM_DATE = 'SET_FROM_DATE';
@@ -59,7 +58,6 @@ export default function FintsAccountSynchronisationSingle() {
         accountSettingsList: [],
         selectedFromDate: sub(new Date(), { months: 2 }),
         selectedToDate: new Date(),
-        transactionReference: '',
         challengeText: '',
         accountId: '',
         labelWidth: 0
@@ -79,11 +77,6 @@ export default function FintsAccountSynchronisationSingle() {
                     ...state,
                     accountSettingsList: payload,
                     accountId: payload.length > 0 ? payload[0].id : 0,
-                };
-            case SET_TRANSACTION_REFERENCE:
-                return {
-                    ...state,
-                    transactionReference: payload
                 };
             case SET_CHALLENGE_TEXT:
                 return {
@@ -169,7 +162,6 @@ export default function FintsAccountSynchronisationSingle() {
                 case 210:
                     response.json().then(json => {
                         console.log(json);
-                        dispatch({ type: SET_TRANSACTION_REFERENCE, payload: json.transactionReference });
                         dispatch({ type: SET_CHALLENGE_TEXT, payload: json.challengeText });
                     }).catch((error) => {
                         console.error(error)
@@ -202,18 +194,11 @@ export default function FintsAccountSynchronisationSingle() {
     };
 
     function clearTanForm() {
-        dispatch({ type: SET_TRANSACTION_REFERENCE, payload: '' });
         dispatch({ type: SET_CHALLENGE_TEXT, payload: '' });
     }
 
-    if (state.transactionReference.length > 0) {
+    if (state.challengeText.length > 0) {
         tanRequiredJsx = <div>
-            <TextField
-                id="transactionReferenceId"
-                name="transactionReference"
-                type="hidden"
-                value={state.transactionReference}
-            />
             <Typography component="h6" variant="h6">
                 {state.challengeText}
             </Typography>
