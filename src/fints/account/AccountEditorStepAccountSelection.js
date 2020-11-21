@@ -1,35 +1,45 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { red } from "@material-ui/core/colors";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import {red} from '@material-ui/core/colors';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import React from "react";
-import { useTranslation } from 'react-i18next';
-import { useHistory } from "react-router-dom";
-import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
-import { openSnackbar } from "../../notifier/Notifier";
+import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
+import {ACCOUNT_PATH} from '../../App';
+import {
+  authenticatedFetch,
+  handleAuthenticationError,
+} from '../../authentication/authenticatedFetch';
+import {openSnackbar} from '../../notifier/Notifier';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
   },
   input: {
     '&:invalid': {
-      borderColor: red
-    }
+      borderColor: red,
+    },
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function AccountEditorStepAccountSelection(props) {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const history = useHistory();
   const step1FormData = props.location.state.form;
   const fintsAccounts = props.location.state.accounts;
@@ -42,34 +52,38 @@ export default function AccountEditorStepAccountSelection(props) {
     if (!event.target.checkValidity()) {
       openSnackbar({
         message: t('formValidationFailed'),
-        variant: "error"
+        variant: 'error',
       });
       return;
     }
     const formData = new FormData(event.target);
-    const selectedFintsAccount = fintsAccounts.filter(account => account.rawstring === formData.get(rawAccountIdentifier))[0];
+    const selectedFintsAccount = fintsAccounts.filter(
+      (account) => account.rawstring === formData.get(rawAccountIdentifier),
+    )[0];
     const data = Object.assign({}, step1FormData, {
       rawAccount: selectedFintsAccount.rawstring,
       bic: selectedFintsAccount.bic,
-      iban: selectedFintsAccount.iban
+      iban: selectedFintsAccount.iban,
     });
 
     authenticatedFetch('/account-settings', history, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data, null, 2),
-    }).then((json) => {
-      console.log(json);
-      history.push('/account');
-    }).catch((error) => {
-      openSnackbar({
-        message: t(handleAuthenticationError(error)),
-        variant: "error"
+    })
+      .then((json) => {
+        console.log(json);
+        history.push(ACCOUNT_PATH);
+      })
+      .catch((error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
       });
-    });
   };
 
   return (
@@ -87,9 +101,15 @@ export default function AccountEditorStepAccountSelection(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {fintsAccounts.map(fintsAccount => (
+            {fintsAccounts.map((fintsAccount) => (
               <TableRow key={fintsAccount.rawstring}>
-                <TableCell><FormControlLabel name={rawAccountIdentifier} value={fintsAccount.rawstring} control={<Radio />} /></TableCell>
+                <TableCell>
+                  <FormControlLabel
+                    name={rawAccountIdentifier}
+                    value={fintsAccount.rawstring}
+                    control={<Radio />}
+                  />
+                </TableCell>
                 <TableCell>{fintsAccount.iban}</TableCell>
                 <TableCell>{fintsAccount.bic}</TableCell>
               </TableRow>
@@ -110,5 +130,3 @@ export default function AccountEditorStepAccountSelection(props) {
     </form>
   );
 }
-
-

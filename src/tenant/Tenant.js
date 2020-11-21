@@ -90,13 +90,7 @@ export default function Tenant() {
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton
-                  size="small"
-                  aria-label="refresh"
-                  onClick={() => {
-                    this.load();
-                  }}
-                >
+                <IconButton size="small" aria-label="refresh" onClick={load}>
                   <RefershIcon />
                 </IconButton>
               </Grid>
