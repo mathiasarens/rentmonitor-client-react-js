@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import RefershIcon from '@material-ui/icons/Refresh';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -40,7 +41,7 @@ export default function Tenant() {
   const [tenants, setTenants] = useState([]);
   const history = useHistory();
 
-  const load = useCallback(() => {
+  const loadTenants = useCallback(() => {
     authenticatedFetch('/tenants', history, {
       method: 'GET',
       headers: {
@@ -63,9 +64,33 @@ export default function Tenant() {
       });
   }, [t, history]);
 
+  const deleteTenant = useCallback(
+    (id) => {
+      authenticatedFetch(`/tenants/${id}`, history, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          console.log(response.statusText);
+          if (response.status === 204) {
+            setTenants(tenants.filter((tenant) => tenant.id !== id));
+          }
+        })
+        .catch((error) => {
+          openSnackbar({
+            message: t(handleAuthenticationError(error)),
+            variant: 'error',
+          });
+        });
+    },
+    [t, history, tenants],
+  );
+
   useEffect(() => {
-    load();
-  }, [load]);
+    loadTenants();
+  }, [loadTenants]);
 
   return (
     <Container component="main">
@@ -90,7 +115,11 @@ export default function Tenant() {
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton size="small" aria-label="refresh" onClick={load}>
+                <IconButton
+                  size="small"
+                  aria-label="refresh"
+                  onClick={loadTenants}
+                >
                   <RefershIcon />
                 </IconButton>
               </Grid>
@@ -103,6 +132,7 @@ export default function Tenant() {
               <TableCell>Name</TableCell>
               <TableCell>{t('email')}</TableCell>
               <TableCell>{t('phone')}</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -111,6 +141,17 @@ export default function Tenant() {
                 <TableCell>{tenantListItem.name}</TableCell>
                 <TableCell>{tenantListItem.email}</TableCell>
                 <TableCell>{tenantListItem.phone}</TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    aria-label="delete"
+                    onClick={() => {
+                      deleteTenant(tenantListItem.id);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
