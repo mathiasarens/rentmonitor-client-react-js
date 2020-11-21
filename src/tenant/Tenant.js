@@ -17,11 +17,11 @@ import RefershIcon from '@material-ui/icons/Refresh';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useHistory} from 'react-router-dom';
-import {TENANT_PATH} from '../App';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
+import {TENANT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({

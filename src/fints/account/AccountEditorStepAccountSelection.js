@@ -15,11 +15,11 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
-import {ACCOUNT_PATH} from '../../App';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
+import {ACCOUNT_PATH} from '../../Constants';
 import {openSnackbar} from '../../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({

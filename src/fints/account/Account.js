@@ -1,60 +1,69 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
-import Container from "@material-ui/core/Container";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
-import RefershIcon from "@material-ui/icons/Refresh";
-import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from "react-router-dom";
-import { ACCOUNT_PATH } from "../../App";
-import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
-import { openSnackbar } from "../../notifier/Notifier";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
+import RefershIcon from '@material-ui/icons/Refresh';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
+import {
+  authenticatedFetch,
+  handleAuthenticationError,
+} from '../../authentication/authenticatedFetch';
+import {ACCOUNT_PATH} from '../../Constants';
+import {openSnackbar} from '../../notifier/Notifier';
 
-
-
-const useStyles = makeStyles(theme => ({
-  "@global": {
+const useStyles = makeStyles((theme) => ({
+  '@global': {
     body: {
-      backgroundColor: theme.palette.common.white
-    }
+      backgroundColor: theme.palette.common.white,
+    },
   },
   paper: {
-    marginTop: theme.spacing(4)
-  }
+    marginTop: theme.spacing(4),
+  },
 }));
 
 export default function Account() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
-  const [accountSettingsList, setAccountSettingsList] = useState([])
+  const [accountSettingsList, setAccountSettingsList] = useState([]);
   const history = useHistory();
 
   const load = useCallback(() => {
     authenticatedFetch('/account-settings', history, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        Accept: "application/json"
-      }
-    }).then((response) => {
-      response.json().then(data => {
-        console.log(data);
-        setAccountSettingsList(data);
+        Accept: 'application/json',
+      },
+    })
+      .then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          setAccountSettingsList(data);
+        });
+      })
+      .catch((error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
       });
-    }).catch((error) => {
-      openSnackbar({
-        message: t(handleAuthenticationError(error)),
-        variant: "error"
-      });
-    });
   }, [t, history]);
 
   useEffect(() => {
     load();
-  }, [load])
+  }, [load]);
 
   return (
     <Container component="main">
@@ -79,11 +88,7 @@ export default function Account() {
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton
-                  size="small"
-                  aria-label="refresh"
-                  onClick={load}
-                >
+                <IconButton size="small" aria-label="refresh" onClick={load}>
                   <RefershIcon />
                 </IconButton>
               </Grid>
@@ -99,7 +104,7 @@ export default function Account() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {accountSettingsList.map(accountSettingsItem => (
+            {accountSettingsList.map((accountSettingsItem) => (
               <TableRow key={accountSettingsItem.id}>
                 <TableCell>{accountSettingsItem.name}</TableCell>
                 <TableCell>{accountSettingsItem.iban}</TableCell>

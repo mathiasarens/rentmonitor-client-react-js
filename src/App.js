@@ -30,8 +30,6 @@ function getFirstPathElement(path) {
   let firstPathelement = '/' + pathelements[1];
   return firstPathelement;
 }
-export const ACCOUNT_PATH = '/account';
-export const TENANT_PATH = '/tenant';
 
 export default function App() {
   const {t} = useTranslation();
