@@ -18,10 +18,11 @@ const resources = {
       phone: 'Phone',
       iban: 'IBAN',
       bic: 'BIC',
+      dateFormat: 'dd/MM/yyyy',
 
-      newTenant: 'New Tenant',
       connectFints: 'Connect',
-      createTenant: 'Create',
+      tenant: 'Tenant',
+      tenantSave: 'Save',
       formValidationFailed: 'Please correct your inputs',
       newAccountSettings: 'New account settings',
       fintsBlz: 'FinTs BLZ',
@@ -56,10 +57,13 @@ const resources = {
       transactions: 'Transactions',
 
       contracts: 'Contracts',
-      tenant: 'Tenant',
+      contract: 'Contract',
       contractRentDueEveryMonth: 'Monthly',
       contractRentDueDayOfMonth: 'Pay Day',
       contractAmount: 'Rent',
+      contractSave: 'Save',
+      contractStart: 'Start',
+      contractEnd: 'End',
     },
   },
   de: {
@@ -75,10 +79,11 @@ const resources = {
       phone: 'Telefon',
       iban: 'IBAN',
       bic: 'BIC',
+      dateFormat: 'dd.MM.yyyy',
 
-      newTenant: 'Neuer Mieter',
+      tenant: 'Mieter',
       connectFints: 'Verbinden',
-      createTenant: 'Anlegen',
+      tenantSave: 'Anlegen',
       formValidationFailed: 'Bitte korrigieren Sie Ihre Eingaben',
       newAccountSettings: 'Neue Kontoeinstellungen',
       fintsBlz: 'FinTs BLZ',
@@ -114,10 +119,14 @@ const resources = {
       transactions: 'Umsätze',
 
       contracts: 'Mietverträge',
-      tenant: 'Mieter',
+      contract: 'Mietvertrag',
+
       contractRentDueEveryMonth: 'Monatlich',
       contractRentDueDayOfMonth: 'Zahltag',
       contractAmount: 'Miete',
+      contractSave: 'Speichern',
+      contractStart: 'Beginn',
+      contractEnd: 'Ende',
     },
   },
 };

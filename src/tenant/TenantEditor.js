@@ -83,7 +83,7 @@ export default function TenantEditor() {
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          {t('newTenant')}
+          {t('tenant')}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
@@ -130,7 +130,7 @@ export default function TenantEditor() {
             color="primary"
             className={classes.submit}
           >
-            {t('createTenant')}
+            {t('tenantSave')}
           </Button>
         </form>
       </div>

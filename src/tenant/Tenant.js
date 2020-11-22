@@ -23,6 +23,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {TENANT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
+import {tenantLoader} from './dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -42,26 +43,12 @@ export default function Tenant() {
   const history = useHistory();
 
   const loadTenants = useCallback(() => {
-    authenticatedFetch('/tenants', history, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-      .then((response) => {
-        console.log(response.statusText);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setTenants(data);
-      })
-      .catch((error) => {
-        openSnackbar({
-          message: t(handleAuthenticationError(error)),
-          variant: 'error',
-        });
+    tenantLoader(history, setTenants, (error) => {
+      openSnackbar({
+        message: t(handleAuthenticationError(error)),
+        variant: 'error',
       });
+    });
   }, [t, history]);
 
   const deleteTenant = useCallback(

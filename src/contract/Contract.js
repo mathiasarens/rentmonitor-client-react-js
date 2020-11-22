@@ -23,6 +23,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {CONTRACT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
+import {tenantLoader} from '../tenant/dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -66,31 +67,23 @@ export default function Contract() {
   }, [t, history]);
 
   const loadTenants = useCallback(() => {
-    authenticatedFetch('/tenants', history, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-      .then((response) => {
-        console.log(response.statusText);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
+    tenantLoader(
+      history,
+      (data) => {
         setTenantsMap(
           data.reduce((map, tenant) => {
             map[tenant.id] = tenant;
             return map;
           }, {}),
         );
-      })
-      .catch((error) => {
+      },
+      (error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
           variant: 'error',
         });
-      });
+      },
+    );
   }, [t, history]);
 
   const deleteContract = useCallback(
@@ -166,6 +159,8 @@ export default function Contract() {
               <TableCell>{t('contractRentDueEveryMonth')}</TableCell>
               <TableCell>{t('contractRentDueDayOfMonth')}</TableCell>
               <TableCell>{t('contractAmount')}</TableCell>
+              <TableCell>{t('contractStart')}</TableCell>
+              <TableCell>{t('contractEnd')}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -178,6 +173,8 @@ export default function Contract() {
                 <TableCell>{contractListItem.rentDueEveryMonth}</TableCell>
                 <TableCell>{contractListItem.rentDueDayOfMonth}</TableCell>
                 <TableCell>{contractListItem.amount}</TableCell>
+                <TableCell>{contractListItem.start}</TableCell>
+                <TableCell>{contractListItem.end}</TableCell>
                 <TableCell>
                   <IconButton
                     size="small"

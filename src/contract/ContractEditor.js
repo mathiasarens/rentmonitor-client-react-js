@@ -1,3 +1,4 @@
+import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
 import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
@@ -5,7 +6,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import 'date-fns';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
 import {
@@ -15,6 +22,8 @@ import {
 } from '../authentication/authenticatedFetch';
 import {CONTRACT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
+import {tenantLoader} from '../tenant/dataaccess/tenantLoader';
+
 const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
@@ -45,6 +54,9 @@ export default function TenantEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
+  const [tenants, setTenants] = useState([]);
+  const [selectedTenant, setSelectedTenant] = useState({});
+  const [startDate, setStartDate] = useState(new Date());
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,6 +68,8 @@ export default function TenantEditor() {
       return;
     }
     const data = new FormData(event.target);
+    data.start = startDate;
+    console.log(stringifyFormData(data));
 
     authenticatedFetch('/contracts', history, {
       method: 'POST',
@@ -78,22 +92,64 @@ export default function TenantEditor() {
       });
   };
 
+  const loadTenants = useCallback(() => {
+    tenantLoader(
+      history,
+      (data) => {
+        setTenants(data);
+      },
+      (error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      },
+    );
+  }, [t, history]);
+
+  useEffect(() => {
+    loadTenants();
+  }, [loadTenants]);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          {t('newContract')}
+          {t('contract')}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <Autocomplete
+            id="teanant-id"
+            options={tenants}
+            getOptionLabel={(tenant) => {
+              console.log('getOptionLabel', tenant);
+              return tenant.name ? tenant.name : '';
+            }}
+            onChange={(event, tenant) => {
+              if (tenant !== null) {
+                console.log('setSelectedTenantId', tenant);
+                setSelectedTenant(tenant);
+              }
+            }}
+            value={selectedTenant}
+            getOptionSelected={(option, value) => {
+              console.log('getOptionSelected', option, value);
+              return value === {} || option.id === value.id;
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label={t('tenant')} variant="outlined" />
+            )}
+          />
+
           <TextField
             variant="outlined"
             margin="normal"
             fullWidth
-            id="tenantId"
-            label={t('email')}
-            name="tenantId"
-            autoComplete="Name"
+            id="contract-rent-due-every-month"
+            label={t('contractRentDueEveryMonth')}
+            name="rentDueEveryMonth"
+            autoComplete="1"
             className={classes.input}
             autoFocus
             required
@@ -102,11 +158,10 @@ export default function TenantEditor() {
             variant="outlined"
             margin="normal"
             fullWidth
-            name="email"
-            label={t('email')}
-            type="email"
-            id="email"
-            autoComplete="your@email.com"
+            name="rentDueDayOfMonth"
+            label={t('contractRentDueDayOfMonth')}
+            id="contract-rent-due-day-of-month"
+            autoComplete="10"
             className={classes.input}
             required
           />
@@ -114,13 +169,29 @@ export default function TenantEditor() {
             variant="outlined"
             margin="normal"
             fullWidth
-            name="phone"
-            label={t('phone')}
-            type="phone"
-            id="phone"
-            autoComplete="+49 170 123456789"
+            name="amount"
+            label={t('contractAmount')}
+            id="contract-amount"
+            autoComplete="50"
             className={classes.input}
           />
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format={t('dateFormat')}
+              margin="normal"
+              id="contract-start"
+              label={t('contractStart')}
+              value={startDate}
+              onChange={setStartDate}
+              fullWidth
+              inputVariant="outlined"
+              KeyboardButtonProps={{
+                'aria-label': 'change contract commencement day',
+              }}
+            />
+          </MuiPickersUtilsProvider>
 
           <Button
             type="submit"
@@ -130,7 +201,7 @@ export default function TenantEditor() {
             color="primary"
             className={classes.submit}
           >
-            {t('createTenant')}
+            {t('contractSave')}
           </Button>
         </form>
       </div>
