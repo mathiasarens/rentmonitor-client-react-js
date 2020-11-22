@@ -3,27 +3,27 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
+  TableRow
 } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import RefershIcon from '@material-ui/icons/Refresh';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError,
+  handleAuthenticationError
 } from '../authentication/authenticatedFetch';
-import {CONTRACT_PATH} from '../Constants';
-import {openSnackbar} from '../notifier/Notifier';
-import {tenantLoader} from '../tenant/dataaccess/tenantLoader';
+import { CONTRACT_PATH } from '../Constants';
+import { openSnackbar } from '../notifier/Notifier';
+import { tenantLoader } from '../tenant/dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Contract() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
   const [contracts, setContracts] = useState([]);
   const [tenantsMap, setTenantsMap] = useState(new Map());
@@ -168,7 +168,7 @@ export default function Contract() {
             {contracts.map((contractListItem) => (
               <TableRow key={contractListItem.id}>
                 <TableCell>
-                  {tenantsMap[contractListItem.tenantId].name}
+                  {tenantsMap[contractListItem.tenantId]?.name}
                 </TableCell>
                 <TableCell>{contractListItem.rentDueEveryMonth}</TableCell>
                 <TableCell>{contractListItem.rentDueDayOfMonth}</TableCell>
