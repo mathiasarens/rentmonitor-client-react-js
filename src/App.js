@@ -14,6 +14,9 @@ import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
 import Signup from './authentication/signup/Signup';
+import {ACCOUNT_PATH, CONTRACT_PATH, TENANT_PATH} from './Constants';
+import Contract from './contract/Contract';
+import ContractEditor from './contract/ContractEditor';
 import Account from './fints/account/Account';
 import AccountEditorWizard from './fints/account/AccountEditorWizard';
 import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
@@ -60,6 +63,12 @@ export default function App() {
                       value="/tenant"
                     />
                     <Tab
+                      label={t('contracts')}
+                      component={Link}
+                      to="/contract"
+                      value="/contract"
+                    />
+                    <Tab
                       label={t('accounts')}
                       component={Link}
                       to={ACCOUNT_PATH}
@@ -86,11 +95,17 @@ export default function App() {
             <PrivateRoute path="/home">
               <Home />
             </PrivateRoute>
-            <PrivateRoute exact path="/tenant">
+            <PrivateRoute exact path={TENANT_PATH}>
               <Tenant />
             </PrivateRoute>
-            <PrivateRoute path="/tenant/edit">
+            <PrivateRoute path={`${TENANT_PATH}/edit`}>
               <TenantEditor />
+            </PrivateRoute>
+            <PrivateRoute exact path={CONTRACT_PATH}>
+              <Contract />
+            </PrivateRoute>
+            <PrivateRoute path={`${CONTRACT_PATH}/edit`}>
+              <ContractEditor />
             </PrivateRoute>
             <PrivateRoute exact path={ACCOUNT_PATH}>
               <Account />

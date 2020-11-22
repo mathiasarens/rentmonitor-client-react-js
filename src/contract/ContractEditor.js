@@ -1,0 +1,139 @@
+import Button from '@material-ui/core/Button';
+import {red} from '@material-ui/core/colors';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import {makeStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
+import {
+  authenticatedFetch,
+  handleAuthenticationError,
+  stringifyFormData,
+} from '../authentication/authenticatedFetch';
+import {CONTRACT_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+const useStyles = makeStyles((theme) => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  input: {
+    '&:invalid': {
+      borderColor: red,
+    },
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+export default function TenantEditor() {
+  const {t} = useTranslation();
+  const classes = useStyles();
+  const history = useHistory();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!event.target.checkValidity()) {
+      openSnackbar({
+        message: t('formValidationFailed'),
+        variant: 'error',
+      });
+      return;
+    }
+    const data = new FormData(event.target);
+
+    authenticatedFetch('/contracts', history, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: stringifyFormData(data),
+    })
+      .then(function (response) {
+        let json = response.json();
+        console.log(json);
+        history.push(CONTRACT_PATH);
+      })
+      .catch(function (error) {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      });
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+          {t('newContract')}
+        </Typography>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="tenantId"
+            label={t('email')}
+            name="tenantId"
+            autoComplete="Name"
+            className={classes.input}
+            autoFocus
+            required
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            name="email"
+            label={t('email')}
+            type="email"
+            id="email"
+            autoComplete="your@email.com"
+            className={classes.input}
+            required
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            name="phone"
+            label={t('phone')}
+            type="phone"
+            id="phone"
+            autoComplete="+49 170 123456789"
+            className={classes.input}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {t('createTenant')}
+          </Button>
+        </form>
+      </div>
+    </Container>
+  );
+}
