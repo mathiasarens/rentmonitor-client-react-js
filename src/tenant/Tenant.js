@@ -13,6 +13,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -23,7 +24,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {TENANT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
-import {tenantLoader} from './dataaccess/tenantLoader';
+import {tenantsLoader} from './dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -43,7 +44,7 @@ export default function Tenant() {
   const history = useHistory();
 
   const loadTenants = useCallback(() => {
-    tenantLoader(history, setTenants, (error) => {
+    tenantsLoader(history, setTenants, (error) => {
       openSnackbar({
         message: t(handleAuthenticationError(error)),
         variant: 'error',
@@ -120,6 +121,7 @@ export default function Tenant() {
               <TableCell>{t('email')}</TableCell>
               <TableCell>{t('phone')}</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -128,6 +130,16 @@ export default function Tenant() {
                 <TableCell>{tenantListItem.name}</TableCell>
                 <TableCell>{tenantListItem.email}</TableCell>
                 <TableCell>{tenantListItem.phone}</TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    aria-label="edit"
+                    component={Link}
+                    to={`${TENANT_PATH}/edit/${tenantListItem.id}`}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
                 <TableCell>
                   <IconButton
                     size="small"

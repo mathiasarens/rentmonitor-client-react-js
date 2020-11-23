@@ -5,9 +5,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -15,6 +15,8 @@ import {
 } from '../authentication/authenticatedFetch';
 import {TENANT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
+import {tenantLoader} from './dataaccess/tenantLoader';
+
 const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
@@ -45,6 +47,32 @@ export default function TenantEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
+  const [tenant, setTenant] = useState({});
+  const {tenantId} = useParams();
+
+  const loadTenant = useCallback(
+    (id) => {
+      tenantLoader(
+        id,
+        history,
+        (data) => {
+          setTenant(data);
+        },
+        (error) => {
+          openSnackbar({
+            message: t(handleAuthenticationError(error)),
+            variant: 'error',
+          });
+        },
+      );
+    },
+    [t, history],
+  );
+
+  useEffect(() => {
+    console.log(tenantId);
+    //loadTenant();
+  }, [loadTenant, tenantId]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -86,6 +114,17 @@ export default function TenantEditor() {
           {t('tenant')}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="id"
+            label="id"
+            name="id"
+            autoComplete="Name"
+            className={classes.input}
+            type="hidden"
+          />
           <TextField
             variant="outlined"
             margin="normal"

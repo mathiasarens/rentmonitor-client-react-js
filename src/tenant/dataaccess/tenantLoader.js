@@ -1,7 +1,25 @@
 import {authenticatedFetch} from '../../authentication/authenticatedFetch';
 
-export function tenantLoader(history, callback, callbackError) {
+export function tenantsLoader(history, callback, callbackError) {
   authenticatedFetch('/tenants', history, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      callback(data);
+    })
+    .catch((error) => {
+      callbackError(error);
+    });
+}
+
+export function tenantLoader(id, history, callback, callbackError) {
+  authenticatedFetch(`/tenants/${id}`, history, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

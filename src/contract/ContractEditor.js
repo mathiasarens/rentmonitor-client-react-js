@@ -1,27 +1,27 @@
 import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import 'date-fns';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { CONTRACT_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantLoader } from '../tenant/dataaccess/tenantLoader';
+import {CONTRACT_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TenantEditor() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
@@ -71,11 +71,11 @@ export default function TenantEditor() {
     for (let key of formData.keys()) {
       data[key] = Number(formData.get(key));
     }
-    console.log("Data before modification", data);
+    console.log('Data before modification', data);
     data.start = startDate;
     data.tenantId = selectedTenant.id;
     const json = JSON.stringify(data, null, 2);
-    console.log("before send", json);
+    console.log('before send', json);
 
     authenticatedFetch('/contracts', history, {
       method: 'POST',
@@ -99,7 +99,7 @@ export default function TenantEditor() {
   };
 
   const loadTenants = useCallback(() => {
-    tenantLoader(
+    tenantsLoader(
       history,
       (data) => {
         setTenants(data);
@@ -128,14 +128,16 @@ export default function TenantEditor() {
           <Autocomplete
             id="teanant-id"
             options={tenants}
-            getOptionLabel={(tenant) => tenant.name ? tenant.name : ''}
+            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
             onChange={(event, tenant) => {
               if (tenant !== null) {
                 setSelectedTenant(tenant);
               }
             }}
             value={selectedTenant}
-            getOptionSelected={(option, value) => Object.keys(value).length === 0 || option.id === value.id}
+            getOptionSelected={(option, value) =>
+              Object.keys(value).length === 0 || option.id === value.id
+            }
             renderInput={(params) => (
               <TextField {...params} label={t('tenant')} variant="outlined" />
             )}
