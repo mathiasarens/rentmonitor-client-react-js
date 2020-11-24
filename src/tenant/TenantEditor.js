@@ -11,7 +11,6 @@ import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
-  stringifyFormData,
 } from '../authentication/authenticatedFetch';
 import {TENANT_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
@@ -70,8 +69,9 @@ export default function TenantEditor() {
   );
 
   useEffect(() => {
-    console.log(tenantId);
-    //loadTenant();
+    if (tenantId) {
+      loadTenant(tenantId);
+    }
   }, [loadTenant, tenantId]);
 
   const handleSubmit = (event) => {
@@ -83,19 +83,20 @@ export default function TenantEditor() {
       });
       return;
     }
-    const data = new FormData(event.target);
-
-    authenticatedFetch('/tenants', history, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+    console.log('before post', tenant);
+    authenticatedFetch(
+      tenant.id ? `/tenants/${tenant.id}` : '/tenants',
+      history,
+      {
+        method: tenant.id ? 'PUT' : 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tenant),
       },
-      body: stringifyFormData(data),
-    })
+    )
       .then(function (response) {
-        let json = response.json();
-        console.log(json);
         history.push(TENANT_PATH);
       })
       .catch(function (error) {
@@ -118,25 +119,19 @@ export default function TenantEditor() {
             variant="outlined"
             margin="normal"
             fullWidth
-            id="id"
-            label="id"
-            name="id"
-            autoComplete="Name"
-            className={classes.input}
-            type="hidden"
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
             id="name"
             label="Name"
             name="name"
             autoComplete="Name"
             className={classes.input}
+            value={tenant.name ? tenant.name : ''}
+            onChange={(event) => {
+              setTenant({...tenant, name: event.target.value});
+            }}
             autoFocus
             required
           />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -147,7 +142,10 @@ export default function TenantEditor() {
             id="email"
             autoComplete="your@email.com"
             className={classes.input}
-            required
+            value={tenant.email ? tenant.email : ''}
+            onChange={(event) => {
+              setTenant({...tenant, email: event.target.value});
+            }}
           />
           <TextField
             variant="outlined"
@@ -159,6 +157,10 @@ export default function TenantEditor() {
             id="phone"
             autoComplete="+49 170 123456789"
             className={classes.input}
+            value={tenant.phone ? tenant.phone : ''}
+            onChange={(event) => {
+              setTenant({...tenant, phone: event.target.value});
+            }}
           />
 
           <Button

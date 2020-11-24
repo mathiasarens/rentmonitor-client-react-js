@@ -98,7 +98,7 @@ export default function App() {
             <PrivateRoute exact path={TENANT_PATH}>
               <Tenant />
             </PrivateRoute>
-            <PrivateRoute path={`${TENANT_PATH}/edit`}>
+            <PrivateRoute exact path={`${TENANT_PATH}/edit`}>
               <TenantEditor />
             </PrivateRoute>
             <PrivateRoute path={`${TENANT_PATH}/edit/:tenantId`}>
