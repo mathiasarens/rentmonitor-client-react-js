@@ -150,8 +150,8 @@ export default function TenantEditor() {
             options={tenants}
             getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
             onChange={(event, tenant) => {
+              console.log('tenantId autocomplete onChange ', tenant);
               if (tenant !== null) {
-                console.log('tenantId autocomplete onChange ', tenant);
                 setContract({...contract, tenantId: tenant.id});
               }
             }}
@@ -161,6 +161,7 @@ export default function TenantEditor() {
                 'tenantId autocomplete getSelectedOption',
                 option,
                 value,
+                option.id === value,
               );
               return (
                 value === '' ||
@@ -185,9 +186,9 @@ export default function TenantEditor() {
             className={classes.input}
             type="number"
             required
-            value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : ''}
-            onChange={(event, value) => {
-              setContract({...contract, rentDueEveryMonth: value});
+            value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : 0}
+            onChange={(event) => {
+              setContract({...contract, rentDueEveryMonth: event.target.value});
             }}
           />
           <TextField
@@ -201,9 +202,10 @@ export default function TenantEditor() {
             autoComplete="10"
             className={classes.input}
             required
-            value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : ''}
-            onChange={(event, value) => {
-              setContract({...contract, rentDueDayOfMonth: value});
+            value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : 0}
+            onChange={(event) => {
+              console.log('contractRentDueDayOfMonth', event.target.value);
+              setContract({...contract, rentDueDayOfMonth: event.target.value});
             }}
           />
           <TextField
@@ -216,9 +218,9 @@ export default function TenantEditor() {
             type="number"
             className={classes.input}
             required
-            value={contract.amount ? contract.amount : ''}
-            onChange={(event, value) => {
-              setContract({...contract, amount: value});
+            value={contract.amount ? contract.amount : 0}
+            onChange={(event) => {
+              setContract({...contract, amount: event.target.value});
             }}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -229,10 +231,10 @@ export default function TenantEditor() {
               margin="normal"
               id="contract-start"
               label={t('contractStart')}
-              value={contract.start ? contract.start : ''}
-              onChange={(event, value) => {
-                console.log('contractStart DatePicker start', contract.start);
-                setContract({...contract, start: value});
+              value={contract.start ? contract.start : new Date()}
+              onChange={(date) => {
+                console.log('contractStart DatePicker start', date);
+                setContract({...contract, start: date});
               }}
               fullWidth
               inputVariant="outlined"
