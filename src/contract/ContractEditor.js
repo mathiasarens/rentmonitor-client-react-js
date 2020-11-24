@@ -14,7 +14,7 @@ import {
 import 'date-fns';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -54,10 +54,11 @@ export default function TenantEditor() {
   const classes = useStyles();
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
-  const [selectedTenant, setSelectedTenant] = useState({});
-  const [startDate, setStartDate] = useState(new Date());
+  const [contract, setContract] = useState({});
+  const {contractId} = useParams();
 
   const handleSubmit = (event) => {
+    console.log('before send', contract);
     event.preventDefault();
     if (!event.target.checkValidity()) {
       openSnackbar({
@@ -66,28 +67,20 @@ export default function TenantEditor() {
       });
       return;
     }
-    const formData = new FormData(event.target);
-    const data = {};
-    for (let key of formData.keys()) {
-      data[key] = Number(formData.get(key));
-    }
-    console.log('Data before modification', data);
-    data.start = startDate;
-    data.tenantId = selectedTenant.id;
-    const json = JSON.stringify(data, null, 2);
-    console.log('before send', json);
 
-    authenticatedFetch('/contracts', history, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+    authenticatedFetch(
+      contract.id ? `/contracts/${contract.id}` : '/contracts',
+      history,
+      {
+        method: contract.id ? 'PUT' : 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contract),
       },
-      body: json,
-    })
+    )
       .then(function (response) {
-        let json = response.json();
-        console.log(json);
         history.push(CONTRACT_PATH);
       })
       .catch(function (error) {
@@ -97,6 +90,30 @@ export default function TenantEditor() {
         });
       });
   };
+
+  const loadContract = useCallback(
+    (id) => {
+      authenticatedFetch(`/contracts/${id}`, history, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((contract) => {
+          setContract(contract);
+        })
+        .catch(function (error) {
+          openSnackbar({
+            message: t(handleAuthenticationError(error)),
+            variant: 'error',
+          });
+        });
+    },
+    [t, history],
+  );
 
   const loadTenants = useCallback(() => {
     tenantsLoader(
@@ -115,7 +132,10 @@ export default function TenantEditor() {
 
   useEffect(() => {
     loadTenants();
-  }, [loadTenants]);
+    if (contractId) {
+      loadContract(contractId);
+    }
+  }, [loadTenants, loadContract, contractId]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -131,13 +151,24 @@ export default function TenantEditor() {
             getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
             onChange={(event, tenant) => {
               if (tenant !== null) {
-                setSelectedTenant(tenant);
+                console.log('tenantId autocomplete onChange ', tenant);
+                setContract({...contract, tenantId: tenant.id});
               }
             }}
-            value={selectedTenant}
-            getOptionSelected={(option, value) =>
-              Object.keys(value).length === 0 || option.id === value.id
-            }
+            value={contract.tenantId ? contract.tenantId : ''}
+            getOptionSelected={(option, value) => {
+              console.log(
+                'tenantId autocomplete getSelectedOption',
+                option,
+                value,
+              );
+              return (
+                value === '' ||
+                (typeof value === 'number'
+                  ? option.id === value
+                  : option.id === value.id)
+              );
+            }}
             renderInput={(params) => (
               <TextField {...params} label={t('tenant')} variant="outlined" />
             )}
@@ -154,6 +185,10 @@ export default function TenantEditor() {
             className={classes.input}
             type="number"
             required
+            value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : ''}
+            onChange={(event, value) => {
+              setContract({...contract, rentDueEveryMonth: value});
+            }}
           />
           <TextField
             variant="outlined"
@@ -166,6 +201,10 @@ export default function TenantEditor() {
             autoComplete="10"
             className={classes.input}
             required
+            value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : ''}
+            onChange={(event, value) => {
+              setContract({...contract, rentDueDayOfMonth: value});
+            }}
           />
           <TextField
             variant="outlined"
@@ -176,6 +215,11 @@ export default function TenantEditor() {
             id="contract-amount"
             type="number"
             className={classes.input}
+            required
+            value={contract.amount ? contract.amount : ''}
+            onChange={(event, value) => {
+              setContract({...contract, amount: value});
+            }}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
@@ -185,8 +229,11 @@ export default function TenantEditor() {
               margin="normal"
               id="contract-start"
               label={t('contractStart')}
-              value={startDate}
-              onChange={setStartDate}
+              value={contract.start ? contract.start : ''}
+              onChange={(event, value) => {
+                console.log('contractStart DatePicker start', contract.start);
+                setContract({...contract, start: value});
+              }}
               fullWidth
               inputVariant="outlined"
               KeyboardButtonProps={{

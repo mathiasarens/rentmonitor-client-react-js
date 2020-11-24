@@ -13,6 +13,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -162,6 +163,7 @@ export default function Contract() {
               <TableCell>{t('contractStart')}</TableCell>
               <TableCell>{t('contractEnd')}</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -175,6 +177,16 @@ export default function Contract() {
                 <TableCell>{contractListItem.amount}</TableCell>
                 <TableCell>{contractListItem.start}</TableCell>
                 <TableCell>{contractListItem.end}</TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    aria-label="edit"
+                    component={Link}
+                    to={`${CONTRACT_PATH}/edit/${contractListItem.id}`}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
                 <TableCell>
                   <IconButton
                     size="small"

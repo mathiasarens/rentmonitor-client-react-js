@@ -125,8 +125,8 @@ export default function TenantEditor() {
             autoComplete="Name"
             className={classes.input}
             value={tenant.name ? tenant.name : ''}
-            onChange={(event) => {
-              setTenant({...tenant, name: event.target.value});
+            onChange={(event, value) => {
+              setTenant({...tenant, name: value});
             }}
             autoFocus
             required

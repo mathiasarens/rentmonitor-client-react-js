@@ -107,7 +107,10 @@ export default function App() {
             <PrivateRoute exact path={CONTRACT_PATH}>
               <Contract />
             </PrivateRoute>
-            <PrivateRoute path={`${CONTRACT_PATH}/edit`}>
+            <PrivateRoute exact path={`${CONTRACT_PATH}/edit`}>
+              <ContractEditor />
+            </PrivateRoute>
+            <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId`}>
               <ContractEditor />
             </PrivateRoute>
             <PrivateRoute exact path={ACCOUNT_PATH}>
