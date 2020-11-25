@@ -125,7 +125,7 @@ export default function AccountEditorStepAccountSelection(props) {
         color="primary"
         className={classes.submit}
       >
-        {t('createTenant')}
+        {t('fintsAccountSynchronisationStep2Button')}
       </Button>
     </form>
   );
