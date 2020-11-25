@@ -162,6 +162,7 @@ export default function Contract() {
               <TableCell>{t('contractAmount')}</TableCell>
               <TableCell>{t('contractStart')}</TableCell>
               <TableCell>{t('contractEnd')}</TableCell>
+              <TableCell>{t('contractAccountSynchronizationName')}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -177,6 +178,9 @@ export default function Contract() {
                 <TableCell>{contractListItem.amount}</TableCell>
                 <TableCell>{contractListItem.start}</TableCell>
                 <TableCell>{contractListItem.end}</TableCell>
+                <TableCell>
+                  {contractListItem.accountSynchronsationName}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     size="small"

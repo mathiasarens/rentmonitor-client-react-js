@@ -149,27 +149,19 @@ export default function TenantEditor() {
             id="teanant-id"
             options={tenants}
             getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+            value={
+              contract.tenantId
+                ? tenants.find((tenant) => tenant.id === contract.tenantId)
+                : ''
+            }
             onChange={(event, tenant) => {
-              console.log('tenantId autocomplete onChange ', tenant);
               if (tenant !== null) {
                 setContract({...contract, tenantId: tenant.id});
               }
             }}
-            value={contract.tenantId ? contract.tenantId : ''}
-            getOptionSelected={(option, value) => {
-              console.log(
-                'tenantId autocomplete getSelectedOption',
-                option,
-                value,
-                option.id === value,
-              );
-              return (
-                value === '' ||
-                (typeof value === 'number'
-                  ? option.id === value
-                  : option.id === value.id)
-              );
-            }}
+            getOptionSelected={(option, value) =>
+              value === '' || option.id === value.id
+            }
             renderInput={(params) => (
               <TextField {...params} label={t('tenant')} variant="outlined" />
             )}
@@ -181,7 +173,6 @@ export default function TenantEditor() {
             fullWidth
             id="contract-rent-due-every-month"
             label={t('contractRentDueEveryMonth')}
-            name="rentDueEveryMonth"
             autoComplete="1"
             className={classes.input}
             type="number"
@@ -195,7 +186,6 @@ export default function TenantEditor() {
             variant="outlined"
             margin="normal"
             fullWidth
-            name="rentDueDayOfMonth"
             label={t('contractRentDueDayOfMonth')}
             id="contract-rent-due-day-of-month"
             type="number"
@@ -212,7 +202,6 @@ export default function TenantEditor() {
             variant="outlined"
             margin="normal"
             fullWidth
-            name="amount"
             label={t('contractAmount')}
             id="contract-amount"
             type="number"
@@ -232,17 +221,46 @@ export default function TenantEditor() {
               id="contract-start"
               label={t('contractStart')}
               value={contract.start ? contract.start : new Date()}
-              onChange={(date) => {
-                console.log('contractStart DatePicker start', date);
-                setContract({...contract, start: date});
-              }}
+              onChange={(date) => setContract({...contract, start: date})}
               fullWidth
               inputVariant="outlined"
               KeyboardButtonProps={{
                 'aria-label': 'change contract commencement day',
               }}
             />
+
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format={t('dateFormat')}
+              margin="normal"
+              id="contract-end"
+              label={t('contractEnd')}
+              value={contract.end ? contract.end : null}
+              onChange={(date) => setContract({...contract, end: date})}
+              fullWidth
+              inputVariant="outlined"
+              KeyboardButtonProps={{
+                'aria-label': 'change contract end day',
+              }}
+            />
           </MuiPickersUtilsProvider>
+
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('contractAccountSynchronizationName')}
+            id="contract-account-sync-name"
+            className={classes.input}
+            value={contract.accountSynchronisationName}
+            onChange={(event) => {
+              setContract({
+                ...contract,
+                accountSynchronisationName: event.target.value,
+              });
+            }}
+          />
 
           <Button
             type="submit"

@@ -64,6 +64,7 @@ const resources = {
       contractSave: 'Save',
       contractStart: 'Start',
       contractEnd: 'End',
+      contractAccountSynchronizationName: 'Name on account statement',
     },
   },
   de: {
@@ -127,6 +128,7 @@ const resources = {
       contractSave: 'Speichern',
       contractStart: 'Beginn',
       contractEnd: 'Ende',
+      contractAccountSynchronizationName: 'Name auf Kontoauszug',
     },
   },
 };
