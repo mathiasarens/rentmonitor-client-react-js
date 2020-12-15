@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import LngDetector from 'i18next-browser-languagedetector';
-import {initReactI18next} from 'react-i18next';
+import { initReactI18next } from 'react-i18next';
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -23,6 +23,7 @@ const resources = {
       connectFints: 'Connect',
       tenant: 'Tenant',
       tenantSave: 'Save',
+      tenantAccountSynchronizationName: 'Name on account statement',
       formValidationFailed: 'Please correct your inputs',
       newAccountSettings: 'New account settings',
       fintsBlz: 'FinTs BLZ',
@@ -65,7 +66,6 @@ const resources = {
       contractSave: 'Save',
       contractStart: 'Start',
       contractEnd: 'End',
-      contractAccountSynchronizationName: 'Name on account statement',
     },
   },
   de: {
@@ -86,6 +86,7 @@ const resources = {
       tenant: 'Mieter',
       connectFints: 'Verbinden',
       tenantSave: 'Anlegen',
+      tenantAccountSynchronizationName: 'Name auf Kontoauszug',
       formValidationFailed: 'Bitte korrigieren Sie Ihre Eingaben',
       newAccountSettings: 'Neue Kontoeinstellungen',
       fintsBlz: 'FinTs BLZ',
@@ -130,7 +131,6 @@ const resources = {
       contractSave: 'Speichern',
       contractStart: 'Beginn',
       contractEnd: 'Ende',
-      contractAccountSynchronizationName: 'Name auf Kontoauszug',
     },
   },
 };

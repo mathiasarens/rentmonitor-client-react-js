@@ -1,20 +1,20 @@
 import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError,
+  handleAuthenticationError
 } from '../authentication/authenticatedFetch';
-import {TENANT_PATH} from '../Constants';
-import {openSnackbar} from '../notifier/Notifier';
-import {tenantLoader} from './dataaccess/tenantLoader';
+import { TENANT_PATH } from '../Constants';
+import { openSnackbar } from '../notifier/Notifier';
+import { tenantLoader } from './dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -43,11 +43,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TenantEditor() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenant, setTenant] = useState({});
-  const {tenantId} = useParams();
+  const { tenantId } = useParams();
 
   const loadTenant = useCallback(
     (id) => {
@@ -126,7 +126,7 @@ export default function TenantEditor() {
             className={classes.input}
             value={tenant.name ? tenant.name : ''}
             onChange={(event) => {
-              setTenant({...tenant, name: event.target.value});
+              setTenant({ ...tenant, name: event.target.value });
             }}
             autoFocus
             required
@@ -144,7 +144,7 @@ export default function TenantEditor() {
             className={classes.input}
             value={tenant.email ? tenant.email : ''}
             onChange={(event) => {
-              setTenant({...tenant, email: event.target.value});
+              setTenant({ ...tenant, email: event.target.value });
             }}
           />
           <TextField
@@ -159,7 +159,24 @@ export default function TenantEditor() {
             className={classes.input}
             value={tenant.phone ? tenant.phone : ''}
             onChange={(event) => {
-              setTenant({...tenant, phone: event.target.value});
+              setTenant({ ...tenant, phone: event.target.value });
+            }}
+          />
+
+
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('tenantAccountSynchronizationName')}
+            id="tenant-account-sync-name"
+            className={classes.input}
+            value={tenant.accountSynchronisationName ? tenant.accountSynchronisationName : ''}
+            onChange={(event) => {
+              setTenant({
+                ...tenant,
+                accountSynchronisationName: event.target.value,
+              });
             }}
           />
 
