@@ -14,7 +14,13 @@ import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
 import Signup from './authentication/signup/Signup';
-import {ACCOUNT_PATH, CONTRACT_PATH, TENANT_PATH} from './Constants';
+import Bookings from './booking/Bookings';
+import {
+  ACCOUNT_PATH,
+  BOOKING_PATH,
+  CONTRACT_PATH,
+  TENANT_PATH,
+} from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
 import Account from './fints/account/Account';
@@ -26,6 +32,7 @@ import Notifier from './notifier/Notifier';
 import Tenant from './tenant/Tenant';
 import TenantEditor from './tenant/TenantEditor';
 import Welcome from './welcome/Welcome';
+
 const theme = createMuiTheme();
 
 function getFirstPathElement(path) {
@@ -67,6 +74,12 @@ export default function App() {
                       component={Link}
                       to="/contract"
                       value="/contract"
+                    />
+                    <Tab
+                      label={t('bookings')}
+                      component={Link}
+                      to={BOOKING_PATH}
+                      value={BOOKING_PATH}
                     />
                     <Tab
                       label={t('accounts')}
@@ -112,6 +125,9 @@ export default function App() {
             </PrivateRoute>
             <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId`}>
               <ContractEditor />
+            </PrivateRoute>
+            <PrivateRoute exact path={BOOKING_PATH}>
+              <Bookings />
             </PrivateRoute>
             <PrivateRoute exact path={ACCOUNT_PATH}>
               <Account />

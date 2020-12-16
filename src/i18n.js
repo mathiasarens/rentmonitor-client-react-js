@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import LngDetector from 'i18next-browser-languagedetector';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -66,6 +66,11 @@ const resources = {
       contractSave: 'Save',
       contractStart: 'Start',
       contractEnd: 'End',
+
+      bookings: 'Bookings',
+      bookingDate: 'Date',
+      bookingComment: 'Comment',
+      bookingAmount: 'Amount',
     },
   },
   de: {
@@ -131,6 +136,11 @@ const resources = {
       contractSave: 'Speichern',
       contractStart: 'Beginn',
       contractEnd: 'Ende',
+
+      bookings: 'Buchungen',
+      bookingDate: 'Datum',
+      bookingComment: 'Verwendungszweck',
+      bookingAmount: 'Betrag',
     },
   },
 };
