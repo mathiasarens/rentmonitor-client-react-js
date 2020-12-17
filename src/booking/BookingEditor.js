@@ -1,20 +1,20 @@
 import Button from '@material-ui/core/Button';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { TENANT_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantLoader } from './dataaccess/tenantLoader';
+import {BOOKING_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+import {bookingLoader} from './dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -42,16 +42,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TenantEditor() {
-  const { t } = useTranslation();
+export default function BookingEditor() {
+  const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenant, setTenant] = useState({});
-  const { tenantId } = useParams();
+  const {bookingId} = useParams();
 
-  const loadTenant = useCallback(
+  const loadBooking = useCallback(
     (id) => {
-      tenantLoader(
+      bookingLoader(
         id,
         history,
         (data) => {
@@ -69,10 +69,10 @@ export default function TenantEditor() {
   );
 
   useEffect(() => {
-    if (tenantId) {
-      loadTenant(tenantId);
+    if (bookingId) {
+      loadBooking(bookingId);
     }
-  }, [loadTenant, tenantId]);
+  }, [loadBooking, bookingId]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -83,21 +83,21 @@ export default function TenantEditor() {
       });
       return;
     }
-    console.log('before post', tenant);
+    console.log('before post', booking);
     authenticatedFetch(
-      tenant.id ? `/tenants/${tenant.id}` : '/tenants',
+      booking.id ? `/bookings/${booking.id}` : '/bookings',
       history,
       {
-        method: tenant.id ? 'PUT' : 'POST',
+        method: booking.id ? 'PUT' : 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(tenant),
+        body: JSON.stringify(booking),
       },
     )
       .then(function (response) {
-        history.push(TENANT_PATH);
+        history.push(BOOKING_PATH);
       })
       .catch(function (error) {
         openSnackbar({
@@ -124,9 +124,9 @@ export default function TenantEditor() {
             name="name"
             autoComplete="Name"
             className={classes.input}
-            value={tenant.name ? tenant.name : ''}
+            value={booking.name ? booking.name : ''}
             onChange={(event) => {
-              setTenant({ ...tenant, name: event.target.value });
+              setBooking({...booking, name: event.target.value});
             }}
             autoFocus
             required
@@ -144,7 +144,7 @@ export default function TenantEditor() {
             className={classes.input}
             value={tenant.email ? tenant.email : ''}
             onChange={(event) => {
-              setTenant({ ...tenant, email: event.target.value });
+              setTenant({...tenant, email: event.target.value});
             }}
           />
           <TextField
@@ -159,10 +159,9 @@ export default function TenantEditor() {
             className={classes.input}
             value={tenant.phone ? tenant.phone : ''}
             onChange={(event) => {
-              setTenant({ ...tenant, phone: event.target.value });
+              setTenant({...tenant, phone: event.target.value});
             }}
           />
-
 
           <TextField
             variant="outlined"
@@ -171,7 +170,11 @@ export default function TenantEditor() {
             label={t('tenantAccountSynchronizationName')}
             id="tenant-account-sync-name"
             className={classes.input}
-            value={tenant.accountSynchronisationName ? tenant.accountSynchronisationName : ''}
+            value={
+              tenant.accountSynchronisationName
+                ? tenant.accountSynchronisationName
+                : ''
+            }
             onChange={(event) => {
               setTenant({
                 ...tenant,

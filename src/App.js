@@ -14,6 +14,7 @@ import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
 import Signup from './authentication/signup/Signup';
+import BookingEditor from './booking/BookingEditor';
 import Bookings from './booking/Bookings';
 import {
   ACCOUNT_PATH,
@@ -128,6 +129,12 @@ export default function App() {
             </PrivateRoute>
             <PrivateRoute exact path={BOOKING_PATH}>
               <Bookings />
+            </PrivateRoute>
+            <PrivateRoute exact path={`${BOOKING_PATH}/edit`}>
+              <BookingEditor />
+            </PrivateRoute>
+            <PrivateRoute path={`${BOOKING_PATH}/edit/:bookingId`}>
+              <BookingEditor />
             </PrivateRoute>
             <PrivateRoute exact path={ACCOUNT_PATH}>
               <Account />
