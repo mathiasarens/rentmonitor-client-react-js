@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
@@ -20,6 +21,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {BOOKING_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {bookingLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +54,7 @@ export default function BookingEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
+  const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
   const {bookingId} = useParams();
 
@@ -74,11 +77,27 @@ export default function BookingEditor() {
     [t, history],
   );
 
+  const loadTenants = useCallback(() => {
+    tenantsLoader(
+      history,
+      (data) => {
+        setTenants(data);
+      },
+      (error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      },
+    );
+  }, [t, history]);
+
   useEffect(() => {
+    loadTenants();
     if (bookingId) {
       loadBooking(bookingId);
     }
-  }, [loadBooking, bookingId]);
+  }, [loadTenants, loadBooking, bookingId]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -135,8 +154,33 @@ export default function BookingEditor() {
               KeyboardButtonProps={{
                 'aria-label': 'change booking date',
               }}
+              required
             />
           </MuiPickersUtilsProvider>
+
+          <Autocomplete
+            id="teanant-id"
+            options={tenants}
+            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+            value={
+              booking.tenantId
+                ? tenants.find((tenant) => tenant.id === booking.tenantId)
+                : ''
+            }
+            onChange={(event, tenant) => {
+              if (tenant !== null) {
+                setBooking({...booking, tenantId: tenant.id});
+              }
+            }}
+            getOptionSelected={(option, value) =>
+              value === '' || option.id === value.id
+            }
+            renderInput={(params) => (
+              <TextField {...params} label={t('tenant')} variant="outlined" />
+            )}
+            required
+          />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -145,7 +189,7 @@ export default function BookingEditor() {
             className={classes.input}
             value={booking.comment ? booking.comment : ''}
             onChange={(event) => {
-              setBooking({...booking, name: event.target.value});
+              setBooking({...booking, comment: event.target.value});
             }}
           />
 
@@ -156,10 +200,11 @@ export default function BookingEditor() {
             label={t('bookingAmount')}
             type="number"
             className={classes.input}
-            value={booking.amount ? booking.amount : ''}
+            value={booking.amount ? booking.amount : 0}
             onChange={(event) => {
               setBooking({...booking, amount: event.target.value});
             }}
+            required
           />
 
           <Button
@@ -170,7 +215,7 @@ export default function BookingEditor() {
             color="primary"
             className={classes.submit}
           >
-            {t('tenantSave')}
+            {t('bookingSave')}
           </Button>
         </form>
       </div>

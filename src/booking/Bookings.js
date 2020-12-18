@@ -24,6 +24,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {BOOKING_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {bookingsLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +42,7 @@ export default function Bookings() {
   const {t} = useTranslation();
   const classes = useStyles();
   const [bookings, setBookings] = useState([]);
+  const [tenantsMap, setTenantsMap] = useState(new Map());
   const history = useHistory();
 
   const loadBookings = useCallback(() => {
@@ -76,9 +78,30 @@ export default function Bookings() {
     [t, history, bookings],
   );
 
+  const loadTenants = useCallback(() => {
+    tenantsLoader(
+      history,
+      (data) => {
+        setTenantsMap(
+          data.reduce((map, tenant) => {
+            map[tenant.id] = tenant;
+            return map;
+          }, {}),
+        );
+      },
+      (error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      },
+    );
+  }, [t, history]);
+
   useEffect(() => {
     loadBookings();
-  }, [loadBookings]);
+    loadTenants();
+  }, [loadBookings, loadTenants]);
 
   return (
     <Container component="main">
@@ -106,7 +129,10 @@ export default function Bookings() {
                 <IconButton
                   size="small"
                   aria-label="refresh"
-                  onClick={loadBookings}
+                  onClick={() => {
+                    loadBookings();
+                    loadTenants();
+                  }}
                 >
                   <RefershIcon />
                 </IconButton>
@@ -118,6 +144,7 @@ export default function Bookings() {
           <TableHead>
             <TableRow>
               <TableCell>{t('bookingDate')}</TableCell>
+              <TableCell>{t('tenant')}</TableCell>
               <TableCell>{t('bookingComment')}</TableCell>
               <TableCell>{t('bookingAmount')}</TableCell>
               <TableCell></TableCell>
@@ -128,6 +155,10 @@ export default function Bookings() {
             {bookings.map((bookingListItem) => (
               <TableRow key={bookingListItem.id}>
                 <TableCell>{bookingListItem.date}</TableCell>
+                <TableCell>
+                  {tenantsMap[bookingListItem.tenantId]?.name}
+                </TableCell>
+                <TableCell>{bookingListItem.comment}</TableCell>
                 <TableCell>{bookingListItem.comment}</TableCell>
                 <TableCell>{bookingListItem.amount}</TableCell>
                 <TableCell>

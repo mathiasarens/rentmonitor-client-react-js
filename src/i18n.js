@@ -72,6 +72,7 @@ const resources = {
       bookingDate: 'Date',
       bookingComment: 'Comment',
       bookingAmount: 'Amount',
+      bookingSave: 'Save',
     },
   },
   de: {
@@ -143,6 +144,7 @@ const resources = {
       bookingDate: 'Datum',
       bookingComment: 'Verwendungszweck',
       bookingAmount: 'Betrag',
+      bookingSave: 'Speichern',
     },
   },
 };
