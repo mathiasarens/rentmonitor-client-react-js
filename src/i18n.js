@@ -68,6 +68,7 @@ const resources = {
       contractEnd: 'End',
 
       bookings: 'Bookings',
+      booking: 'Booking',
       bookingDate: 'Date',
       bookingComment: 'Comment',
       bookingAmount: 'Amount',
@@ -138,6 +139,7 @@ const resources = {
       contractEnd: 'Ende',
 
       bookings: 'Buchungen',
+      booking: 'Buchung',
       bookingDate: 'Datum',
       bookingComment: 'Verwendungszweck',
       bookingAmount: 'Betrag',

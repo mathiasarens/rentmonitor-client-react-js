@@ -1,27 +1,27 @@
 import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import 'date-fns';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { CONTRACT_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
+import {CONTRACT_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -50,12 +50,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TenantEditor() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
   const [contract, setContract] = useState({});
-  const { contractId } = useParams();
+  const {contractId} = useParams();
 
   const handleSubmit = (event) => {
     console.log('before send', contract);
@@ -156,7 +156,7 @@ export default function TenantEditor() {
             }
             onChange={(event, tenant) => {
               if (tenant !== null) {
-                setContract({ ...contract, tenantId: tenant.id });
+                setContract({...contract, tenantId: tenant.id});
               }
             }}
             getOptionSelected={(option, value) =>
@@ -179,7 +179,7 @@ export default function TenantEditor() {
             required
             value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : 0}
             onChange={(event) => {
-              setContract({ ...contract, rentDueEveryMonth: event.target.value });
+              setContract({...contract, rentDueEveryMonth: event.target.value});
             }}
           />
           <TextField
@@ -195,7 +195,7 @@ export default function TenantEditor() {
             value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : 0}
             onChange={(event) => {
               console.log('contractRentDueDayOfMonth', event.target.value);
-              setContract({ ...contract, rentDueDayOfMonth: event.target.value });
+              setContract({...contract, rentDueDayOfMonth: event.target.value});
             }}
           />
           <TextField
@@ -209,7 +209,7 @@ export default function TenantEditor() {
             required
             value={contract.amount ? contract.amount : 0}
             onChange={(event) => {
-              setContract({ ...contract, amount: event.target.value });
+              setContract({...contract, amount: event.target.value});
             }}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -221,7 +221,7 @@ export default function TenantEditor() {
               id="contract-start"
               label={t('contractStart')}
               value={contract.start ? contract.start : new Date()}
-              onChange={(date) => setContract({ ...contract, start: date })}
+              onChange={(date) => setContract({...contract, start: date})}
               fullWidth
               inputVariant="outlined"
               KeyboardButtonProps={{
@@ -237,7 +237,7 @@ export default function TenantEditor() {
               id="contract-end"
               label={t('contractEnd')}
               value={contract.end ? contract.end : null}
-              onChange={(date) => setContract({ ...contract, end: date })}
+              onChange={(date) => setContract({...contract, end: date})}
               fullWidth
               inputVariant="outlined"
               KeyboardButtonProps={{

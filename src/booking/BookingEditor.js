@@ -1,3 +1,4 @@
+import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
 import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
@@ -5,6 +6,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import 'date-fns';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory, useParams} from 'react-router-dom';
@@ -14,7 +20,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {BOOKING_PATH} from '../Constants';
 import {openSnackbar} from '../notifier/Notifier';
-import {bookingLoader} from './dataaccess/tenantLoader';
+import {bookingLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -46,7 +52,7 @@ export default function BookingEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
-  const [tenant, setTenant] = useState({});
+  const [booking, setBooking] = useState({});
   const {bookingId} = useParams();
 
   const loadBooking = useCallback(
@@ -55,7 +61,7 @@ export default function BookingEditor() {
         id,
         history,
         (data) => {
-          setTenant(data);
+          setBooking(data);
         },
         (error) => {
           openSnackbar({
@@ -112,74 +118,47 @@ export default function BookingEditor() {
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          {t('tenant')}
+          {t('booking')}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format={t('dateFormat')}
+              margin="normal"
+              label={t('bookingDate')}
+              value={booking.date ? booking.date : new Date()}
+              onChange={(date) => setBooking({...booking, date: date})}
+              fullWidth
+              inputVariant="outlined"
+              KeyboardButtonProps={{
+                'aria-label': 'change booking date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
           <TextField
             variant="outlined"
             margin="normal"
             fullWidth
-            id="name"
-            label="Name"
-            name="name"
-            autoComplete="Name"
+            label={t('bookingComment')}
             className={classes.input}
-            value={booking.name ? booking.name : ''}
+            value={booking.comment ? booking.comment : ''}
             onChange={(event) => {
               setBooking({...booking, name: event.target.value});
             }}
-            autoFocus
-            required
           />
 
           <TextField
             variant="outlined"
             margin="normal"
             fullWidth
-            name="email"
-            label={t('email')}
-            type="email"
-            id="email"
-            autoComplete="your@email.com"
+            label={t('bookingAmount')}
+            type="number"
             className={classes.input}
-            value={tenant.email ? tenant.email : ''}
+            value={booking.amount ? booking.amount : ''}
             onChange={(event) => {
-              setTenant({...tenant, email: event.target.value});
-            }}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="phone"
-            label={t('phone')}
-            type="phone"
-            id="phone"
-            autoComplete="+49 170 123456789"
-            className={classes.input}
-            value={tenant.phone ? tenant.phone : ''}
-            onChange={(event) => {
-              setTenant({...tenant, phone: event.target.value});
-            }}
-          />
-
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('tenantAccountSynchronizationName')}
-            id="tenant-account-sync-name"
-            className={classes.input}
-            value={
-              tenant.accountSynchronisationName
-                ? tenant.accountSynchronisationName
-                : ''
-            }
-            onChange={(event) => {
-              setTenant({
-                ...tenant,
-                accountSynchronisationName: event.target.value,
-              });
+              setBooking({...booking, amount: event.target.value});
             }}
           />
 
