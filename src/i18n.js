@@ -73,6 +73,11 @@ const resources = {
       bookingComment: 'Comment',
       bookingAmount: 'Amount',
       bookingSave: 'Save',
+      bookingErrorMessageAmount:
+        'Please enter a amount with 2 decimal places max.',
+      bookingErrorMessageComment:
+        'Please enter a booking comment with 255 characters max.',
+      bookingErrorMessageTenantId: 'Please select a tenant',
     },
   },
   de: {
@@ -145,6 +150,11 @@ const resources = {
       bookingComment: 'Verwendungszweck',
       bookingAmount: 'Betrag',
       bookingSave: 'Speichern',
+      bookingErrorMessageAmount:
+        'Bitte gib einen Betrag mit max. 2 Nachkommastellen an',
+      bookingErrorMessageComment:
+        'Bitte gib einen Verwendungszweck mit max. 255 Zeichen an',
+      bookingErrorMessageTenantId: 'Bitte wähle einen Mieter aus',
     },
   },
 };

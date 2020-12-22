@@ -13,6 +13,7 @@ import {
 } from '@material-ui/pickers';
 import 'date-fns';
 import React, {useCallback, useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useHistory, useParams} from 'react-router-dom';
 import {
@@ -57,6 +58,7 @@ export default function BookingEditor() {
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
   const {bookingId} = useParams();
+  const {register, handleSubmit, control, errors} = useForm();
 
   const loadBooking = useCallback(
     (id) => {
@@ -99,16 +101,13 @@ export default function BookingEditor() {
     }
   }, [loadTenants, loadBooking, bookingId]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!event.target.checkValidity()) {
-      openSnackbar({
-        message: t('formValidationFailed'),
-        variant: 'error',
-      });
-      return;
+  const onSubmit = (formInputs) => {
+    console.log('onSubmit - start: ', formInputs, booking);
+    if (booking.id) {
+      formInputs.bookingId = booking.id;
     }
-    console.log('before post', booking);
+    formInputs.amount = parseFloat(formInputs.amount);
+    console.log('onSubmit - before submit: ', formInputs);
     authenticatedFetch(
       booking.id ? `/bookings/${booking.id}` : '/bookings',
       history,
@@ -118,7 +117,7 @@ export default function BookingEditor() {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(booking),
+        body: JSON.stringify(formInputs),
       },
     )
       .then(function (response) {
@@ -139,16 +138,20 @@ export default function BookingEditor() {
         <Typography component="h1" variant="h5">
           {t('booking')}
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={classes.form}
+            noValidate
+          >
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
               format={t('dateFormat')}
               margin="normal"
               label={t('bookingDate')}
+              name="date"
               value={booking.date ? booking.date : new Date()}
-              onChange={(date) => setBooking({...booking, date: date})}
               fullWidth
               inputVariant="outlined"
               KeyboardButtonProps={{
@@ -156,68 +159,97 @@ export default function BookingEditor() {
               }}
               required
             />
-          </MuiPickersUtilsProvider>
-
-          <Autocomplete
-            id="teanant-id"
-            options={tenants}
-            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-            value={
-              booking.tenantId
-                ? tenants.find((tenant) => tenant.id === booking.tenantId)
-                : ''
-            }
-            onChange={(event, tenant) => {
-              if (tenant !== null) {
-                setBooking({...booking, tenantId: tenant.id});
+            <Controller
+              as={
+                <Autocomplete
+                  id="teanant-id"
+                  options={tenants}
+                  getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+                  getOptionSelected={(option, value) =>
+                    value === '' || option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t('tenant')}
+                      variant="outlined"
+                      name="tenantId"
+                      inputRef={register({
+                        required: {
+                          value: true,
+                          message: t('bookingErrorMessageTenantId'),
+                        },
+                      })}
+                      error={errors.tenantId ? true : false}
+                      helperText={errors.tenantId?.message}
+                      required
+                    />
+                  )}
+                />
               }
-            }}
-            getOptionSelected={(option, value) =>
-              value === '' || option.id === value.id
-            }
-            renderInput={(params) => (
-              <TextField {...params} label={t('tenant')} variant="outlined" />
-            )}
-            required
-          />
+              onChange={([, data]) => data}
+              name="tenantId"
+              control={control}
+              defaultValue={
+                booking.tenantId
+                  ? tenants.find((tenant) => tenant.id === booking.tenantId)
+                  : ''
+              }
+            />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('bookingComment')}
-            className={classes.input}
-            value={booking.comment ? booking.comment : ''}
-            onChange={(event) => {
-              setBooking({...booking, comment: event.target.value});
-            }}
-          />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label={t('bookingComment')}
+              className={classes.input}
+              name="comment"
+              defaultValue={booking.comment}
+              inputRef={register({
+                maxLength: {
+                  value: 5,
+                  message: t('bookingErrorMessageComment'),
+                },
+              })}
+              error={errors.comment ? true : false}
+              helperText={errors.comment?.message}
+            />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('bookingAmount')}
-            type="number"
-            className={classes.input}
-            value={booking.amount ? booking.amount : 0}
-            onChange={(event) => {
-              setBooking({...booking, amount: event.target.value});
-            }}
-            required
-          />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label={t('bookingAmount')}
+              className={classes.input}
+              name="amount"
+              defaultValue={booking.amount}
+              inputRef={register({
+                required: {
+                  value: true,
+                  message: t('bookingErrorMessageAmount'),
+                },
+                pattern: {
+                  value: '^d+(.d{1,2})?$',
+                  message: t('bookingErrorMessageAmount'),
+                },
+              })}
+              error={errors.amount ? true : false}
+              helperText={errors.amount?.message}
+              required
+            />
 
-          <Button
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            {t('bookingSave')}
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              fullWidth
+              size="large"
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              {t('bookingSave')}
+            </Button>
+          </form>
+        </MuiPickersUtilsProvider>
       </div>
     </Container>
   );
