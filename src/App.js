@@ -1,9 +1,9 @@
-import DateFnsUtils from '@date-io/date-fns';
 import {createMuiTheme} from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import {MuiPickersUtilsProvider} from '@material-ui/pickers';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import {ThemeProvider} from '@material-ui/styles';
 import deLocale from 'date-fns/locale/de';
 import React, {Fragment} from 'react';
@@ -46,7 +46,7 @@ export default function App() {
   const {t} = useTranslation();
   return (
     <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={deLocale}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
         <BrowserRouter>
           <Route
             path="/"
@@ -150,7 +150,7 @@ export default function App() {
             </PrivateRoute>
           </Switch>
         </BrowserRouter>
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }

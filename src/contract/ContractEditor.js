@@ -1,4 +1,3 @@
-import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
 import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
@@ -7,11 +6,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import 'date-fns';
+import DesktopDatePicker from '@material-ui/lab/DesktopDatePicker';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory, useParams} from 'react-router-dom';
@@ -212,39 +207,37 @@ export default function TenantEditor() {
               setContract({...contract, amount: event.target.value});
             }}
           />
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format={t('dateFormat')}
-              margin="normal"
-              id="contract-start"
-              label={t('contractStart')}
-              value={contract.start ? contract.start : new Date()}
-              onChange={(date) => setContract({...contract, start: date})}
-              fullWidth
-              inputVariant="outlined"
-              KeyboardButtonProps={{
-                'aria-label': 'change contract commencement day',
-              }}
-            />
+          <DesktopDatePicker
+            disableToolbar
+            variant="inline"
+            format={t('dateFormat')}
+            margin="normal"
+            id="contract-start"
+            label={t('contractStart')}
+            value={contract.start ? contract.start : new Date()}
+            onChange={(date) => setContract({...contract, start: date})}
+            fullWidth
+            inputVariant="outlined"
+            KeyboardButtonProps={{
+              'aria-label': 'change contract commencement day',
+            }}
+          />
 
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format={t('dateFormat')}
-              margin="normal"
-              id="contract-end"
-              label={t('contractEnd')}
-              value={contract.end ? contract.end : null}
-              onChange={(date) => setContract({...contract, end: date})}
-              fullWidth
-              inputVariant="outlined"
-              KeyboardButtonProps={{
-                'aria-label': 'change contract end day',
-              }}
-            />
-          </MuiPickersUtilsProvider>
+          <DesktopDatePicker
+            disableToolbar
+            variant="inline"
+            format={t('dateFormat')}
+            margin="normal"
+            id="contract-end"
+            label={t('contractEnd')}
+            value={contract.end ? contract.end : null}
+            onChange={(date) => setContract({...contract, end: date})}
+            fullWidth
+            inputVariant="outlined"
+            KeyboardButtonProps={{
+              'aria-label': 'change contract end day',
+            }}
+          />
 
           <Button
             type="submit"
