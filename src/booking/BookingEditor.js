@@ -6,7 +6,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import DesktopDatePicker from '@material-ui/lab/DesktopDatePicker';
+import DatePicker from '@material-ui/lab/DatePicker';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
@@ -139,19 +139,33 @@ export default function BookingEditor() {
           className={classes.form}
           noValidate
         >
-          <DesktopDatePicker
+          <DatePicker
             disableToolbar
-            variant="inline"
-            format={t('dateFormat')}
+            inputFormat={t('dateFormat')}
             margin="normal"
             label={t('bookingDate')}
-            name="date"
-            defaultValue={booking.date ? booking.date : new Date()}
-            fullWidth
-            inputVariant="outlined"
-            KeyboardButtonProps={{
+            OpenPickerButtonProps={{
               'aria-label': 'change booking date',
             }}
+            renderInput={(params) => (
+              <TextField
+                margin="normal"
+                {...params}
+                name="date"
+                variant="outlined"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: t('bookingErrorMessageDate'),
+                  },
+                })}
+                error={errors.date ? true : false}
+                helperText={errors.date?.message}
+                fullWidth
+              />
+            )}
+            value={booking.date ? booking.date : new Date()}
+            onChange={(date) => setBooking({...booking, date: date})}
             required
           />
 
