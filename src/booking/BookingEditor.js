@@ -1,24 +1,24 @@
 import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DatePicker from '@material-ui/lab/DatePicker';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError,
+  handleAuthenticationError
 } from '../authentication/authenticatedFetch';
-import {BOOKING_PATH} from '../Constants';
-import {openSnackbar} from '../notifier/Notifier';
-import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
-import {bookingLoader} from './dataaccess/bookingLoader';
+import { BOOKING_PATH } from '../Constants';
+import { openSnackbar } from '../notifier/Notifier';
+import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
+import { bookingLoader } from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -47,13 +47,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BookingEditor() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
-  const {bookingId} = useParams();
-  const {register, handleSubmit, control, errors} = useForm();
+  const { bookingId } = useParams();
+  const { register, handleSubmit, errors } = useForm();
 
   const loadBooking = useCallback(
     (id) => {
@@ -161,12 +161,12 @@ export default function BookingEditor() {
                 })}
                 error={errors.date ? true : false}
                 helperText={errors.date?.message}
+                required
                 fullWidth
               />
             )}
             value={booking.date ? booking.date : new Date()}
-            onChange={(date) => setBooking({...booking, date: date})}
-            required
+            onChange={(date) => setBooking({ ...booking, date: date })}
           />
 
           <Autocomplete
@@ -187,7 +187,7 @@ export default function BookingEditor() {
             }
             onChange={(event, tenant) => {
               if (tenant !== null) {
-                setBooking({...booking, tenantId: tenant.id});
+                setBooking({ ...booking, tenantId: tenant.id });
               }
             }}
             renderInput={(params) => (
