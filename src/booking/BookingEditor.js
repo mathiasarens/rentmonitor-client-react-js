@@ -98,12 +98,8 @@ export default function BookingEditor() {
 
   const onSubmit = (formInputs) => {
     console.log('onSubmit - start: ', formInputs, booking);
-    if (booking.id) {
-      formInputs.bookingId = booking.id;
-    }
-    formInputs.tenantId = booking.tenantId;
-    formInputs.amount = parseFloat(formInputs.amount);
-    console.log('onSubmit - before submit: ', formInputs);
+    booking.amount = parseFloat(booking.amount)
+    console.log('onSubmit - before submit: ', booking);
     authenticatedFetch(
       booking.id ? `/bookings/${booking.id}` : '/bookings',
       history,
@@ -173,13 +169,9 @@ export default function BookingEditor() {
             id="teanant-id"
             options={tenants}
             getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-            getOptionSelected={(option, value) => {
-              console.log('Autocompete (getOptionsSelected) - option', option);
-              console.log('Autocompete (getOptionsSelected) - value', value);
-              return (
-                value === undefined || value === '' || option.id === value.id
-              );
-            }}
+            getOptionSelected={(option, value) =>
+              value === undefined || value === '' || option.id === value.id
+            }
             value={
               booking.tenantId
                 ? tenants.find((tenant) => tenant.id === booking.tenantId)
@@ -216,10 +208,11 @@ export default function BookingEditor() {
             label={t('bookingComment')}
             className={classes.input}
             name="comment"
-            defaultValue={booking.comment}
+            value={booking.comment ? booking.comment : ''}
+            onChange={(event) => { setBooking({ ...booking, comment: event.target.value }) }}
             inputRef={register({
               maxLength: {
-                value: 5,
+                value: 255,
                 message: t('bookingErrorMessageComment'),
               },
             })}
@@ -234,14 +227,15 @@ export default function BookingEditor() {
             label={t('bookingAmount')}
             className={classes.input}
             name="amount"
-            defaultValue={booking.amount}
+            value={booking.amount ? booking.amount : ''}
+            onChange={(event) => { setBooking({ ...booking, amount: event.target.value }) }}
             inputRef={register({
               required: {
                 value: true,
                 message: t('bookingErrorMessageAmount'),
               },
               pattern: {
-                value: '^d+(.d{1,2})?$',
+                value: '^-?d+(.d{1,2})?$',
                 message: t('bookingErrorMessageAmount'),
               },
             })}
