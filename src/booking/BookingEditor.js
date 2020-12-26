@@ -1,25 +1,25 @@
 import Button from '@material-ui/core/Button';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DatePicker from '@material-ui/lab/DatePicker';
 import parse from 'date-fns/parse';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { BOOKING_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
-import { bookingLoader } from './dataaccess/bookingLoader';
+import {BOOKING_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {bookingLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -48,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BookingEditor() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
-  const { bookingId } = useParams();
-  const { register, handleSubmit, errors } = useForm();
+  const {bookingId} = useParams();
+  const {register, handleSubmit, errors} = useForm();
 
   const loadBooking = useCallback(
     (id) => {
@@ -62,6 +62,7 @@ export default function BookingEditor() {
         id,
         history,
         (data) => {
+          data.amount = data.amount / 100;
           setBooking(data);
         },
         (error) => {
@@ -98,10 +99,26 @@ export default function BookingEditor() {
   }, [loadTenants, loadBooking, bookingId]);
 
   const onSubmit = (formInputs) => {
-    booking.date = parse(formInputs.date, t('dateFormat'), new Date());
-    booking.comment = formInputs.comment;
-    booking.amount = Math.trunc(parseFloat(formInputs.amount) * 100)
-    console.log('onSubmit - before submit: ', formInputs, JSON.stringify(booking));
+    const bookingToSubmit = {};
+    bookingToSubmit.id = booking.id;
+    bookingToSubmit.clientId = booking.clientId;
+    bookingToSubmit.tenantId = booking.tenantId;
+    if (booking.contractId) {
+      bookingToSubmit.contractId = booking.contractId;
+    }
+    if (booking.accountTransactionId) {
+      bookingToSubmit.accountTransactionId = booking.accountTransactionId;
+    }
+    bookingToSubmit.date = parse(formInputs.date, t('dateFormat'), new Date());
+    bookingToSubmit.comment = formInputs.comment;
+    bookingToSubmit.amount = Math.trunc(parseFloat(formInputs.amount) * 100);
+    bookingToSubmit.type = booking.type;
+    console.log(
+      'onSubmit - before submit: ',
+      formInputs,
+      booking,
+      JSON.stringify(bookingToSubmit),
+    );
     authenticatedFetch(
       booking.id ? `/bookings/${booking.id}` : '/bookings',
       history,
@@ -111,7 +128,7 @@ export default function BookingEditor() {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(booking),
+        body: JSON.stringify(bookingToSubmit),
       },
     )
       .then(function (response) {
@@ -164,7 +181,7 @@ export default function BookingEditor() {
               />
             )}
             value={booking.date ? booking.date : new Date()}
-            onChange={(date) => setBooking({ ...booking, date: date })}
+            onChange={(date) => setBooking({...booking, date: date})}
           />
 
           <Autocomplete
@@ -181,7 +198,7 @@ export default function BookingEditor() {
             }
             onChange={(event, tenant) => {
               if (tenant !== null) {
-                setBooking({ ...booking, tenantId: tenant.id });
+                setBooking({...booking, tenantId: tenant.id});
               }
             }}
             renderInput={(params) => (
@@ -211,7 +228,9 @@ export default function BookingEditor() {
             className={classes.input}
             name="comment"
             value={booking.comment ? booking.comment : ''}
-            onChange={(event) => { setBooking({ ...booking, comment: event.target.value }) }}
+            onChange={(event) => {
+              setBooking({...booking, comment: event.target.value});
+            }}
             inputRef={register({
               maxLength: {
                 value: 255,
@@ -229,8 +248,10 @@ export default function BookingEditor() {
             label={t('bookingAmount')}
             className={classes.input}
             name="amount"
-            value={booking.amount ? booking.amount / 100 : ''}
-            onChange={(event) => { setBooking({ ...booking, amount: event.target.value }) }}
+            value={booking.amount ? booking.amount : ''}
+            onChange={(event) => {
+              setBooking({...booking, amount: event.target.value});
+            }}
             inputRef={register({
               required: {
                 value: true,
