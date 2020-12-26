@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DatePicker from '@material-ui/lab/DatePicker';
+import parse from 'date-fns/parse';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -97,9 +98,10 @@ export default function BookingEditor() {
   }, [loadTenants, loadBooking, bookingId]);
 
   const onSubmit = (formInputs) => {
-    console.log('onSubmit - start: ', formInputs, booking);
-    booking.amount = parseFloat(booking.amount)
-    console.log('onSubmit - before submit: ', booking);
+    booking.date = parse(formInputs.date, t('dateFormat'), new Date());
+    booking.comment = formInputs.comment;
+    booking.amount = Math.trunc(parseFloat(formInputs.amount) * 100)
+    console.log('onSubmit - before submit: ', formInputs, JSON.stringify(booking));
     authenticatedFetch(
       booking.id ? `/bookings/${booking.id}` : '/bookings',
       history,
@@ -109,7 +111,7 @@ export default function BookingEditor() {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formInputs),
+        body: JSON.stringify(booking),
       },
     )
       .then(function (response) {
@@ -227,7 +229,7 @@ export default function BookingEditor() {
             label={t('bookingAmount')}
             className={classes.input}
             name="amount"
-            value={booking.amount ? booking.amount : ''}
+            value={booking.amount ? booking.amount / 100 : ''}
             onChange={(event) => { setBooking({ ...booking, amount: event.target.value }) }}
             inputRef={register({
               required: {

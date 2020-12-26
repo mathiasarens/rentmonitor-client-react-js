@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
+import format from 'date-fns/format';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
@@ -154,12 +155,12 @@ export default function Bookings() {
           <TableBody>
             {bookings.map((bookingListItem) => (
               <TableRow key={bookingListItem.id}>
-                <TableCell>{bookingListItem.date}</TableCell>
+                <TableCell>{format(new Date(bookingListItem.date), t('dateFormat'))}</TableCell>
                 <TableCell>
                   {tenantsMap[bookingListItem.tenantId]?.name}
                 </TableCell>
                 <TableCell>{bookingListItem.comment}</TableCell>
-                <TableCell>{bookingListItem.amount}</TableCell>
+                <TableCell>{bookingListItem.amount / 100}</TableCell>
                 <TableCell>
                   <IconButton
                     size="small"
