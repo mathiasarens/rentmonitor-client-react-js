@@ -1,24 +1,24 @@
-import {Button} from '@material-ui/core';
-import {red} from '@material-ui/core/colors';
+import { Button } from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import sub from 'date-fns/sub';
-import React, {useEffect, useReducer} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import React, { useEffect, useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError,
+  handleAuthenticationError
 } from '../../authentication/authenticatedFetch';
-import {openSnackbar} from '../../notifier/Notifier';
+import { openSnackbar } from '../../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -51,23 +51,24 @@ export default function FintsAccountSynchronisationSingle() {
   const SET_FROM_DATE = 'SET_FROM_DATE';
   const SET_TO_DATE = 'SET_TO_DATE';
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
+  const { accountSettingsId } = useParams();
 
   const inputLabel = React.useRef(null);
   const initialState = {
     accountSettingsList: [],
-    selectedFromDate: sub(new Date(), {months: 2}),
+    selectedFromDate: sub(new Date(), { months: 2 }),
     selectedToDate: new Date(),
     challengeText: '',
-    accountId: '',
+    accountSettingsIdSelected: accountSettingsId ? accountSettingsId : '',
     labelWidth: 0,
   };
 
   let tanRequiredJsx;
 
-  const reducer = (state, {type, payload}) => {
+  const reducer = (state, { type, payload }) => {
     switch (type) {
       case SET_LABEL_WIDTH:
         return {
@@ -78,7 +79,6 @@ export default function FintsAccountSynchronisationSingle() {
         return {
           ...state,
           accountSettingsList: payload,
-          accountId: payload.length > 0 ? payload[0].id : 0,
         };
       case SET_CHALLENGE_TEXT:
         return {
@@ -88,7 +88,7 @@ export default function FintsAccountSynchronisationSingle() {
       case SET_ACCOUNT_ID:
         return {
           ...state,
-          accountId: payload,
+          accountSettingsIdSelected: payload,
         };
       case SET_FROM_DATE:
         return {
@@ -107,7 +107,7 @@ export default function FintsAccountSynchronisationSingle() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({type: SET_LABEL_WIDTH, payload: inputLabel.current.offsetWidth});
+    dispatch({ type: SET_LABEL_WIDTH, payload: inputLabel.current.offsetWidth });
 
     authenticatedFetch('/account-settings', history, {
       method: 'GET',
@@ -118,7 +118,7 @@ export default function FintsAccountSynchronisationSingle() {
       .then((response) => {
         response.json().then((data) => {
           console.log(data);
-          dispatch({type: SET_ACCOUNT_SETTINGS_LIST, payload: data});
+          dispatch({ type: SET_ACCOUNT_SETTINGS_LIST, payload: data });
         });
       })
       .catch((error) => {
@@ -143,7 +143,7 @@ export default function FintsAccountSynchronisationSingle() {
     const formDataToSubmit = Object.assign({}, formDataJs, {
       from: state.selectedFromDate,
       to: state.selectedToDate,
-      accountId: state.accountId,
+      accountSettingsId: state.accountSettingsIdSelected,
     });
     const bodyJson = JSON.stringify(formDataToSubmit, null, 2);
     console.log(bodyJson);
@@ -207,12 +207,8 @@ export default function FintsAccountSynchronisationSingle() {
       });
   };
 
-  const handleAccountIdChange = (event) => {
-    dispatch({type: SET_ACCOUNT_ID, payload: event.target.value});
-  };
-
   function clearTanForm() {
-    dispatch({type: SET_CHALLENGE_TEXT, payload: ''});
+    dispatch({ type: SET_CHALLENGE_TEXT, payload: '' });
   }
 
   if (state.challengeText.length > 0) {
@@ -244,14 +240,6 @@ export default function FintsAccountSynchronisationSingle() {
     ),
   );
 
-  const handleFromDateChange = (date) => {
-    dispatch({type: SET_FROM_DATE, payload: date});
-  };
-
-  const handleToDateChange = (date) => {
-    dispatch({type: SET_TO_DATE, payload: date});
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -264,15 +252,17 @@ export default function FintsAccountSynchronisationSingle() {
           className={classes.form}
           noValidate
         >
-          <FormControl variant="outlined" className={classes.form} fullWidth>
+          <FormControl variant="outlined" className={classes.form} fullWidth margin="normal">
             <InputLabel ref={inputLabel} id="accountId">
               {t('account')}
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
               id="demo-simple-select-outlined"
-              value={state.accountId}
-              onChange={handleAccountIdChange}
+              value={state.accountSettingsIdSelected}
+              onChange={(event) => {
+                dispatch({ type: SET_ACCOUNT_ID, payload: event.target.value });
+              }}
               labelWidth={state.labelWidth}
             >
               {accountDropdownMenuItems}
@@ -280,28 +270,28 @@ export default function FintsAccountSynchronisationSingle() {
           </FormControl>
 
           <DatePicker
-            inputVariant="outlined"
             label={t('fintsAccountSyncronisationFrom')}
             value={state.selectedFromDate}
-            onChange={handleFromDateChange}
-            format={t('dateFormat')}
+            onChange={(date) => {
+              dispatch({ type: SET_FROM_DATE, payload: date });
+            }}
+            inputFormat={t('dateFormat')}
             renderInput={(params) => (
-              <TextField {...params} variant="outlined" />
+              <TextField {...params} variant="outlined" margin="normal" fullWidth />
             )}
-            margin="normal"
-            fullWidth
           />
 
           <DatePicker
-            inputVariant="outlined"
             label={t('fintsAccountSyncronisationTo')}
             value={state.selectedToDate}
-            onChange={handleToDateChange}
-            format={t('dateFormat')}
+            onChange={(date) => {
+              dispatch({ type: SET_TO_DATE, payload: date });
+            }}
+            inputFormat={t('dateFormat')}
+
             renderInput={(params) => (
-              <TextField {...params} variant="outlined" />
+              <TextField {...params} variant="outlined" margin="normal" fullWidth />
             )}
-            fullWidth
           />
 
           {tanRequiredJsx}

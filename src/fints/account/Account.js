@@ -3,25 +3,26 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
+  TableRow
 } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import RefershIcon from '@material-ui/icons/Refresh';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import SyncOutlinedIcon from '@material-ui/icons/SyncOutlined';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError,
+  handleAuthenticationError
 } from '../../authentication/authenticatedFetch';
-import {ACCOUNT_PATH} from '../../Constants';
-import {openSnackbar} from '../../notifier/Notifier';
+import { ACCOUNT_PATH } from '../../Constants';
+import { openSnackbar } from '../../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Account() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const classes = useStyles();
   const [accountSettingsList, setAccountSettingsList] = useState([]);
   const history = useHistory();
@@ -101,6 +102,7 @@ export default function Account() {
               <TableCell>Name</TableCell>
               <TableCell>{t('iban')}</TableCell>
               <TableCell>{t('bic')}</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -109,6 +111,16 @@ export default function Account() {
                 <TableCell>{accountSettingsItem.name}</TableCell>
                 <TableCell>{accountSettingsItem.iban}</TableCell>
                 <TableCell>{accountSettingsItem.bic}</TableCell>
+                <TableCell>
+                  <IconButton
+                    size="small"
+                    aria-label="edit"
+                    component={Link}
+                    to={`${ACCOUNT_PATH}/synchronisation/${accountSettingsItem.id}`}
+                  >
+                    <SyncOutlinedIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

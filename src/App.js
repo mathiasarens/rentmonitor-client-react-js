@@ -1,15 +1,15 @@
-import {createMuiTheme} from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import {ThemeProvider} from '@material-ui/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import deLocale from 'date-fns/locale/de';
-import React, {Fragment} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Redirect} from 'react-router';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
@@ -20,7 +20,7 @@ import {
   ACCOUNT_PATH,
   BOOKING_PATH,
   CONTRACT_PATH,
-  TENANT_PATH,
+  TENANT_PATH
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
@@ -43,14 +43,14 @@ function getFirstPathElement(path) {
 }
 
 export default function App() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
         <BrowserRouter>
           <Route
             path="/"
-            render={({location}) => (
+            render={({ location }) => (
               <Fragment>
                 <Notifier />
                 <AppBar position="static">
@@ -142,7 +142,10 @@ export default function App() {
             <PrivateRoute path={`${ACCOUNT_PATH}/edit`}>
               <AccountEditorWizard />
             </PrivateRoute>
-            <PrivateRoute path={`${ACCOUNT_PATH}/synchronisation`}>
+            <PrivateRoute exact path={`${ACCOUNT_PATH}/synchronisation`}>
+              <FintsAccountSynchronisationSingle />
+            </PrivateRoute>
+            <PrivateRoute path={`${ACCOUNT_PATH}/synchronisation/:accountSettingsId`}>
               <FintsAccountSynchronisationSingle />
             </PrivateRoute>
             <PrivateRoute path="/transaction">
