@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import sub from 'date-fns/sub';
 import React, { useEffect, useReducer } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
@@ -19,6 +20,7 @@ import {
   handleAuthenticationError
 } from '../../authentication/authenticatedFetch';
 import { openSnackbar } from '../../notifier/Notifier';
+
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -55,6 +57,7 @@ export default function FintsAccountSynchronisationSingle() {
   const classes = useStyles();
   const history = useHistory();
   const { accountSettingsId } = useParams();
+  const { register, handleSubmit, control, errors } = useForm();
 
   const inputLabel = React.useRef(null);
   const initialState = {
@@ -271,13 +274,27 @@ export default function FintsAccountSynchronisationSingle() {
 
           <DatePicker
             label={t('fintsAccountSyncronisationFrom')}
-            value={state.selectedFromDate}
+            value={state.fromDate}
             onChange={(date) => {
               dispatch({ type: SET_FROM_DATE, payload: date });
             }}
             inputFormat={t('dateFormat')}
             renderInput={(params) => (
-              <TextField {...params} variant="outlined" margin="normal" fullWidth />
+              <TextField {...params}
+                variant="outlined"
+                margin="normal"
+                name="fromDate"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: t('fintsAccountSynchronisationErrorFrom'),
+                  },
+                })}
+                error={errors.fromDate ? true : false}
+                helperText={errors.fromDate?.message}
+                fullWidth
+                required
+              />
             )}
           />
 
@@ -288,9 +305,20 @@ export default function FintsAccountSynchronisationSingle() {
               dispatch({ type: SET_TO_DATE, payload: date });
             }}
             inputFormat={t('dateFormat')}
-
             renderInput={(params) => (
-              <TextField {...params} variant="outlined" margin="normal" fullWidth />
+              <TextField {...params}
+                variant="outlined"
+                margin="normal"
+                name="toDate"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: t('fintsAccountSynchronisationToFrom'),
+                  },
+                })}
+                error={errors.toDate ? true : false}
+                helperText={errors.toDate?.message}
+                fullWidth />
             )}
           />
 

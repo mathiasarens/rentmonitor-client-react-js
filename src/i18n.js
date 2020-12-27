@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import LngDetector from 'i18next-browser-languagedetector';
-import {initReactI18next} from 'react-i18next';
+import { initReactI18next } from 'react-i18next';
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -56,6 +56,9 @@ const resources = {
       fintsAccountSyncronisationTo: 'to',
       fintsAccountSyncronisationSuccess:
         'Synchronisation: New: {{newBookingsCount}} Unmatched: {{unmatchedTransactions}}',
+      fintsAccountSynchronisationErrorAccountSettingsId: 'Please select an account',
+      fintsAccountSynchronisationErrorFrom: 'Please enter a from date',
+      fintsAccountSynchronisationErrorTo: 'Please enter a to date',
       transactions: 'Transactions',
 
       contracts: 'Contracts',
@@ -133,6 +136,9 @@ const resources = {
       fintsAccountSyncronisationTo: 'bis',
       fintsAccountSyncronisationSuccess:
         'Kontoabgleich erfolgreich: Neu: {{newBookingsCount}} Nicht zuordenbar: {{unmatchedTransactions}}',
+      fintsAccountSynchronisationErrorAccountSettingsId: 'Bitte waehle ein Konto aus',
+      fintsAccountSynchronisationErrorFrom: 'Bitte waehle einen Starttag',
+      fintsAccountSynchronisationErrorTo: 'Bitte waehlen ein Endtag',
       transactions: 'Umsätze',
 
       contracts: 'Mietverträge',
