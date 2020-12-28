@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import sub from 'date-fns/sub';
 import React, { useEffect, useReducer } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
@@ -20,7 +20,6 @@ import {
   handleAuthenticationError
 } from '../../authentication/authenticatedFetch';
 import { openSnackbar } from '../../notifier/Notifier';
-
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -62,10 +61,10 @@ export default function FintsAccountSynchronisationSingle() {
   const inputLabel = React.useRef(null);
   const initialState = {
     accountSettingsList: [],
-    selectedFromDate: sub(new Date(), { months: 2 }),
-    selectedToDate: new Date(),
+    fromDate: sub(new Date(), { months: 2 }),
+    toDate: new Date(),
     challengeText: '',
-    accountSettingsIdSelected: accountSettingsId ? accountSettingsId : '',
+    accountSettingsIdSelected: '',
     labelWidth: 0,
   };
 
@@ -79,6 +78,7 @@ export default function FintsAccountSynchronisationSingle() {
           labelWidth: payload,
         };
       case SET_ACCOUNT_SETTINGS_LIST:
+        console.log('Reducer set accountSettingsList: ', payload)
         return {
           ...state,
           accountSettingsList: payload,
@@ -89,6 +89,7 @@ export default function FintsAccountSynchronisationSingle() {
           challengeText: payload,
         };
       case SET_ACCOUNT_ID:
+        console.log('Reducer set accountSettingsIdSelected: ', payload)
         return {
           ...state,
           accountSettingsIdSelected: payload,
@@ -119,9 +120,14 @@ export default function FintsAccountSynchronisationSingle() {
       },
     })
       .then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          dispatch({ type: SET_ACCOUNT_SETTINGS_LIST, payload: data });
+        response.json().then((responseAccountSettingsList) => {
+          dispatch({ type: SET_ACCOUNT_SETTINGS_LIST, payload: responseAccountSettingsList });
+          if (accountSettingsId) {
+            if (responseAccountSettingsList.filter(accountSettings => accountSettings.id === parseInt(accountSettingsId)).length > 0) {
+              console.log('Account Settings loaded. Set accountSettingsId ', parseInt(accountSettingsId));
+              dispatch({ type: SET_ACCOUNT_ID, payload: parseInt(accountSettingsId) });
+            }
+          }
         });
       })
       .catch((error) => {
@@ -130,7 +136,7 @@ export default function FintsAccountSynchronisationSingle() {
           variant: 'error',
         });
       });
-  }, [dispatch, history, t]);
+  }, [dispatch, history, t, accountSettingsId]);
 
   const synchroniseAccounts = (event) => {
     event.preventDefault();
@@ -259,17 +265,24 @@ export default function FintsAccountSynchronisationSingle() {
             <InputLabel ref={inputLabel} id="accountId">
               {t('account')}
             </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              value={state.accountSettingsIdSelected}
-              onChange={(event) => {
-                dispatch({ type: SET_ACCOUNT_ID, payload: event.target.value });
-              }}
-              labelWidth={state.labelWidth}
-            >
-              {accountDropdownMenuItems}
-            </Select>
+            <Controller
+              as={
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  labelWidth={state.labelWidth}
+                  value={state.accountSettingsIdSelected}
+                  onChange={(event) => {
+                    dispatch({ type: SET_ACCOUNT_ID, payload: event.target.value });
+                  }}
+                >
+                  {accountDropdownMenuItems}
+                </Select>
+              }
+              name='accountSettingsIdSelected'
+              control={control}
+
+            />
           </FormControl>
 
           <DatePicker
