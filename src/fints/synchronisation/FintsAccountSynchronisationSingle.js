@@ -1,23 +1,23 @@
-import { Button } from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import Autocomplete from '@material-ui/core/Autocomplete';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
+import parse from 'date-fns/parse';
 import sub from 'date-fns/sub';
-import React, { useEffect, useReducer } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useEffect, useReducer} from 'react';
+import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router-dom';
 import {
-    authenticatedFetch,
-    handleAuthenticationError
+  authenticatedFetch,
+  handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import { openSnackbar } from '../../notifier/Notifier';
+import {openSnackbar} from '../../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FintsAccountSynchronisationSingle() {
-  const SET_LABEL_WIDTH = 'SET_LABEL_WIDTH';
   const SET_ACCOUNT_SETTINGS_LIST = 'SET_ACCOUNT_SETTINGS_LIST';
   const SET_CHALLENGE_TEXT = 'SET_CHALLENGE_TEXT';
   const SET_ACCOUNT_ID = 'SET_ACCOUNT_ID';
@@ -54,9 +53,8 @@ export default function FintsAccountSynchronisationSingle() {
   const classes = useStyles();
   const history = useHistory();
   const {accountSettingsId} = useParams();
-  const {register, handleSubmit, control, errors} = useForm();
+  const {register, handleSubmit, errors} = useForm();
 
-  const inputLabel = React.useRef(null);
   const initialState = {
     accountSettingsList: [],
     fromDate: sub(new Date(), {months: 2}),
@@ -70,11 +68,6 @@ export default function FintsAccountSynchronisationSingle() {
 
   const reducer = (state, {type, payload}) => {
     switch (type) {
-      case SET_LABEL_WIDTH:
-        return {
-          ...state,
-          labelWidth: payload,
-        };
       case SET_ACCOUNT_SETTINGS_LIST:
         console.log('Reducer set accountSettingsList: ', payload);
         return {
@@ -87,7 +80,11 @@ export default function FintsAccountSynchronisationSingle() {
           challengeText: payload,
         };
       case SET_ACCOUNT_ID:
-        console.log('Reducer set accountSettingsIdSelected: ', payload);
+        console.log(
+          'Reducer set accountSettingsIdSelected: ',
+          payload,
+          typeof payload,
+        );
         return {
           ...state,
           accountSettingsIdSelected: payload,
@@ -95,12 +92,12 @@ export default function FintsAccountSynchronisationSingle() {
       case SET_FROM_DATE:
         return {
           ...state,
-          selectedFromDate: payload,
+          fromDate: payload,
         };
       case SET_TO_DATE:
         return {
           ...state,
-          selectedToDate: payload,
+          toDate: payload,
         };
       default:
         throw new Error(`Action type ${type} unknown`);
@@ -109,8 +106,6 @@ export default function FintsAccountSynchronisationSingle() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch({type: SET_LABEL_WIDTH, payload: inputLabel.current.offsetWidth});
-
     authenticatedFetch('/account-settings', history, {
       method: 'GET',
       headers: {
@@ -136,7 +131,7 @@ export default function FintsAccountSynchronisationSingle() {
               );
               dispatch({
                 type: SET_ACCOUNT_ID,
-                payload: accountSettingsId,
+                payload: parseInt(accountSettingsId),
               });
             }
           }
@@ -150,23 +145,13 @@ export default function FintsAccountSynchronisationSingle() {
       });
   }, [dispatch, history, t, accountSettingsId]);
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    if (!event.target.checkValidity()) {
-      openSnackbar({
-        message: t('formValidationFailed'),
-        variant: 'error',
-      });
-      return;
-    }
-    const formData = new FormData(event.target);
-    const formDataJs = convertFromDataToJsObject(formData);
-    const formDataToSubmit = Object.assign({}, formDataJs, {
-      from: state.selectedFromDate,
-      to: state.selectedToDate,
-      accountSettingsId: state.accountSettingsIdSelected,
-    });
-    const bodyJson = JSON.stringify(formDataToSubmit, null, 2);
+  const onSubmit = (formInputs) => {
+    console.log('formInputs', formInputs);
+    const request = {};
+    request.from = parse(formInputs.from, t('dateFormat'), state.fromDate);
+    request.to = parse(formInputs.to, t('dateFormat'), state.toDate);
+    request.accountSettingsId = state.accountSettingsIdSelected;
+    const bodyJson = JSON.stringify(request, null, 2);
     console.log(bodyJson);
     authenticatedFetch('/account-synchronization/single', history, {
       method: 'POST',
@@ -253,14 +238,6 @@ export default function FintsAccountSynchronisationSingle() {
     tanRequiredJsx = <div></div>;
   }
 
-  const accountDropdownMenuItems = state.accountSettingsList.map(
-    (accountSettings) => (
-      <MenuItem key={accountSettings.id} value={accountSettings.id}>
-        {accountSettings.name}
-      </MenuItem>
-    ),
-  );
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -275,28 +252,33 @@ export default function FintsAccountSynchronisationSingle() {
         >
           <Autocomplete
             id="account-settings-id"
-            options={tenants}
-            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+            options={state.accountSettingsList}
+            getOptionLabel={(accountSettings) =>
+              accountSettings.name ? accountSettings.name : ''
+            }
             getOptionSelected={(option, value) =>
               value === undefined || value === '' || option.id === value.id
             }
             value={
-              statusbar..tenantId
-                ? tenants.find((tenant) => tenant.id === booking.tenantId)
+              state.accountSettingsIdSelected
+                ? state.accountSettingsList.find(
+                    (accountSettings) =>
+                      accountSettings.id === state.accountSettingsIdSelected,
+                  )
                 : ''
             }
-            onChange={(event, tenant) => {
-              if (tenant !== null) {
-                setBooking({...booking, tenantId: tenant.id});
+            onChange={(event, accountSettings) => {
+              if (accountSettings !== null) {
+                dispatch({type: SET_ACCOUNT_ID, payload: accountSettings.id});
               }
             }}
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t('tenant')}
+                label={t('account')}
                 margin="normal"
                 variant="outlined"
-                name="tenantId"
+                name="accountSettingsId"
                 inputRef={register({
                   required: {
                     value: true,
@@ -305,8 +287,8 @@ export default function FintsAccountSynchronisationSingle() {
                     ),
                   },
                 })}
-                error={errors.tenantId ? true : false}
-                helperText={errors.tenantId?.message}
+                error={errors.accountSettingsId ? true : false}
+                helperText={errors.accountSettingsId?.message}
                 required
               />
             )}
@@ -324,15 +306,15 @@ export default function FintsAccountSynchronisationSingle() {
                 {...params}
                 variant="outlined"
                 margin="normal"
-                name="fromDate"
+                name="from"
                 inputRef={register({
                   required: {
                     value: true,
                     message: t('fintsAccountSynchronisationErrorFrom'),
                   },
                 })}
-                error={errors.fromDate ? true : false}
-                helperText={errors.fromDate?.message}
+                error={errors.from ? true : false}
+                helperText={errors.from?.message}
                 fullWidth
                 required
               />
@@ -341,7 +323,7 @@ export default function FintsAccountSynchronisationSingle() {
 
           <DatePicker
             label={t('fintsAccountSyncronisationTo')}
-            value={state.selectedToDate}
+            value={state.toDate}
             onChange={(date) => {
               dispatch({type: SET_TO_DATE, payload: date});
             }}
@@ -351,15 +333,15 @@ export default function FintsAccountSynchronisationSingle() {
                 {...params}
                 variant="outlined"
                 margin="normal"
-                name="toDate"
+                name="to"
                 inputRef={register({
                   required: {
                     value: true,
                     message: t('fintsAccountSynchronisationToFrom'),
                   },
                 })}
-                error={errors.toDate ? true : false}
-                helperText={errors.toDate?.message}
+                error={errors.to ? true : false}
+                helperText={errors.to?.message}
                 fullWidth
               />
             )}
@@ -381,12 +363,4 @@ export default function FintsAccountSynchronisationSingle() {
       </div>
     </Container>
   );
-}
-
-function convertFromDataToJsObject(fd) {
-  const data = {};
-  for (let key of fd.keys()) {
-    data[key] = fd.get(key);
-  }
-  return data;
 }
