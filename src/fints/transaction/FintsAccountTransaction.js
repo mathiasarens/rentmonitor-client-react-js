@@ -6,13 +6,13 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import RefershIcon from "@material-ui/icons/Refresh";
+import SyncOutlinedIcon from '@material-ui/icons/SyncOutlined';
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
+import { TRANSACTION_PATH } from '../../Constants';
 import { openSnackbar } from "../../notifier/Notifier";
-
-
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -82,6 +82,16 @@ export default function FintsAccountTransaction() {
                   onClick={load}
                 >
                   <RefershIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  size="small"
+                  aria-label="edit"
+                  component={Link}
+                  to={`${TRANSACTION_PATH}/synchronisation`}
+                >
+                  <SyncOutlinedIcon />
                 </IconButton>
               </Grid>
             </Grid>
