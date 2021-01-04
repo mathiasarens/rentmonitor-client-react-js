@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
+import format from 'date-fns/format';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
@@ -175,8 +176,8 @@ export default function Contract() {
                 <TableCell>{contractListItem.rentDueEveryMonth}</TableCell>
                 <TableCell>{contractListItem.rentDueDayOfMonth}</TableCell>
                 <TableCell>{contractListItem.amount}</TableCell>
-                <TableCell>{contractListItem.start}</TableCell>
-                <TableCell>{contractListItem.end}</TableCell>
+                <TableCell>{format(new Date(contractListItem.start), t('dateFormat'))}</TableCell>
+                <TableCell>{contractListItem.end ? format(new Date(contractListItem.end), t('dateFormat')) : ''}</TableCell>
                 <TableCell>
                   <IconButton
                     size="small"
