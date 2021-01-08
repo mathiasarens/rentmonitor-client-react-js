@@ -163,10 +163,10 @@ export default function BookingEditor() {
             inputFormat={t('dateFormat')}
             renderInput={(params) => (
               <TextField
-                margin="normal"
                 {...params}
-                name="date"
+                margin="normal"
                 variant="outlined"
+                name="date"
                 inputRef={register({
                   required: {
                     value: true,

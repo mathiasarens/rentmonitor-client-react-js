@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
+import SyncOutlinedIcon from '@material-ui/icons/SyncOutlined';
 import format from 'date-fns/format';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -151,6 +152,16 @@ export default function Contract() {
                   <RefershIcon />
                 </IconButton>
               </Grid>
+              <Grid item>
+                <IconButton
+                  size="small"
+                  aria-label="edit"
+                  component={Link}
+                  to={`${CONTRACT_PATH}/synchronisation`}
+                >
+                  <SyncOutlinedIcon />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -175,7 +186,12 @@ export default function Contract() {
                 </TableCell>
                 <TableCell>{contractListItem.rentDueEveryMonth}</TableCell>
                 <TableCell>{contractListItem.rentDueDayOfMonth}</TableCell>
-                <TableCell>{contractListItem.amount}</TableCell>
+                <TableCell>{new Intl.NumberFormat("de-DE", {
+                  style: "currency",
+                  currency: "EUR",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }).format(contractListItem.amount / 100)}</TableCell>
                 <TableCell>{format(new Date(contractListItem.start), t('dateFormat'))}</TableCell>
                 <TableCell>{contractListItem.end ? format(new Date(contractListItem.end), t('dateFormat')) : ''}</TableCell>
                 <TableCell>

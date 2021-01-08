@@ -159,8 +159,13 @@ export default function Bookings() {
                 <TableCell>
                   {tenantsMap[bookingListItem.tenantId]?.name}
                 </TableCell>
-                <TableCell>{bookingListItem.comment}</TableCell>
-                <TableCell>{bookingListItem.amount / 100}</TableCell>
+                <TableCell>{(bookingListItem.type === 'RENT_DUE' ? t('bookingCommentRentDue') + ' ' : '') + bookingListItem.comment}</TableCell>
+                <TableCell>{new Intl.NumberFormat("de-DE", {
+                  style: "currency",
+                  currency: "EUR",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }).format(bookingListItem.amount / 100)}</TableCell>
                 <TableCell>
                   <IconButton
                     size="small"

@@ -24,6 +24,7 @@ import {
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
+import ContractSynchronisation from './contract/ContractSynchronisation';
 import Account from './fints/account/Account';
 import AccountEditorWizard from './fints/account/AccountEditorWizard';
 import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
@@ -127,6 +128,9 @@ export default function App() {
             </PrivateRoute>
             <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId`}>
               <ContractEditor />
+            </PrivateRoute>
+            <PrivateRoute path={`${CONTRACT_PATH}/synchronisation`}>
+              <ContractSynchronisation />
             </PrivateRoute>
             <PrivateRoute exact path={BOOKING_PATH}>
               <Bookings />

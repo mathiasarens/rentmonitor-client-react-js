@@ -82,6 +82,7 @@ const resources = {
         'Please enter a booking comment with 255 characters max.',
       bookingErrorMessageTenantId: 'Please select a tenant',
       bookingErrorMessageDate: 'Please add a booking date',
+      bookingCommentRentDue: 'Rent due'
     },
   },
   de: {
@@ -163,6 +164,8 @@ const resources = {
         'Bitte gib einen Verwendungszweck mit max. 255 Zeichen an',
       bookingErrorMessageTenantId: 'Bitte wähle einen Mieter aus',
       bookingErrorMessageDate: 'Bitte geben Sie ein Buchungsdatum an',
+
+      bookingCommentRentDue: 'Miete fällig'
     },
   },
 };

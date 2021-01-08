@@ -14,8 +14,8 @@ import { useHistory } from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError
-} from '../../authentication/authenticatedFetch';
-import { openSnackbar } from '../../notifier/Notifier';
+} from '../authentication/authenticatedFetch';
+import { openSnackbar } from '../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FintsTransactionSynchronisation() {
+export default function ContractSynchronisation() {
   const { t } = useTranslation();
   const classes = useStyles();
   const history = useHistory();
@@ -61,7 +61,7 @@ export default function FintsTransactionSynchronisation() {
     }
     const bodyJson = JSON.stringify(request, null, 2);
     console.log(bodyJson);
-    authenticatedFetch('/transaction-to-booking', history, {
+    authenticatedFetch('/contract-to-booking', history, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
