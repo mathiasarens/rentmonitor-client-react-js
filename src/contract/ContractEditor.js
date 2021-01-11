@@ -104,6 +104,8 @@ export default function ContractEditor() {
           return response.json();
         })
         .then((contract) => {
+          console.log('Loaded contract: ', contract);
+          contract.amount = contract.amount / 100;
           setContract(contract);
         })
         .catch(function (error) {
@@ -187,15 +189,14 @@ export default function ContractEditor() {
             id="contract-rent-due-every-month"
             label={t('contractRentDueEveryMonth')}
             className={classes.input}
-            type="number"
             name="rentDueEveryMonth"
-            value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : 0}
+            value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : ''}
             onChange={(event) => {
               setContract({ ...contract, rentDueEveryMonth: event.target.value });
             }}
             inputRef={register({
-              required: {
-                value: true,
+              pattern: {
+                value: /^\d+$/,
                 message: t('contractErrorMessageRentDueEveryMonth'),
               },
             })}
@@ -209,17 +210,16 @@ export default function ContractEditor() {
             fullWidth
             label={t('contractRentDueDayOfMonth')}
             id="contract-rent-due-day-of-month"
-            type="number"
             className={classes.input}
             name="rentDueDayOfMonth"
-            value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : 0}
+            value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : ''}
             onChange={(event) => {
               console.log('contractRentDueDayOfMonth', event.target.value);
               setContract({ ...contract, rentDueDayOfMonth: event.target.value });
             }}
             inputRef={register({
-              required: {
-                value: true,
+              pattern: {
+                value: /^\d+$/,
                 message: t('contractErrorMessageRentDueDayOfMonth'),
               },
             })}
@@ -233,20 +233,19 @@ export default function ContractEditor() {
             fullWidth
             label={t('contractAmount')}
             id="contract-amount"
-            type="number"
             className={classes.input}
             name="amount"
-            value={contract.amount ? contract.amount : 0}
+            value={contract.amount ? contract.amount : ''}
             onChange={(event) => {
               setContract({ ...contract, amount: event.target.value });
             }}
             inputRef={register({
               required: {
-                value: 255,
+                value: true,
                 message: t('contractErrorMessageAmount'),
               },
               pattern: {
-                value: '^-?d+(.d{1,2})?$',
+                value: /^\d+(\.\d{1,2})?$/,
                 message: t('contractErrorMessageAmount'),
               },
             })}
@@ -269,7 +268,7 @@ export default function ContractEditor() {
                 name="start"
                 inputRef={register({
                   required: {
-                    value: 255,
+                    value: true,
                     message: t('contractErrorMessageStart'),
                   },
                 })}
@@ -310,6 +309,7 @@ export default function ContractEditor() {
 
           <Button
             type="submit"
+            margin="normal"
             fullWidth
             size="large"
             variant="contained"

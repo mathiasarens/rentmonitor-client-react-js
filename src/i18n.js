@@ -69,6 +69,9 @@ const resources = {
       contractSave: 'Save',
       contractStart: 'Start',
       contractEnd: 'End',
+      contractErrorMessageRentDueEveryMonth: 'Please enter 1 for every month 2 for every second month, etc.',
+      contractErrorMessageRentDueDayOfMonth: 'Please enter a day of month like 10.',
+      contractErrorMessageAmount: 'Please enter an amount in like 12 or 13.50',
 
       bookings: 'Bookings',
       booking: 'Booking',
@@ -154,6 +157,9 @@ const resources = {
       contractSave: 'Speichern',
       contractStart: 'Beginn',
       contractEnd: 'Ende',
+      contractErrorMessageRentDueEveryMonth: 'Bitte gib 1 für jeden Monat an, 2 für jeden zweiten Monat, etc.',
+      contractErrorMessageRentDueDayOfMonth: 'Bitte gib einen Tag im Monat an. Wie 10.',
+      contractErrorMessageAmount: 'Bitte gib einen Betrag wie 12 or 13.50 an',
 
       bookings: 'Buchungen',
       booking: 'Buchung',
