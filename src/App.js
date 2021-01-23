@@ -1,10 +1,8 @@
-import { createMuiTheme } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import { ThemeProvider } from '@material-ui/styles';
 import deLocale from 'date-fns/locale/de';
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,8 +34,6 @@ import Tenant from './tenant/Tenant';
 import TenantEditor from './tenant/TenantEditor';
 import Welcome from './welcome/Welcome';
 
-const theme = createMuiTheme();
-
 function getFirstPathElement(path) {
   let pathelements = path.split('/');
   let firstPathelement = '/' + pathelements[1];
@@ -47,7 +43,7 @@ function getFirstPathElement(path) {
 export default function App() {
   const { t } = useTranslation();
   return (
-    <ThemeProvider theme={theme}>
+
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
         <BrowserRouter>
           <Route
@@ -162,6 +158,6 @@ export default function App() {
           </Switch>
         </BrowserRouter>
       </LocalizationProvider>
-    </ThemeProvider>
+
   );
 }
