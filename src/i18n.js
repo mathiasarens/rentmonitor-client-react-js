@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import LngDetector from 'i18next-browser-languagedetector';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 
 // the translations
 // (tip move them in a JSON file and import them)
@@ -19,6 +19,8 @@ const resources = {
       iban: 'IBAN',
       bic: 'BIC',
       dateFormat: 'dd/MM/yyyy',
+      signup: 'Sign Up',
+      signin: 'Sign In',
 
       connectFints: 'Connect',
       tenant: 'Tenant',
@@ -56,7 +58,8 @@ const resources = {
       fintsAccountSyncronisationTo: 'to',
       fintsAccountSyncronisationSuccess:
         'Synchronisation: New: {{newBookingsCount}} Unmatched: {{unmatchedTransactions}}',
-      fintsAccountSynchronisationErrorAccountSettingsId: 'Please select an account',
+      fintsAccountSynchronisationErrorAccountSettingsId:
+        'Please select an account',
       fintsAccountSynchronisationErrorFrom: 'Please enter a from date',
       fintsAccountSynchronisationErrorTo: 'Please enter a to date',
       transactions: 'Transactions',
@@ -69,8 +72,10 @@ const resources = {
       contractSave: 'Save',
       contractStart: 'Start',
       contractEnd: 'End',
-      contractErrorMessageRentDueEveryMonth: 'Please enter 1 for every month 2 for every second month, etc.',
-      contractErrorMessageRentDueDayOfMonth: 'Please enter a day of month like 10.',
+      contractErrorMessageRentDueEveryMonth:
+        'Please enter 1 for every month 2 for every second month, etc.',
+      contractErrorMessageRentDueDayOfMonth:
+        'Please enter a day of month like 10.',
       contractErrorMessageAmount: 'Please enter an amount in like 12 or 13.50',
 
       bookings: 'Bookings',
@@ -88,7 +93,7 @@ const resources = {
       bookingCommentRentDue: 'Rent due',
 
       tenantBookingOverview: 'Overview',
-      tenantBookingOverviewSum: 'Sum'
+      tenantBookingOverviewSum: 'Sum',
     },
   },
   de: {
@@ -105,6 +110,8 @@ const resources = {
       iban: 'IBAN',
       bic: 'BIC',
       dateFormat: 'dd.MM.yyyy',
+      signup: 'Registrieren',
+      signin: 'Anmelden',
 
       tenant: 'Mieter',
       connectFints: 'Verbinden',
@@ -143,7 +150,8 @@ const resources = {
       fintsAccountSyncronisationTo: 'bis',
       fintsAccountSyncronisationSuccess:
         'Kontoabgleich erfolgreich: Neu: {{newBookingsCount}} Nicht zuordenbar: {{unmatchedTransactions}}',
-      fintsAccountSynchronisationErrorAccountSettingsId: 'Bitte waehle ein Konto aus',
+      fintsAccountSynchronisationErrorAccountSettingsId:
+        'Bitte waehle ein Konto aus',
       fintsAccountSynchronisationErrorFrom: 'Bitte waehle einen Starttag',
       fintsAccountSynchronisationErrorTo: 'Bitte waehlen ein Endtag',
       transactions: 'Umsätze',
@@ -157,8 +165,10 @@ const resources = {
       contractSave: 'Speichern',
       contractStart: 'Beginn',
       contractEnd: 'Ende',
-      contractErrorMessageRentDueEveryMonth: 'Bitte gib 1 für jeden Monat an, 2 für jeden zweiten Monat, etc.',
-      contractErrorMessageRentDueDayOfMonth: 'Bitte gib einen Tag im Monat an. Wie 10.',
+      contractErrorMessageRentDueEveryMonth:
+        'Bitte gib 1 für jeden Monat an, 2 für jeden zweiten Monat, etc.',
+      contractErrorMessageRentDueDayOfMonth:
+        'Bitte gib einen Tag im Monat an. Wie 10.',
       contractErrorMessageAmount: 'Bitte gib einen Betrag wie 12 or 13.50 an',
 
       bookings: 'Buchungen',
@@ -177,7 +187,7 @@ const resources = {
       bookingCommentRentDue: 'Miete fällig',
 
       tenantBookingOverview: 'Uebersicht',
-      tenantBookingOverviewSum: 'Summe'
+      tenantBookingOverviewSum: 'Summe',
     },
   },
 };

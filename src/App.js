@@ -1,13 +1,27 @@
 import AppBar from '@material-ui/core/AppBar';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MailIcon from '@material-ui/icons/Mail';
+import MenuIcon from '@material-ui/icons/Menu';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import clsx from 'clsx';
 import deLocale from 'date-fns/locale/de';
-import React, { Fragment } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Redirect } from 'react-router';
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import React, {Fragment} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Redirect} from 'react-router';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
@@ -16,9 +30,10 @@ import BookingEditor from './booking/BookingEditor';
 import Bookings from './booking/Bookings';
 import {
   ACCOUNT_PATH,
+  AUTH_TOKEN,
   BOOKING_PATH,
   CONTRACT_PATH,
-  TENANT_PATH
+  TENANT_PATH,
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
@@ -40,18 +55,165 @@ function getFirstPathElement(path) {
   return firstPathelement;
 }
 
-export default function App() {
-  const { t } = useTranslation();
-  return (
+const drawerWidth = 240;
 
-      <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
-        <BrowserRouter>
-          <Route
-            path="/"
-            render={({ location }) => (
-              <Fragment>
-                <Notifier />
-                <AppBar position="static">
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    boxSizing: 'border-box',
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+}));
+
+export default function App() {
+  const {t} = useTranslation();
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
+      <BrowserRouter>
+        <Route
+          path="/"
+          render={({location}) => (
+            <Fragment>
+              <Notifier />
+              <div className={classes.root}>
+                <AppBar
+                  position="fixed"
+                  className={clsx(classes.appBar, {
+                    [classes.appBarShift]: open,
+                  })}
+                >
+                  <Toolbar>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={handleDrawerOpen}
+                      edge="start"
+                      className={clsx(classes.menuButton, open && classes.hide)}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" noWrap component="div">
+                      Persistent drawer
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
+                <Drawer
+                  className={classes.drawer}
+                  variant="persistent"
+                  anchor="left"
+                  open={open}
+                  classes={{
+                    paper: classes.drawerPaper,
+                  }}
+                >
+                  <div className={classes.drawerHeader}>
+                    <IconButton onClick={handleDrawerClose}>
+                      {theme.direction === 'ltr' ? (
+                        <ChevronLeftIcon />
+                      ) : (
+                        <ChevronRightIcon />
+                      )}
+                    </IconButton>
+                  </div>
+                  <Divider />
+                  {sessionStorage.getItem(AUTH_TOKEN) ? (
+                    <List>
+                      {['Inbox', 'Starred', 'Send email', 'Drafts'].map(
+                        (text, index) => (
+                          <ListItem button key={text}>
+                            <ListItemIcon>
+                              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                          </ListItem>
+                        ),
+                      )}
+                    </List>
+                  ) : (
+                    <List>
+                      <ListItem button key="signup">
+                        <ListItemIcon>
+                          <InboxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('signup')} />
+                      </ListItem>
+                      <ListItem button key="signin">
+                        <ListItemIcon>
+                          <InboxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('signin')} />
+                      </ListItem>
+                    </List>
+                  )}
+                </Drawer>
+                <main
+                  className={clsx(classes.content, {
+                    [classes.contentShift]: open,
+                  })}
+                >
+                  {/* 
                   <Tabs
                     value={getFirstPathElement(location.pathname)}
                     aria-label="simple tabs example"
@@ -92,72 +254,74 @@ export default function App() {
                       to="/transaction"
                       value="/transaction"
                     />
-                  </Tabs>
-                </AppBar>
-              </Fragment>
-            )}
-          />
-          <Switch>
-            <Redirect exact from="/" to="/welcome" />
-            <Route path="/welcome">
-              <Welcome />
-            </Route>
-            <Route path="/signup" component={Signup} />
-            <Route path="/signin" component={Signin} />
-            <PrivateRoute path="/home">
-              <Home />
-            </PrivateRoute>
-            <PrivateRoute exact path={TENANT_PATH}>
-              <Tenant />
-            </PrivateRoute>
-            <PrivateRoute exact path={`${TENANT_PATH}/edit`}>
-              <TenantEditor />
-            </PrivateRoute>
-            <PrivateRoute path={`${TENANT_PATH}/edit/:tenantId`}>
-              <TenantEditor />
-            </PrivateRoute>
-            <PrivateRoute exact path={CONTRACT_PATH}>
-              <Contract />
-            </PrivateRoute>
-            <PrivateRoute exact path={`${CONTRACT_PATH}/edit`}>
-              <ContractEditor />
-            </PrivateRoute>
-            <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId`}>
-              <ContractEditor />
-            </PrivateRoute>
-            <PrivateRoute path={`${CONTRACT_PATH}/synchronisation`}>
-              <ContractSynchronisation />
-            </PrivateRoute>
-            <PrivateRoute exact path={BOOKING_PATH}>
-              <Bookings />
-            </PrivateRoute>
-            <PrivateRoute exact path={`${BOOKING_PATH}/edit`}>
-              <BookingEditor />
-            </PrivateRoute>
-            <PrivateRoute path={`${BOOKING_PATH}/edit/:bookingId`}>
-              <BookingEditor />
-            </PrivateRoute>
-            <PrivateRoute exact path={ACCOUNT_PATH}>
-              <Account />
-            </PrivateRoute>
-            <PrivateRoute path={`${ACCOUNT_PATH}/edit`}>
-              <AccountEditorWizard />
-            </PrivateRoute>
-            <PrivateRoute exact path={`${ACCOUNT_PATH}/synchronisation`}>
-              <FintsAccountSynchronisationSingle />
-            </PrivateRoute>
-            <PrivateRoute path={`${ACCOUNT_PATH}/synchronisation/:accountSettingsId`}>
-              <FintsAccountSynchronisationSingle />
-            </PrivateRoute>
-            <PrivateRoute exact path="/transaction">
-              <FintsAccountTransaction />
-            </PrivateRoute>
-            <PrivateRoute path="/transaction/synchronisation">
-              <FintsTransactionSynchronisation />
-            </PrivateRoute>
-          </Switch>
-        </BrowserRouter>
-      </LocalizationProvider>
-
+                  </Tabs>*/}
+                </main>
+              </div>
+            </Fragment>
+          )}
+        />
+        <Switch>
+          <Redirect exact from="/" to="/welcome" />
+          <Route path="/welcome">
+            <Welcome />
+          </Route>
+          <Route path="/signup" component={Signup} />
+          <Route path="/signin" component={Signin} />
+          <PrivateRoute path="/home">
+            <Home />
+          </PrivateRoute>
+          <PrivateRoute exact path={TENANT_PATH}>
+            <Tenant />
+          </PrivateRoute>
+          <PrivateRoute exact path={`${TENANT_PATH}/edit`}>
+            <TenantEditor />
+          </PrivateRoute>
+          <PrivateRoute path={`${TENANT_PATH}/edit/:tenantId`}>
+            <TenantEditor />
+          </PrivateRoute>
+          <PrivateRoute exact path={CONTRACT_PATH}>
+            <Contract />
+          </PrivateRoute>
+          <PrivateRoute exact path={`${CONTRACT_PATH}/edit`}>
+            <ContractEditor />
+          </PrivateRoute>
+          <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId`}>
+            <ContractEditor />
+          </PrivateRoute>
+          <PrivateRoute path={`${CONTRACT_PATH}/synchronisation`}>
+            <ContractSynchronisation />
+          </PrivateRoute>
+          <PrivateRoute exact path={BOOKING_PATH}>
+            <Bookings />
+          </PrivateRoute>
+          <PrivateRoute exact path={`${BOOKING_PATH}/edit`}>
+            <BookingEditor />
+          </PrivateRoute>
+          <PrivateRoute path={`${BOOKING_PATH}/edit/:bookingId`}>
+            <BookingEditor />
+          </PrivateRoute>
+          <PrivateRoute exact path={ACCOUNT_PATH}>
+            <Account />
+          </PrivateRoute>
+          <PrivateRoute path={`${ACCOUNT_PATH}/edit`}>
+            <AccountEditorWizard />
+          </PrivateRoute>
+          <PrivateRoute exact path={`${ACCOUNT_PATH}/synchronisation`}>
+            <FintsAccountSynchronisationSingle />
+          </PrivateRoute>
+          <PrivateRoute
+            path={`${ACCOUNT_PATH}/synchronisation/:accountSettingsId`}
+          >
+            <FintsAccountSynchronisationSingle />
+          </PrivateRoute>
+          <PrivateRoute exact path="/transaction">
+            <FintsAccountTransaction />
+          </PrivateRoute>
+          <PrivateRoute path="/transaction/synchronisation">
+            <FintsTransactionSynchronisation />
+          </PrivateRoute>
+        </Switch>
+      </BrowserRouter>
+    </LocalizationProvider>
   );
 }
