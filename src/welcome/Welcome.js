@@ -8,6 +8,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {Link as RLink} from 'react-router-dom';
 
 function MadeWithLove() {
@@ -49,6 +50,7 @@ const SignInLink = React.forwardRef((props, ref) => (
 ));
 
 export default function Welcome() {
+  const {t} = useTranslation();
   const classes = useStyles();
   return (
     <Container component="main" maxWidth="xs">
@@ -65,10 +67,10 @@ export default function Welcome() {
       </div>
       <Grid container>
         <Grid item xs style={{textAlign: 'center'}}>
-          <Button component={SignInLink}>SignIn</Button>
+          <Button component={SignInLink}>{t('signin')}</Button>
         </Grid>
         <Grid item xs style={{textAlign: 'center'}}>
-          <Button component={SignUpLink}>{t()}</Button>
+          <Button component={SignUpLink}>{t('signup')}</Button>
         </Grid>
       </Grid>
       <Box mt={5}>
