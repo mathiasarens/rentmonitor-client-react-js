@@ -21,7 +21,7 @@ import deLocale from 'date-fns/locale/de';
 import React, {Fragment} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Redirect} from 'react-router';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
 import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
@@ -34,6 +34,7 @@ import {
   BOOKING_PATH,
   CONTRACT_PATH,
   TENANT_PATH,
+  TRANSACTION_PATH,
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
@@ -48,7 +49,6 @@ import Notifier from './notifier/Notifier';
 import Tenant from './tenant/Tenant';
 import TenantEditor from './tenant/TenantEditor';
 import Welcome from './welcome/Welcome';
-
 function getFirstPathElement(path) {
   let pathelements = path.split('/');
   let firstPathelement = '/' + pathelements[1];
@@ -129,6 +129,23 @@ export default function App() {
     setOpen(false);
   };
 
+  const renderHeadlineFromLocationPathname = (fullLocation) => {
+    switch (getFirstPathElement(fullLocation.pathname)) {
+      case CONTRACT_PATH:
+        return t('contracts');
+      case ACCOUNT_PATH:
+        return t('accounts');
+      case TENANT_PATH:
+        return t('tenants');
+      case BOOKING_PATH:
+        return t('bookings');
+      case TRANSACTION_PATH:
+        return t('transactions');
+      default:
+        return 'Rent Monitor';
+    }
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
       <BrowserRouter>
@@ -155,7 +172,7 @@ export default function App() {
                       <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                      Rent Monitor
+                      {renderHeadlineFromLocationPathname(location)}
                     </Typography>
                   </Toolbar>
                 </AppBar>
@@ -180,26 +197,106 @@ export default function App() {
                   <Divider />
                   {sessionStorage.getItem(AUTH_TOKEN) ? (
                     <List>
-                      {['Inbox', 'Starred', 'Send email', 'Drafts'].map(
-                        (text, index) => (
-                          <ListItem button key={text}>
-                            <ListItemIcon>
-                              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                          </ListItem>
-                        ),
-                      )}
+                      <ListItem
+                        button
+                        key="home"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to="/home"
+                      >
+                        <ListItemIcon>
+                          <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('home')} />
+                      </ListItem>
+
+                      <ListItem
+                        button
+                        key="tenants"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to={TENANT_PATH}
+                      >
+                        <ListItemIcon>
+                          <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('tenants')} />
+                      </ListItem>
+
+                      <ListItem
+                        button
+                        key="contracts"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to={CONTRACT_PATH}
+                      >
+                        <ListItemIcon>
+                          <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('contracts')} />
+                      </ListItem>
+
+                      <ListItem
+                        button
+                        key="bookings"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to={BOOKING_PATH}
+                      >
+                        <ListItemIcon>
+                          <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('bookings')} />
+                      </ListItem>
+
+                      <ListItem
+                        button
+                        key="accounts"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to={ACCOUNT_PATH}
+                      >
+                        <ListItemIcon>
+                          <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('accounts')} />
+                      </ListItem>
+
+                      <ListItem
+                        button
+                        key="transactions"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to={TRANSACTION_PATH}
+                      >
+                        <ListItemIcon>
+                          <MailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={t('transactions')} />
+                      </ListItem>
                     </List>
                   ) : (
                     <List>
-                      <ListItem button key="signup">
+                      <ListItem
+                        button
+                        key="signup"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to="/signup"
+                      >
                         <ListItemIcon>
                           <InboxIcon />
                         </ListItemIcon>
                         <ListItemText primary={t('signup')} />
                       </ListItem>
-                      <ListItem button key="signin">
+
+                      <ListItem
+                        button
+                        key="signin"
+                        onClick={handleDrawerClose}
+                        component={Link}
+                        to="/signin"
+                      >
                         <ListItemIcon>
                           <InboxIcon />
                         </ListItemIcon>
@@ -208,12 +305,13 @@ export default function App() {
                     </List>
                   )}
                 </Drawer>
+
                 <main
                   className={clsx(classes.content, {
                     [classes.contentShift]: open,
                   })}
                 >
-                  {/* 
+                  {/*
                   <Tabs
                     value={getFirstPathElement(location.pathname)}
                     aria-label="simple tabs example"
