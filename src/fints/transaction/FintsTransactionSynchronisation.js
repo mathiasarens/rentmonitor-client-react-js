@@ -1,21 +1,21 @@
-import { Button } from '@material-ui/core';
-import { red } from '@material-ui/core/colors';
+import {Button} from '@material-ui/core';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import parse from 'date-fns/parse';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import { openSnackbar } from '../../notifier/Notifier';
+import {openSnackbar} from '../../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -41,22 +41,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FintsTransactionSynchronisation() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
-  const { fromDate, setFromDate } = useState();
-  const { toDate, setToDate } = useState();
-  const { register, handleSubmit, errors } = useForm();
-
-
+  const [fromDate, setFromDate] = useState();
+  const [toDate, setToDate] = useState();
+  const {register, handleSubmit, errors} = useForm();
 
   const onSubmit = (formInputs) => {
     console.log('formInputs', formInputs);
     const request = {};
-    if (formInputs.from !== "") {
+    if (formInputs.from !== '') {
       request.from = parse(formInputs.from, t('dateFormat'), new Date());
     }
-    if (formInputs.to !== "") {
+    if (formInputs.to !== '') {
       request.to = parse(formInputs.to, t('dateFormat'), new Date());
     }
     const bodyJson = JSON.stringify(request, null, 2);
@@ -111,7 +109,6 @@ export default function FintsTransactionSynchronisation() {
           className={classes.form}
           noValidate
         >
-
           <DatePicker
             label={t('fintsAccountSyncronisationFrom')}
             inputFormat={t('dateFormat')}
