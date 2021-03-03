@@ -16,6 +16,7 @@ import {
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
 import {openSnackbar} from '../../notifier/Notifier';
+var subDays = require('date-fns/subDays');
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -44,8 +45,8 @@ export default function FintsTransactionSynchronisation() {
   const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
-  const [fromDate, setFromDate] = useState();
-  const [toDate, setToDate] = useState();
+  const [fromDate, setFromDate] = useState(subDays(new Date(), 30));
+  const [toDate, setToDate] = useState(new Date());
   const {register, handleSubmit, errors} = useForm();
 
   const onSubmit = (formInputs) => {
@@ -111,7 +112,6 @@ export default function FintsTransactionSynchronisation() {
         >
           <DatePicker
             label={t('fintsAccountSyncronisationFrom')}
-            inputFormat={t('dateFormat')}
             value={fromDate ? fromDate : ''}
             onChange={(date) => {
               setFromDate(date);
@@ -132,7 +132,6 @@ export default function FintsTransactionSynchronisation() {
 
           <DatePicker
             label={t('fintsAccountSyncronisationTo')}
-            inputFormat={t('dateFormat')}
             value={toDate ? toDate : ''}
             onChange={(date) => {
               setToDate(date);
