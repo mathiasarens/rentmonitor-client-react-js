@@ -3,30 +3,32 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/core/Autocomplete';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
 import format from 'date-fns/format';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { BOOKING_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
-import { bookingsLoader } from './dataaccess/bookingLoader';
+import {BOOKING_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {bookingsLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -40,10 +42,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Bookings() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const [bookings, setBookings] = useState([]);
+  const [selectedTenantId, setSelectedTenantId] = useState();
   const [tenantsMap, setTenantsMap] = useState(new Map());
+  const [tenants, setTenants] = useState([]);
   const history = useHistory();
 
   const loadBookings = useCallback(() => {
@@ -89,6 +93,7 @@ export default function Bookings() {
             return map;
           }, {}),
         );
+        setTenants(data.sort((a, b) => a.name.localeCompare(b.name)));
       },
       (error) => {
         openSnackbar({
@@ -138,6 +143,40 @@ export default function Bookings() {
                   <RefershIcon />
                 </IconButton>
               </Grid>
+              <Grid item>
+                <Autocomplete
+                  id="teanant-id"
+                  options={tenants}
+                  getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+                  getOptionSelected={(option, value) =>
+                    value === undefined ||
+                    value === '' ||
+                    option.id === value.id
+                  }
+                  value={
+                    tenantsMap[selectedTenantId]
+                      ? tenantsMap[selectedTenantId]
+                      : ''
+                  }
+                  onChange={(event, tenant) => {
+                    if (tenant !== null) {
+                      setSelectedTenantId(tenant.id);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t('tenant')}
+                      margin="none"
+                      variant="standard"
+                      name="tenantId"
+                      //error={errors.tenantId ? true : false}
+                      //helperText={errors.tenantId?.message}
+                      required
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -155,17 +194,25 @@ export default function Bookings() {
           <TableBody>
             {bookings.map((bookingListItem) => (
               <TableRow key={bookingListItem.id}>
-                <TableCell>{format(new Date(bookingListItem.date), t('dateFormat'))}</TableCell>
+                <TableCell>
+                  {format(new Date(bookingListItem.date), t('dateFormat'))}
+                </TableCell>
                 <TableCell>
                   {tenantsMap[bookingListItem.tenantId]?.name}
                 </TableCell>
-                <TableCell>{(bookingListItem.type === 'RENT_DUE' ? t('bookingCommentRentDue') + ' ' : '') + bookingListItem.comment}</TableCell>
-                <TableCell>{new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "EUR",
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }).format(bookingListItem.amount / 100)}</TableCell>
+                <TableCell>
+                  {(bookingListItem.type === 'RENT_DUE'
+                    ? t('bookingCommentRentDue') + ' '
+                    : '') + bookingListItem.comment}
+                </TableCell>
+                <TableCell>
+                  {new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(bookingListItem.amount / 100)}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     size="small"
