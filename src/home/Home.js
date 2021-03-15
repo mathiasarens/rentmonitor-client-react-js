@@ -3,26 +3,26 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from '@material-ui/core';
-import Container from "@material-ui/core/Container";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import {makeStyles} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { BOOKING_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
+import {BOOKINGS_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
       backgroundColor: theme.palette.common.white,
@@ -47,11 +47,9 @@ export default function Home() {
       },
     })
       .then((response) => {
-        console.log(response.statusText);
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setBookingSumPerTenants(data);
       })
       .catch((error) => {
@@ -65,7 +63,6 @@ export default function Home() {
   useEffect(() => {
     loadTenantBookingOverview();
   }, [loadTenantBookingOverview]);
-
 
   return (
     <Container component="main">
@@ -90,18 +87,20 @@ export default function Home() {
             {bookingSumPerTenants.map((bookingSumPerTenantItem) => (
               <TableRow key={bookingSumPerTenantItem.tenant.id}>
                 <TableCell>{bookingSumPerTenantItem.tenant.name}</TableCell>
-                <TableCell>{new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "EUR",
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }).format(bookingSumPerTenantItem.sum / 100)}</TableCell>
+                <TableCell>
+                  {new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(bookingSumPerTenantItem.sum / 100)}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     size="small"
                     aria-label="edit"
                     component={Link}
-                    to={`${BOOKING_PATH}`}
+                    to={`${BOOKINGS_PATH}/${bookingSumPerTenantItem.tenant.id}`}
                   >
                     <EditIcon />
                   </IconButton>

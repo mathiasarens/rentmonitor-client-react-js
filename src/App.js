@@ -31,6 +31,7 @@ import Bookings from './booking/Bookings';
 import {
   ACCOUNT_PATH,
   AUTH_TOKEN,
+  BOOKINGS_PATH,
   BOOKING_PATH,
   CONTRACT_PATH,
   TENANT_PATH,
@@ -138,6 +139,7 @@ export default function App() {
       case TENANT_PATH:
         return t('tenants');
       case BOOKING_PATH:
+      case BOOKINGS_PATH:
         return t('bookings');
       case TRANSACTION_PATH:
         return t('transactions');
@@ -241,7 +243,7 @@ export default function App() {
                         key="bookings"
                         onClick={handleDrawerClose}
                         component={Link}
-                        to={BOOKING_PATH}
+                        to={BOOKINGS_PATH}
                       >
                         <ListItemIcon>
                           <MailIcon />
@@ -310,50 +312,7 @@ export default function App() {
                   className={clsx(classes.content, {
                     [classes.contentShift]: open,
                   })}
-                >
-                  {/*
-                  <Tabs
-                    value={getFirstPathElement(location.pathname)}
-                    aria-label="simple tabs example"
-                  >
-                    <Tab
-                      label={t('home')}
-                      component={Link}
-                      to="/home"
-                      value="/home"
-                    />
-                    <Tab
-                      label={t('tenants')}
-                      component={Link}
-                      to="/tenant"
-                      value="/tenant"
-                    />
-                    <Tab
-                      label={t('contracts')}
-                      component={Link}
-                      to="/contract"
-                      value="/contract"
-                    />
-                    <Tab
-                      label={t('bookings')}
-                      component={Link}
-                      to={BOOKING_PATH}
-                      value={BOOKING_PATH}
-                    />
-                    <Tab
-                      label={t('accounts')}
-                      component={Link}
-                      to={ACCOUNT_PATH}
-                      value={ACCOUNT_PATH}
-                    />
-                    <Tab
-                      label={t('transactions')}
-                      component={Link}
-                      to="/transaction"
-                      value="/transaction"
-                    />
-                  </Tabs>*/}
-                </main>
+                ></main>
               </div>
             </Fragment>
           )}
@@ -389,7 +348,10 @@ export default function App() {
           <PrivateRoute path={`${CONTRACT_PATH}/synchronisation`}>
             <ContractSynchronisation />
           </PrivateRoute>
-          <PrivateRoute exact path={BOOKING_PATH}>
+          <PrivateRoute exact path={BOOKINGS_PATH}>
+            <Bookings />
+          </PrivateRoute>
+          <PrivateRoute exact path={`${BOOKINGS_PATH}/:tenantId`}>
             <Bookings />
           </PrivateRoute>
           <PrivateRoute exact path={`${BOOKING_PATH}/edit`}>

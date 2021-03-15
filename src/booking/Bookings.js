@@ -20,7 +20,7 @@ import RefershIcon from '@material-ui/icons/Refresh';
 import format from 'date-fns/format';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -46,9 +46,13 @@ export default function Bookings() {
   const classes = useStyles();
   const [bookings, setBookings] = useState([]);
   const [selectedTenantId, setSelectedTenantId] = useState();
+  const [selectedTenantIdOverriden, setSelectedTenantIdOverriden] = useState(
+    false,
+  );
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const [tenants, setTenants] = useState([]);
   const history = useHistory();
+  const {tenantId: selectedTenantIdParam} = useParams();
 
   const loadBookings = useCallback(
     (tenantId) => {
@@ -107,9 +111,18 @@ export default function Bookings() {
   }, [t, history]);
 
   useEffect(() => {
+    if (selectedTenantIdParam && !selectedTenantIdOverriden) {
+      setSelectedTenantId(selectedTenantIdParam);
+    }
     loadBookings(selectedTenantId);
     loadTenants();
-  }, [loadBookings, loadTenants, selectedTenantId]);
+  }, [
+    loadBookings,
+    loadTenants,
+    selectedTenantId,
+    selectedTenantIdParam,
+    selectedTenantIdOverriden,
+  ]);
 
   return (
     <Container component="main">
@@ -143,7 +156,7 @@ export default function Bookings() {
                   size="small"
                   aria-label="refresh"
                   onClick={() => {
-                    loadBookings();
+                    loadBookings(selectedTenantId);
                     loadTenants();
                   }}
                 >
@@ -169,6 +182,7 @@ export default function Bookings() {
                 } else {
                   setSelectedTenantId(undefined);
                 }
+                setSelectedTenantIdOverriden(true);
               }}
               style={{width: 300}}
               renderInput={(params) => (
