@@ -113,7 +113,12 @@ export default function Bookings() {
     <Container component="main">
       <CssBaseline />
       <div className={classes.paper}>
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          spacing={3}
+        >
           <Grid item>
             <Typography component="h1" variant="h5">
               {t('bookings')}
@@ -143,41 +148,38 @@ export default function Bookings() {
                   <RefershIcon />
                 </IconButton>
               </Grid>
-              <Grid item>
-                <Autocomplete
-                  id="teanant-id"
-                  options={tenants}
-                  getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-                  getOptionSelected={(option, value) =>
-                    value === undefined ||
-                    value === '' ||
-                    option.id === value.id
-                  }
-                  value={
-                    tenantsMap[selectedTenantId]
-                      ? tenantsMap[selectedTenantId]
-                      : ''
-                  }
-                  onChange={(event, tenant) => {
-                    if (tenant !== null) {
-                      setSelectedTenantId(tenant.id);
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={t('tenant')}
-                      margin="none"
-                      variant="standard"
-                      name="tenantId"
-                      //error={errors.tenantId ? true : false}
-                      //helperText={errors.tenantId?.message}
-                      required
-                    />
-                  )}
-                />
-              </Grid>
             </Grid>
+          </Grid>
+          <Grid item>
+            <Autocomplete
+              id="teanant-id"
+              options={tenants}
+              getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+              getOptionSelected={(option, value) =>
+                value === undefined || value === '' || option.id === value.id
+              }
+              value={
+                tenantsMap[selectedTenantId] ? tenantsMap[selectedTenantId] : ''
+              }
+              onChange={(event, tenant) => {
+                if (tenant !== null) {
+                  setSelectedTenantId(tenant.id);
+                }
+              }}
+              style={{width: 300}}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('filter')}
+                  margin="none"
+                  variant="standard"
+                  name="tenantId"
+                  //error={errors.tenantId ? true : false}
+                  //helperText={errors.tenantId?.message}
+                  required
+                />
+              )}
+            />
           </Grid>
         </Grid>
         <Table>

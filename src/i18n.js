@@ -21,6 +21,7 @@ const resources = {
       dateFormat: 'dd/MM/yyyy',
       signup: 'Sign Up',
       signin: 'Sign In',
+      filter: 'Filter',
 
       connectFints: 'Connect',
       tenant: 'Tenant',
@@ -112,6 +113,7 @@ const resources = {
       dateFormat: 'dd.MM.yyyy',
       signup: 'Registrieren',
       signin: 'Anmelden',
+      filter: 'Filter',
 
       tenant: 'Mieter',
       connectFints: 'Verbinden',
