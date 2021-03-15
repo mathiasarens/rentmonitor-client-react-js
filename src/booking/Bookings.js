@@ -50,14 +50,17 @@ export default function Bookings() {
   const [tenants, setTenants] = useState([]);
   const history = useHistory();
 
-  const loadBookings = useCallback(() => {
-    bookingsLoader(history, setBookings, (error) => {
-      openSnackbar({
-        message: t(handleAuthenticationError(error)),
-        variant: 'error',
+  const loadBookings = useCallback(
+    (tenantId) => {
+      bookingsLoader(tenantId, history, setBookings, (error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
       });
-    });
-  }, [t, history]);
+    },
+    [t, history],
+  );
 
   const deleteBooking = useCallback(
     (id) => {
@@ -68,7 +71,6 @@ export default function Bookings() {
         },
       })
         .then((response) => {
-          console.log(response.statusText);
           if (response.status === 204) {
             setBookings(bookings.filter((booking) => booking.id !== id));
           }
@@ -105,9 +107,9 @@ export default function Bookings() {
   }, [t, history]);
 
   useEffect(() => {
-    loadBookings();
+    loadBookings(selectedTenantId);
     loadTenants();
-  }, [loadBookings, loadTenants]);
+  }, [loadBookings, loadTenants, selectedTenantId]);
 
   return (
     <Container component="main">
@@ -161,9 +163,12 @@ export default function Bookings() {
               value={
                 tenantsMap[selectedTenantId] ? tenantsMap[selectedTenantId] : ''
               }
-              onChange={(event, tenant) => {
+              onChange={(event, tenant, reason) => {
+                console.log('Bookings - Filter - onChange: ', tenant, reason);
                 if (tenant !== null) {
                   setSelectedTenantId(tenant.id);
+                } else {
+                  setSelectedTenantId(undefined);
                 }
               }}
               style={{width: 300}}
@@ -176,7 +181,6 @@ export default function Bookings() {
                   name="tenantId"
                   //error={errors.tenantId ? true : false}
                   //helperText={errors.tenantId?.message}
-                  required
                 />
               )}
             />
