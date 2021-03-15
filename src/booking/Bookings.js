@@ -164,7 +164,6 @@ export default function Bookings() {
                 tenantsMap[selectedTenantId] ? tenantsMap[selectedTenantId] : ''
               }
               onChange={(event, tenant, reason) => {
-                console.log('Bookings - Filter - onChange: ', tenant, reason);
                 if (tenant !== null) {
                   setSelectedTenantId(tenant.id);
                 } else {
