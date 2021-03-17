@@ -78,6 +78,7 @@ const resources = {
       contractErrorMessageRentDueDayOfMonth:
         'Please enter a day of month like 10.',
       contractErrorMessageAmount: 'Please enter an amount in like 12 or 13.50',
+      contractToBookingTitle: 'Create due bookings for contracts',
 
       bookings: 'Bookings',
       booking: 'Booking',
@@ -172,7 +173,7 @@ const resources = {
       contractErrorMessageRentDueDayOfMonth:
         'Bitte gib einen Tag im Monat an. Wie 10.',
       contractErrorMessageAmount: 'Bitte gib einen Betrag wie 12 or 13.50 an',
-
+      contractToBookingTitle: 'Mietbuchungen erzeugen',
       bookings: 'Buchungen',
       booking: 'Buchung',
       bookingDate: 'Datum',
