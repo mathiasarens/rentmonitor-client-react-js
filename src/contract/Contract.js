@@ -3,30 +3,30 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
-import SyncOutlinedIcon from '@material-ui/icons/SyncOutlined';
 import format from 'date-fns/format';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { CONTRACT_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
+import {CONTRACT_PATH} from '../Constants';
+import {openSnackbar} from '../notifier/Notifier';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Contract() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const [contracts, setContracts] = useState([]);
   const [tenantsMap, setTenantsMap] = useState(new Map());
@@ -113,6 +113,46 @@ export default function Contract() {
     [t, history, contracts],
   );
 
+  const addDueBookingsFromContracts = () => {
+    const bodyJson = JSON.stringify({}, null, 2);
+    authenticatedFetch('/contract-to-booking', history, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: bodyJson,
+    })
+      .then((response) => {
+        switch (response.status) {
+          case 200:
+            response.json().then((json) => {
+              console.log(json);
+              openSnackbar({
+                message: t('fintsAccountSyncronisationSuccess', {
+                  newBookingsCount: json.newBookings,
+                  unmatchedTransactions: json.unmatchedTransactions,
+                }),
+                variant: 'info',
+              });
+            });
+            break;
+          default:
+            console.error(response);
+            openSnackbar({
+              message: t('connectionError'),
+              variant: 'error',
+            });
+        }
+      })
+      .catch((error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      });
+  };
+
   useEffect(() => {
     loadContracts();
     loadTenants();
@@ -153,14 +193,13 @@ export default function Contract() {
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton
+                <Button
                   size="small"
-                  aria-label="edit"
-                  component={Link}
-                  to={`${CONTRACT_PATH}/synchronisation`}
+                  variant="outlined"
+                  onClick={addDueBookingsFromContracts}
                 >
-                  <SyncOutlinedIcon />
-                </IconButton>
+                  {t('contractToBookingTitle')}
+                </Button>
               </Grid>
             </Grid>
           </Grid>
@@ -186,14 +225,22 @@ export default function Contract() {
                 </TableCell>
                 <TableCell>{contractListItem.rentDueEveryMonth}</TableCell>
                 <TableCell>{contractListItem.rentDueDayOfMonth}</TableCell>
-                <TableCell>{new Intl.NumberFormat("de-DE", {
-                  style: "currency",
-                  currency: "EUR",
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }).format(contractListItem.amount / 100)}</TableCell>
-                <TableCell>{format(new Date(contractListItem.start), t('dateFormat'))}</TableCell>
-                <TableCell>{contractListItem.end ? format(new Date(contractListItem.end), t('dateFormat')) : ''}</TableCell>
+                <TableCell>
+                  {new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(contractListItem.amount / 100)}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(contractListItem.start), t('dateFormat'))}
+                </TableCell>
+                <TableCell>
+                  {contractListItem.end
+                    ? format(new Date(contractListItem.end), t('dateFormat'))
+                    : ''}
+                </TableCell>
                 <TableCell>
                   <IconButton
                     size="small"
