@@ -55,6 +55,7 @@ const resources = {
       fintsAccountTransactionText: 'Comment',
       fintsAccountTransactionAmount: 'Amount',
       fintsAccountSelectionHead: 'Select an account',
+      fintsAccountTransactionToBookingButton: 'Create bookings',
       fintsAccountSyncronisationFrom: 'from',
       fintsAccountSyncronisationTo: 'to',
       fintsAccountSyncronisationSuccess:
@@ -148,6 +149,7 @@ const resources = {
       fintsAccountTransactionBic: 'BIC',
       fintsAccountTransactionText: 'Verwendungszweck',
       fintsAccountTransactionAmount: 'Betrag',
+      fintsAccountTransactionToBookingButton: 'Buchungen erzeugen',
       fintsAccountSelectionHead: 'Wählen Sie ein Konto aus',
       fintsAccountSyncronisationFrom: 'von',
       fintsAccountSyncronisationTo: 'bis',

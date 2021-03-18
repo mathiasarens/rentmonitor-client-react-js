@@ -43,7 +43,6 @@ import Account from './fints/account/Account';
 import AccountEditorWizard from './fints/account/AccountEditorWizard';
 import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
 import FintsAccountTransaction from './fints/transaction/FintsAccountTransaction';
-import FintsTransactionSynchronisation from './fints/transaction/FintsTransactionSynchronisation';
 import Home from './home/Home';
 import Notifier from './notifier/Notifier';
 import Tenant from './tenant/Tenant';
@@ -372,9 +371,6 @@ export default function App() {
           </PrivateRoute>
           <PrivateRoute exact path="/transaction">
             <FintsAccountTransaction />
-          </PrivateRoute>
-          <PrivateRoute path="/transaction/synchronisation">
-            <FintsTransactionSynchronisation />
           </PrivateRoute>
         </Switch>
       </BrowserRouter>

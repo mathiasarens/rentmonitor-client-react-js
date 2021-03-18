@@ -5,6 +5,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -13,15 +14,13 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import RefershIcon from '@material-ui/icons/Refresh';
-import SyncOutlinedIcon from '@material-ui/icons/SyncOutlined';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import {TRANSACTION_PATH} from '../../Constants';
 import {openSnackbar} from '../../notifier/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +109,48 @@ export default function FintsAccountTransaction() {
     [t, history, accountTransactionList],
   );
 
+  const transactionsToBookings = () => {
+    const request = {};
+    const bodyJson = JSON.stringify(request, null, 2);
+    console.log(bodyJson);
+    authenticatedFetch('/transaction-to-booking', history, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: bodyJson,
+    })
+      .then((response) => {
+        switch (response.status) {
+          case 200:
+            response.json().then((json) => {
+              console.log(json);
+              openSnackbar({
+                message: t('fintsAccountSyncronisationSuccess', {
+                  newBookingsCount: json.newBookings,
+                  unmatchedTransactions: json.unmatchedTransactions,
+                }),
+                variant: 'info',
+              });
+            });
+            break;
+          default:
+            console.error(response);
+            openSnackbar({
+              message: t('connectionError'),
+              variant: 'error',
+            });
+        }
+      })
+      .catch((error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      });
+  };
+
   return (
     <Container component="main">
       <CssBaseline />
@@ -128,14 +169,13 @@ export default function FintsAccountTransaction() {
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton
+                <Button
                   size="small"
-                  aria-label="edit"
-                  component={Link}
-                  to={`${TRANSACTION_PATH}/synchronisation`}
+                  variant="outlined"
+                  onClick={transactionsToBookings}
                 >
-                  <SyncOutlinedIcon />
-                </IconButton>
+                  {t('fintsAccountTransactionToBookingButton')}
+                </Button>
               </Grid>
             </Grid>
           </Grid>
