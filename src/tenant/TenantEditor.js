@@ -83,7 +83,7 @@ export default function TenantEditor() {
       });
       return;
     }
-    console.log('before post', tenant);
+
     authenticatedFetch(
       tenant.id ? `/tenants/${tenant.id}` : '/tenants',
       history,

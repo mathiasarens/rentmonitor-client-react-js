@@ -61,7 +61,6 @@ export default function Tenant() {
         },
       })
         .then((response) => {
-          console.log(response.statusText);
           if (response.status === 204) {
             setTenants(tenants.filter((tenant) => tenant.id !== id));
           }

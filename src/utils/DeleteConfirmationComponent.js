@@ -30,6 +30,7 @@ export function DeleteConfirmationComponent(props) {
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const {t} = useTranslation();
   let buttonClassName;
+  let showDeleteIconTimer;
   if (showDeleteButton) {
     buttonClassName = classes.visible;
   } else {
@@ -44,9 +45,13 @@ export function DeleteConfirmationComponent(props) {
 
   const onClickDelete = () => {
     if (showDeleteButton) {
+      clearTimeout(showDeleteIconTimer);
       onDelete();
     } else {
       setShowDeleteButton(true);
+      showDeleteIconTimer = setTimeout(() => {
+        setShowDeleteButton(false);
+      }, 2000);
     }
   };
 
