@@ -12,7 +12,6 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
 import RefershIcon from '@material-ui/icons/Refresh';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -21,6 +20,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
+import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -211,15 +211,11 @@ export default function FintsAccountTransaction() {
                   }).format(accountTransactionItem.amount / 100)}
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    size="small"
-                    aria-label="delete"
-                    onClick={() => {
+                  <DeleteConfirmationComponent
+                    onDelete={() => {
                       deleteAccountTransaction(accountTransactionItem.id);
                     }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  />
                 </TableCell>
               </TableRow>
             ))}

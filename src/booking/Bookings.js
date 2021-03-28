@@ -14,7 +14,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
 import format from 'date-fns/format';
@@ -27,6 +26,7 @@ import {
 } from '../authentication/authenticatedFetch';
 import {BOOKING_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
 import {bookingsLoader} from './dataaccess/bookingLoader';
 
@@ -243,15 +243,11 @@ export default function Bookings() {
                   </IconButton>
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    size="small"
-                    aria-label="delete"
-                    onClick={() => {
+                  <DeleteConfirmationComponent
+                    onDelete={() => {
                       deleteBooking(bookingListItem.id);
                     }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  />
                 </TableCell>
               </TableRow>
             ))}
