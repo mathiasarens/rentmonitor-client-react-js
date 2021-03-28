@@ -1,32 +1,35 @@
-import Button from "@material-ui/core/Button";
-import { red } from "@material-ui/core/colors";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import React from "react";
-import { useTranslation } from 'react-i18next';
-import { useHistory } from "react-router-dom";
-import { authenticatedFetch, handleAuthenticationError } from "../../authentication/authenticatedFetch";
-import { openSnackbar } from "../../notifier/Notifier";
+import Button from '@material-ui/core/Button';
+import {red} from '@material-ui/core/colors';
+import {makeStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
+import {
+  authenticatedFetch,
+  handleAuthenticationError,
+} from '../../authentication/authenticatedFetch';
+import {openSnackbar} from '../../utils/Notifier';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
   },
   input: {
     '&:invalid': {
-      borderColor: red
-    }
+      borderColor: red,
+    },
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function AccountEditorStepTan() {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const history = useHistory();
 
   const handleSubmit = (event) => {
@@ -34,7 +37,7 @@ export default function AccountEditorStepTan() {
     if (!event.target.checkValidity()) {
       openSnackbar({
         message: t('formValidationFailed'),
-        variant: "error"
+        variant: 'error',
       });
       return;
     }
@@ -43,26 +46,31 @@ export default function AccountEditorStepTan() {
     authenticatedFetch('/account-settings', history, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: stringifyFormData(data),
-    }).then(response => {
-      response.json().then(json => {
-        console.log(json);
-        history.push('/fints/accounts');
-      }).catch((error) => {
+    })
+      .then((response) => {
+        response
+          .json()
+          .then((json) => {
+            console.log(json);
+            history.push('/fints/accounts');
+          })
+          .catch((error) => {
+            openSnackbar({
+              message: t(handleAuthenticationError(error)),
+              variant: 'error',
+            });
+          });
+      })
+      .catch((error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
-          variant: "error"
+          variant: 'error',
         });
       });
-    }).catch((error) => {
-      openSnackbar({
-        message: t(handleAuthenticationError(error)),
-        variant: "error"
-      });
-    });
   };
 
   return (

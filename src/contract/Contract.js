@@ -25,8 +25,8 @@ import {
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
 import {CONTRACT_PATH} from '../Constants';
-import {openSnackbar} from '../notifier/Notifier';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {openSnackbar} from '../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -162,7 +162,12 @@ export default function Contract() {
     <Container component="main">
       <CssBaseline />
       <div className={classes.paper}>
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          spacing={1}
+        >
           <Grid item>
             <Typography component="h1" variant="h5">
               {t('contracts')}
@@ -192,16 +197,16 @@ export default function Contract() {
                   <RefershIcon />
                 </IconButton>
               </Grid>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={addDueBookingsFromContracts}
-                >
-                  {t('contractToBookingTitle')}
-                </Button>
-              </Grid>
             </Grid>
+          </Grid>
+          <Grid item>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={addDueBookingsFromContracts}
+            >
+              {t('contractToBookingTitle')}
+            </Button>
           </Grid>
         </Grid>
         <Table>

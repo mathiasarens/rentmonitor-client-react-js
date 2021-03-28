@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
-import { useTranslation } from 'react-i18next';
-import { openSnackbar } from "../../notifier/Notifier";
-import { AUTH_TOKEN } from '../../Constants';
-import { useHistory } from "react-router-dom";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import {makeStyles} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
+import {AUTH_TOKEN} from '../../Constants';
+import {openSnackbar} from '../../utils/Notifier';
 
 function MadeWithLove() {
   return (
@@ -29,7 +29,7 @@ function MadeWithLove() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
       backgroundColor: theme.palette.common.white,
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Signin() {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
@@ -64,37 +64,38 @@ export default function Signin() {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     fetch(`${process.env.REACT_APP_BACKEND_URL_PREFIX}/users/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        'Content-Type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email, password: password })
-    }).then((response) => {
-      console.log(response.statusText);
-      return response.json();
+      body: JSON.stringify({email: email, password: password}),
     })
+      .then((response) => {
+        console.log(response.statusText);
+        return response.json();
+      })
       .then((data) => {
         console.log(data);
         if (data.error) {
-          console.error(data.error)
+          console.error(data.error);
           openSnackbar({
             message: data.error.message,
-            variant: "error"
+            variant: 'error',
           });
         } else {
-          sessionStorage.setItem(AUTH_TOKEN, data.token)
-          history.push('/home')
+          sessionStorage.setItem(AUTH_TOKEN, data.token);
+          history.push('/home');
         }
       })
       .catch((error) => {
-        console.error(error)
+        console.error(error);
         openSnackbar({
           message: t('connectionError'),
-          variant: "error"
+          variant: 'error',
         });
       });
-  }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -117,7 +118,7 @@ export default function Signin() {
             name="email"
             autoFocus
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -129,7 +130,7 @@ export default function Signin() {
             type="password"
             id="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}

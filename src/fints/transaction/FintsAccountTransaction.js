@@ -21,7 +21,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import {openSnackbar} from '../../notifier/Notifier';
+import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {

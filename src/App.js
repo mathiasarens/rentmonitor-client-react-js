@@ -44,9 +44,9 @@ import AccountEditorWizard from './fints/account/AccountEditorWizard';
 import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
 import FintsAccountTransaction from './fints/transaction/FintsAccountTransaction';
 import Home from './home/Home';
-import Notifier from './notifier/Notifier';
 import Tenant from './tenant/Tenant';
 import TenantEditor from './tenant/TenantEditor';
+import Notifier from './utils/Notifier';
 import Welcome from './welcome/Welcome';
 function getFirstPathElement(path) {
   let pathelements = path.split('/');

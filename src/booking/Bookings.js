@@ -26,8 +26,8 @@ import {
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
 import {BOOKING_PATH} from '../Constants';
-import {openSnackbar} from '../notifier/Notifier';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {openSnackbar} from '../utils/Notifier';
 import {bookingsLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({

@@ -13,7 +13,7 @@ import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
 import {AUTH_TOKEN} from '../../Constants';
-import {openSnackbar} from '../../notifier/Notifier';
+import {openSnackbar} from '../../utils/Notifier';
 
 function MadeWithLove() {
   return (

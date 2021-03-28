@@ -22,6 +22,7 @@ const resources = {
       signup: 'Sign Up',
       signin: 'Sign In',
       filter: 'Filter',
+      delete: 'Delete',
 
       connectFints: 'Connect',
       tenant: 'Tenant',
@@ -80,6 +81,7 @@ const resources = {
         'Please enter a day of month like 10.',
       contractErrorMessageAmount: 'Please enter an amount in like 12 or 13.50',
       contractToBookingTitle: 'Create due bookings for contracts',
+      contractDeleteConfirmationText: 'Do you want to delete this contract?',
 
       bookings: 'Bookings',
       booking: 'Booking',
@@ -116,6 +118,7 @@ const resources = {
       signup: 'Registrieren',
       signin: 'Anmelden',
       filter: 'Filter',
+      delete: 'Löschen',
 
       tenant: 'Mieter',
       connectFints: 'Verbinden',
@@ -176,6 +179,9 @@ const resources = {
         'Bitte gib einen Tag im Monat an. Wie 10.',
       contractErrorMessageAmount: 'Bitte gib einen Betrag wie 12 or 13.50 an',
       contractToBookingTitle: 'Mietbuchungen erzeugen',
+      contractDeleteConfirmationText:
+        'Möchten Sie den Mietvertrag für {{tenantsMap[contractToDelete.tenantId]?.name}} wirklich löschen?',
+
       bookings: 'Buchungen',
       booking: 'Buchung',
       bookingDate: 'Datum',
@@ -191,7 +197,7 @@ const resources = {
 
       bookingCommentRentDue: 'Miete fällig',
 
-      tenantBookingOverview: 'Uebersicht',
+      tenantBookingOverview: 'Übersicht',
       tenantBookingOverviewSum: 'Summe',
     },
   },

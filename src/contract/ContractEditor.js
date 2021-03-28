@@ -1,24 +1,24 @@
 import Autocomplete from '@material-ui/core/Autocomplete';
 import Button from '@material-ui/core/Button';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import parse from 'date-fns/parse';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { CONTRACT_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
+import {CONTRACT_PATH} from '../Constants';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {openSnackbar} from '../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -47,20 +47,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ContractEditor() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
   const [contract, setContract] = useState({});
-  const { contractId } = useParams();
-  const { register, handleSubmit, errors } = useForm();
+  const {contractId} = useParams();
+  const {register, handleSubmit, errors} = useForm();
 
   const onSubmit = (formInputs) => {
     const contractToSubmit = {};
     contractToSubmit.id = contract.id;
     contractToSubmit.clientId = contract.clientId;
     contractToSubmit.tenantId = contract.tenantId;
-    contractToSubmit.start = parse(formInputs.start, t('dateFormat'), new Date());
+    contractToSubmit.start = parse(
+      formInputs.start,
+      t('dateFormat'),
+      new Date(),
+    );
     if (formInputs.end) {
       contractToSubmit.end = parse(formInputs.end, t('dateFormat'), new Date());
     }
@@ -147,7 +151,11 @@ export default function ContractEditor() {
         <Typography component="h1" variant="h5">
           {t('contract')}
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={classes.form}
+          noValidate
+        >
           <Autocomplete
             id="teanant-id"
             options={tenants}
@@ -159,14 +167,16 @@ export default function ContractEditor() {
             }
             onChange={(event, tenant) => {
               if (tenant !== null) {
-                setContract({ ...contract, tenantId: tenant.id });
+                setContract({...contract, tenantId: tenant.id});
               }
             }}
             getOptionSelected={(option, value) =>
               value === '' || option.id === value.id
             }
             renderInput={(params) => (
-              <TextField {...params} label={t('tenant')}
+              <TextField
+                {...params}
+                label={t('tenant')}
                 margin="normal"
                 variant="outlined"
                 name="tenantId"
@@ -178,7 +188,8 @@ export default function ContractEditor() {
                 })}
                 error={errors.tenantId ? true : false}
                 helperText={errors.tenantId?.message}
-                required />
+                required
+              />
             )}
           />
 
@@ -192,7 +203,7 @@ export default function ContractEditor() {
             name="rentDueEveryMonth"
             value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : ''}
             onChange={(event) => {
-              setContract({ ...contract, rentDueEveryMonth: event.target.value });
+              setContract({...contract, rentDueEveryMonth: event.target.value});
             }}
             inputRef={register({
               pattern: {
@@ -215,7 +226,7 @@ export default function ContractEditor() {
             value={contract.rentDueDayOfMonth ? contract.rentDueDayOfMonth : ''}
             onChange={(event) => {
               console.log('contractRentDueDayOfMonth', event.target.value);
-              setContract({ ...contract, rentDueDayOfMonth: event.target.value });
+              setContract({...contract, rentDueDayOfMonth: event.target.value});
             }}
             inputRef={register({
               pattern: {
@@ -237,7 +248,7 @@ export default function ContractEditor() {
             name="amount"
             value={contract.amount ? contract.amount : ''}
             onChange={(event) => {
-              setContract({ ...contract, amount: event.target.value });
+              setContract({...contract, amount: event.target.value});
             }}
             inputRef={register({
               required: {
@@ -257,7 +268,7 @@ export default function ContractEditor() {
             label={t('contractStart')}
             inputFormat={t('dateFormat')}
             value={contract.start ? contract.start : ''}
-            onChange={(date) => setContract({ ...contract, start: date })}
+            onChange={(date) => setContract({...contract, start: date})}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -287,7 +298,7 @@ export default function ContractEditor() {
             variant="inline"
             inpuFormat={t('dateFormat')}
             value={contract.end ? contract.end : ''}
-            onChange={(date) => setContract({ ...contract, end: date })}
+            onChange={(date) => setContract({...contract, end: date})}
             renderInput={(params) => (
               <TextField
                 {...params}

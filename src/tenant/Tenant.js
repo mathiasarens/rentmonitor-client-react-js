@@ -3,28 +3,28 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { TENANT_PATH } from '../Constants';
-import { openSnackbar } from '../notifier/Notifier';
-import { tenantsLoader } from './dataaccess/tenantLoader';
+import {TENANT_PATH} from '../Constants';
+import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
+import {openSnackbar} from '../utils/Notifier';
+import {tenantsLoader} from './dataaccess/tenantLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Tenant() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const classes = useStyles();
   const [tenants, setTenants] = useState([]);
   const history = useHistory();
@@ -145,15 +145,11 @@ export default function Tenant() {
                   </IconButton>
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    size="small"
-                    aria-label="delete"
-                    onClick={() => {
+                  <DeleteConfirmationComponent
+                    onDelete={() => {
                       deleteTenant(tenantListItem.id);
                     }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  />
                 </TableCell>
               </TableRow>
             ))}

@@ -20,7 +20,7 @@ import {
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
 import {BOOKINGS_PATH} from '../Constants';
-import {openSnackbar} from '../notifier/Notifier';
+import {openSnackbar} from '../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
