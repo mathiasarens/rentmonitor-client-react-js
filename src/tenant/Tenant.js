@@ -1,10 +1,5 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -82,7 +76,7 @@ export default function Tenant() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <Box className={classes.paper}>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography component="h1" variant="h5">
@@ -113,48 +107,56 @@ export default function Tenant() {
             </Grid>
           </Grid>
         </Grid>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>{t('email')}</TableCell>
-              <TableCell>{t('phone')}</TableCell>
-              <TableCell>{t('tenantAccountSynchronizationName')}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tenants.map((tenantListItem) => (
-              <TableRow key={tenantListItem.id}>
-                <TableCell>{tenantListItem.name}</TableCell>
-                <TableCell>{tenantListItem.email}</TableCell>
-                <TableCell>{tenantListItem.phone}</TableCell>
-                <TableCell>
-                  {tenantListItem.accountSynchronisationName}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    size="small"
-                    aria-label="edit"
-                    component={Link}
-                    to={`${TENANT_PATH}/edit/${tenantListItem.id}`}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <DeleteConfirmationComponent
-                    onDelete={() => {
-                      deleteTenant(tenantListItem.id);
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+        {tenants.map((tenantListItem) => (
+          <div>
+            <Grid container marginTop={2} paddingTop={2}>
+              <Grid item xs={12}>
+                {tenantListItem.name}
+              </Grid>
+            </Grid>
+            <Grid container marginTop={1} spacing={1} alignItems="flex-end">
+              <Grid item xs={3}>
+                <Typography variant="caption">{t('email')}:</Typography>
+              </Grid>
+              <Grid item xs={9}>
+                {tenantListItem.email}
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="caption">{t('phone')}:</Typography>
+              </Grid>
+              <Grid item xs={9}>
+                {tenantListItem.phone}
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="caption">
+                  {t('tenantAccountSynchronizationName')}:
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                {tenantListItem.accountSynchronisationName}
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  aria-label="edit"
+                  component={Link}
+                  to={`${TENANT_PATH}/edit/${tenantListItem.id}`}
+                >
+                  {t('edit')}
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <DeleteConfirmationComponent
+                  onDelete={() => {
+                    deleteTenant(tenantListItem.id);
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </div>
+        ))}
+      </Box>
     </Container>
   );
 }

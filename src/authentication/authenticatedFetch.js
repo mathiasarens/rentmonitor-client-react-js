@@ -22,7 +22,6 @@ export function authenticatedFetch(urlSuffix, history, options) {
 }
 
 export function handleAuthenticationError(error) {
-  console.error(error);
   if ([401, 403].indexOf(error.status) !== -1) {
     return 'unauthenticatedError';
   } else {

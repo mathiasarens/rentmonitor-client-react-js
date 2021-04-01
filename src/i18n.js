@@ -22,6 +22,7 @@ const resources = {
       signup: 'Sign Up',
       signin: 'Sign In',
       filter: 'Filter',
+      edit: 'Edit',
       delete: 'Delete',
 
       connectFints: 'Connect',
@@ -118,12 +119,13 @@ const resources = {
       signup: 'Registrieren',
       signin: 'Anmelden',
       filter: 'Filter',
+      edit: 'Ändern',
       delete: 'Löschen',
 
       tenant: 'Mieter',
       connectFints: 'Verbinden',
       tenantSave: 'Anlegen',
-      tenantAccountSynchronizationName: 'Name auf Kontoauszug',
+      tenantAccountSynchronizationName: 'Name auf Auszug',
       formValidationFailed: 'Bitte korrigieren Sie Ihre Eingaben',
       newAccountSettings: 'Neue Kontoeinstellungen',
       fintsBlz: 'FinTs BLZ',
