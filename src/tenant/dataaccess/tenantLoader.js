@@ -1,7 +1,7 @@
 import {authenticatedFetch} from '../../authentication/authenticatedFetch';
 
 export function tenantsLoader(history, callback, callbackError) {
-  authenticatedFetch('/tenants', history, {
+  authenticatedFetch('/tenants?filter[order]=name%20ASC', history, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

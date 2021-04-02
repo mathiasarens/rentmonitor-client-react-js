@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.common.white,
     },
   },
-  paper: {
-    marginTop: theme.spacing(4),
-  },
 }));
 
 export default function Tenant() {
@@ -76,7 +73,7 @@ export default function Tenant() {
   return (
     <Container component="main">
       <CssBaseline />
-      <Box className={classes.paper}>
+      <Box marginTop={4} marginBottom={4}>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography component="h1" variant="h5">
@@ -111,7 +108,7 @@ export default function Tenant() {
           <div>
             <Grid container marginTop={2} paddingTop={2}>
               <Grid item xs={12}>
-                {tenantListItem.name}
+                <Typography variant="h6">{tenantListItem.name}</Typography>
               </Grid>
             </Grid>
             <Grid container marginTop={1} spacing={1} alignItems="flex-end">
@@ -135,23 +132,27 @@ export default function Tenant() {
               <Grid item xs={9}>
                 {tenantListItem.accountSynchronisationName}
               </Grid>
-              <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  aria-label="edit"
-                  component={Link}
-                  to={`${TENANT_PATH}/edit/${tenantListItem.id}`}
-                >
-                  {t('edit')}
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <DeleteConfirmationComponent
-                  onDelete={() => {
-                    deleteTenant(tenantListItem.id);
-                  }}
-                />
+              <Grid item xs={12}>
+                <Grid container spacing={1}>
+                  <Grid item>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      aria-label="edit"
+                      component={Link}
+                      to={`${TENANT_PATH}/edit/${tenantListItem.id}`}
+                    >
+                      {t('edit')}
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <DeleteConfirmationComponent
+                      onDelete={() => {
+                        deleteTenant(tenantListItem.id);
+                      }}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </div>
