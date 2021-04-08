@@ -1,25 +1,24 @@
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import RefershIcon from '@material-ui/icons/Refresh';
 import format from 'date-fns/format';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link, useHistory} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { CONTRACT_PATH } from '../Constants';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
-import { DeleteConfirmationComponent } from '../utils/DeleteConfirmationComponent';
-import { openSnackbar } from '../utils/Notifier';
+import {CONTRACT_PATH} from '../Constants';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
+import {openSnackbar} from '../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -205,80 +204,86 @@ export default function Contract() {
         </Grid>
 
         {contracts.map((contractListItem) => (
-          <Box marginTop={2} key={contractListItem.id}>
-            <Typography variant="h6">
-              {tenantsMap[contractListItem.tenantId]?.name}
-            </Typography>
-            <Grid container marginTop={1}>
-              <Grid item xs={4}>
-                {t('contractAmount')}:
-              </Grid>
-              <Grid item xs={8}>
-                {new Intl.NumberFormat('de-DE', {
-                  style: 'currency',
-                  currency: 'EUR',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }).format(contractListItem.amount / 100)}{' '}
-                {(() => {
-                  switch (contractListItem.rentDueEveryMonth) {
-                    case 1:
-                      return t('contractRentDueEveryMonth1');
-                    case 12:
-                      return t('contractRentDueEveryMonth12');
-                    default:
-                      return t('contractRentDueEveryMonthX', {
-                        month: contractListItem.rentDueEveryMonth,
-                      });
-                  }
-                })()}
-              </Grid>
+          <Grid container marginTop={2} spacing={1} key={contractListItem.id}>
+            <Grid item xs={12} sm={3}>
+              <Typography variant="h6">
+                {tenantsMap[contractListItem.tenantId]?.name}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <Grid container marginTop={1}>
+                <Grid item xs={4}>
+                  {t('contractAmount')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(contractListItem.amount / 100)}{' '}
+                  {(() => {
+                    switch (contractListItem.rentDueEveryMonth) {
+                      case 1:
+                        return t('contractRentDueEveryMonth1');
+                      case 12:
+                        return t('contractRentDueEveryMonth12');
+                      default:
+                        return t('contractRentDueEveryMonthX', {
+                          month: contractListItem.rentDueEveryMonth,
+                        });
+                    }
+                  })()}
+                </Grid>
 
-              <Grid item xs={4}>
-                {t('contractRentDueDayOfMonth')}:
-              </Grid>
-              <Grid item xs={8}>
-                {t('contractRentDueDayOfMonthX', {
-                  day: contractListItem.rentDueDayOfMonth,
-                })}
-              </Grid>
+                <Grid item xs={4}>
+                  {t('contractRentDueDayOfMonth')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {t('contractRentDueDayOfMonthX', {
+                    day: contractListItem.rentDueDayOfMonth,
+                  })}
+                </Grid>
 
-              <Grid item xs={4}>
-                {t('contractStart')}:
-              </Grid>
-              <Grid item xs={8}>
-                {format(new Date(contractListItem.start), t('dateFormat'))}
-              </Grid>
-              <Grid item xs={4}>
-                {t('contractEnd')}:
-              </Grid>
-              <Grid item xs={8}>
-                {contractListItem.end
-                  ? format(new Date(contractListItem.end), t('dateFormat'))
-                  : ''}
+                <Grid item xs={4}>
+                  {t('contractStart')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {format(new Date(contractListItem.start), t('dateFormat'))}
+                </Grid>
+                <Grid item xs={4}>
+                  {t('contractEnd')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {contractListItem.end
+                    ? format(new Date(contractListItem.end), t('dateFormat'))
+                    : ''}
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container spacing={1} marginTop={1}>
-              <Grid item>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  aria-label="edit"
-                  component={Link}
-                  to={`${CONTRACT_PATH}/edit/${contractListItem.id}`}
-                >
-                  {t('edit')}
-                </Button>
-              </Grid>
-              <Grid item>
-                <DeleteConfirmationComponent
-                  onDelete={() => {
-                    deleteContract(contractListItem.id);
-                  }}
-                />
+            <Grid item xs={12} sm={2}>
+              <Grid container spacing={1} marginTop={1}>
+                <Grid item>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    aria-label="edit"
+                    component={Link}
+                    to={`${CONTRACT_PATH}/edit/${contractListItem.id}`}
+                  >
+                    {t('edit')}
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <DeleteConfirmationComponent
+                    onDelete={() => {
+                      deleteContract(contractListItem.id);
+                    }}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Box>
+          </Grid>
         ))}
       </div>
     </Container>
