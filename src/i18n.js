@@ -225,6 +225,8 @@ i18n
     interpolation: {
       escapeValue: false, // react already safes from xss
     },
+    transSupportBasicHtmlNodes: true,
+    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'p', 'wbr'],
   });
 
 export default i18n;

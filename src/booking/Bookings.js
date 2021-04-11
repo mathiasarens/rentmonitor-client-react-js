@@ -1,11 +1,5 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
 import Autocomplete from '@material-ui/core/Autocomplete';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -14,11 +8,10 @@ import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
 import RefershIcon from '@material-ui/icons/Refresh';
 import format from 'date-fns/format';
 import React, {useCallback, useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {Link, useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
@@ -199,60 +192,70 @@ export default function Bookings() {
             />
           </Grid>
         </Grid>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('bookingDate')}</TableCell>
-              <TableCell>{t('tenant')}</TableCell>
-              <TableCell>{t('bookingComment')}</TableCell>
-              <TableCell>{t('bookingAmount')}</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {bookings.map((bookingListItem) => (
-              <TableRow key={bookingListItem.id}>
-                <TableCell>
+
+        {bookings.map((bookingListItem) => (
+          <Grid container marginTop={2} spacing={1} key={bookingListItem.id}>
+            <Grid item xs={12} sm={10}>
+              <Grid container>
+                <Grid item xs={4}>
+                  {t('bookingDate')}
+                </Grid>
+                <Grid item xs={8}>
                   {format(new Date(bookingListItem.date), t('dateFormat'))}
-                </TableCell>
-                <TableCell>
+                </Grid>
+                <Grid item xs={4}>
+                  {t('tenant')}
+                </Grid>
+                <Grid item xs={8}>
                   {tenantsMap[bookingListItem.tenantId]?.name}
-                </TableCell>
-                <TableCell>
-                  {(bookingListItem.type === 'RENT_DUE'
-                    ? t('bookingCommentRentDue') + ' '
-                    : '') + bookingListItem.comment}
-                </TableCell>
-                <TableCell>
+                </Grid>
+                <Grid item xs={4}>
+                  {t('bookingAmount')}
+                </Grid>
+                <Grid item xs={8}>
                   {new Intl.NumberFormat('de-DE', {
                     style: 'currency',
                     currency: 'EUR',
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   }).format(bookingListItem.amount / 100)}
-                </TableCell>
-                <TableCell>
-                  <IconButton
+                </Grid>
+                <Grid item xs={4} zeroMinWidth>
+                  <Typography style={{overflowWrap: 'break-word'}}>
+                    <Trans t={t}>{t('bookingComment')}</Trans>
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  {(bookingListItem.type === 'RENT_DUE'
+                    ? t('bookingCommentRentDue') + ' '
+                    : '') + bookingListItem.comment}
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Grid container spacing={1} marginTop={1}>
+                <Grid item>
+                  <Button
                     size="small"
+                    variant="outlined"
                     aria-label="edit"
                     component={Link}
                     to={`${BOOKING_PATH}/edit/${bookingListItem.id}`}
                   >
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
+                    {t('edit')}
+                  </Button>
+                </Grid>
+                <Grid item>
                   <DeleteConfirmationComponent
                     onDelete={() => {
                       deleteBooking(bookingListItem.id);
                     }}
                   />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
       </div>
     </Container>
   );
