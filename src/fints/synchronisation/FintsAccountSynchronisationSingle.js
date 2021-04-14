@@ -53,7 +53,11 @@ export default function FintsAccountSynchronisationSingle() {
   const classes = useStyles();
   const history = useHistory();
   const {accountSettingsId} = useParams();
-  const {register, handleSubmit, errors} = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
 
   const initialState = {
     accountSettingsList: [],
@@ -238,6 +242,21 @@ export default function FintsAccountSynchronisationSingle() {
     tanRequiredJsx = <div></div>;
   }
 
+  const {
+    ref: accountSettingsIdFormHookRef,
+    ...accountSettingsIdFormHookRest
+  } = register('accountSettingsId', {
+    required: true,
+  });
+
+  const {ref: fromFormHookRef, ...fromFormHookRest} = register('from', {
+    required: true,
+  });
+
+  const {ref: toFormHookRef, ...toFormHookRest} = register('to', {
+    required: true,
+  });
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -268,6 +287,7 @@ export default function FintsAccountSynchronisationSingle() {
                 : ''
             }
             onChange={(event, accountSettings) => {
+              console.log('SET_ACCOUNT_ID onChange called');
               if (accountSettings !== null) {
                 dispatch({type: SET_ACCOUNT_ID, payload: accountSettings.id});
               }
@@ -275,20 +295,16 @@ export default function FintsAccountSynchronisationSingle() {
             renderInput={(params) => (
               <TextField
                 {...params}
+                {...accountSettingsIdFormHookRest}
                 label={t('account')}
                 margin="normal"
                 variant="outlined"
-                name="accountSettingsId"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t(
-                      'fintsAccountSynchronisationErrorAccountSettingsId',
-                    ),
-                  },
-                })}
+                inputRef={accountSettingsIdFormHookRef}
                 error={errors.accountSettingsId ? true : false}
-                helperText={errors.accountSettingsId?.message}
+                helperText={
+                  errors.accountSettingsId &&
+                  t('fintsAccountSynchronisationErrorAccountSettingsId')
+                }
                 required
               />
             )}
@@ -301,20 +317,17 @@ export default function FintsAccountSynchronisationSingle() {
               dispatch({type: SET_FROM_DATE, payload: date});
             }}
             inputFormat={t('dateFormat')}
+            {...fromFormHookRest}
             renderInput={(params) => (
               <TextField
                 {...params}
                 variant="outlined"
                 margin="normal"
-                name="from"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t('fintsAccountSynchronisationErrorFrom'),
-                  },
-                })}
+                inputRef={fromFormHookRef}
                 error={errors.from ? true : false}
-                helperText={errors.from?.message}
+                helperText={
+                  errors.from && t('fintsAccountSynchronisationErrorFrom')
+                }
                 fullWidth
                 required
               />
@@ -331,17 +344,12 @@ export default function FintsAccountSynchronisationSingle() {
             renderInput={(params) => (
               <TextField
                 {...params}
+                {...toFormHookRest}
                 variant="outlined"
                 margin="normal"
-                name="to"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t('fintsAccountSynchronisationToFrom'),
-                  },
-                })}
+                inputRef={toFormHookRef}
                 error={errors.to ? true : false}
-                helperText={errors.to?.message}
+                helperText={errors.to && t('fintsAccountSynchronisationToFrom')}
                 fullWidth
               />
             )}
