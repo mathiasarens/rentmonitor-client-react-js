@@ -1,10 +1,3 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -180,47 +173,74 @@ export default function FintsAccountTransaction() {
             </Grid>
           </Grid>
         </Grid>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('fintsAccountTransactionDate')}</TableCell>
-              <TableCell>{t('fintsAccountTransactionName')}</TableCell>
-              <TableCell>{t('fintsAccountTransactionText')}</TableCell>
-              <TableCell>{t('fintsAccountTransactionAmount')}</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {accountTransactionList.map((accountTransactionItem) => (
-              <TableRow key={accountTransactionItem.id}>
-                <TableCell>
+        {accountTransactionList.map((accountTransactionItem) => (
+          <Grid
+            container
+            marginTop={2}
+            spacing={1}
+            key={accountTransactionItem.id}
+          >
+            <Grid item xs={12} sm={10}>
+              <Grid container>
+                <Grid item xs={4}>
+                  {t('fintsAccountTransactionDate')}:
+                </Grid>
+                <Grid item xs={8}>
                   {new Intl.DateTimeFormat('de-DE', {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
                   }).format(new Date(accountTransactionItem.date))}
-                </TableCell>
-                <TableCell>{accountTransactionItem.name}</TableCell>
-                <TableCell>{accountTransactionItem.text}</TableCell>
-                <TableCell className={classes.right}>
+                </Grid>
+
+                <Grid item xs={4}>
+                  {t('fintsAccountTransactionName')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {accountTransactionItem.name}
+                </Grid>
+
+                <Grid item xs={4} zeroMinWidth>
+                  <Typography style={{overflowWrap: 'break-word'}}>
+                    {t('fintsAccountTransactionText')}:
+                  </Typography>
+                </Grid>
+                <Grid item xs={8} zeroMinWidth>
+                  <Typography style={{overflowWrap: 'break-word'}}>
+                    {accountTransactionItem.text}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  {t('fintsAccountTransactionAmount')}:
+                </Grid>
+                <Grid item xs={8}>
                   {new Intl.NumberFormat('de-DE', {
                     style: 'currency',
                     currency: 'EUR',
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   }).format(accountTransactionItem.amount / 100)}
-                </TableCell>
-                <TableCell>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Grid container spacing={1} marginTop={1}>
+                <Grid item>
+                  <Button size="small" variant="outlined" aria-label="edit">
+                    {t('edit')}
+                  </Button>
+                </Grid>
+                <Grid item>
                   <DeleteConfirmationComponent
                     onDelete={() => {
                       deleteAccountTransaction(accountTransactionItem.id);
                     }}
                   />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
       </div>
     </Container>
   );
