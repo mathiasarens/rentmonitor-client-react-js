@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import parse from 'date-fns/parse';
 import React, {useCallback, useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useHistory, useParams} from 'react-router-dom';
 import {
@@ -53,7 +53,12 @@ export default function ContractEditor() {
   const [tenants, setTenants] = useState([]);
   const [contract, setContract] = useState({});
   const {contractId} = useParams();
-  const {register, handleSubmit, errors} = useForm();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
 
   const onSubmit = (formInputs) => {
     const contractToSubmit = {};
@@ -144,6 +149,42 @@ export default function ContractEditor() {
     }
   }, [loadTenants, loadContract, contractId]);
 
+  const {
+    ref: rentDueEveryMonthRef,
+    ...rentDueEveryMonthFormHookRest
+  } = register('rentDueEveryMonth', {
+    pattern: {
+      value: /^\d+$/,
+    },
+  });
+
+  const {
+    ref: rentDueDayOfMonthRef,
+    ...rentDueDayOfMonthFormHookRest
+  } = register('rentDueDayOfMonth', {
+    pattern: {
+      value: /^\d+$/,
+    },
+  });
+
+  const {ref: amountRef, ...amountFormHookRest} = register('amount', {
+    required: {
+      value: true,
+      message: t('contractErrorMessageAmount'),
+    },
+    pattern: {
+      value: /^\d+(\.\d{1,2})?$/,
+      message: t('contractErrorMessageAmount'),
+    },
+  });
+
+  const {ref: startRef, ...startFormHookRest} = register('start', {
+    required: {
+      value: true,
+      message: t('contractErrorMessageStart'),
+    },
+  });
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -156,65 +197,66 @@ export default function ContractEditor() {
           className={classes.form}
           noValidate
         >
-          <Autocomplete
-            id="teanant-id"
-            options={tenants}
-            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-            value={
-              contract.tenantId
-                ? tenants.find((tenant) => tenant.id === contract.tenantId)
-                : ''
-            }
-            onChange={(event, tenant) => {
-              if (tenant !== null) {
-                setContract({...contract, tenantId: tenant.id});
-              }
-            }}
-            getOptionSelected={(option, value) =>
-              value === '' || option.id === value.id
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t('tenant')}
-                margin="normal"
-                variant="outlined"
-                name="tenantId"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t('contractErrorMessageTenantId'),
-                  },
-                })}
-                error={errors.tenantId ? true : false}
-                helperText={errors.tenantId?.message}
-                required
+          <Controller
+            control={control}
+            name="tenantId"
+            rules={{required: true}}
+            render={({field: {onChange, value}}) => (
+              <Autocomplete
+                id="teanant-id"
+                options={tenants}
+                getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+                value={
+                  contract.tenantId
+                    ? tenants.find((tenant) => tenant.id === contract.tenantId)
+                    : ''
+                }
+                onChange={(event, tenant) => {
+                  if (tenant !== null) {
+                    onChange({...contract, tenantId: tenant.id});
+                  }
+                }}
+                getOptionSelected={(option, value) =>
+                  value === '' || option.id === value.id
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={t('tenant')}
+                    margin="normal"
+                    variant="outlined"
+                    error={!!errors.tenantId}
+                    helperText={
+                      errors.tenantId && t('contractErrorMessageTenantId')
+                    }
+                    required
+                  />
+                )}
               />
             )}
           />
 
           <TextField
+            {...rentDueEveryMonthFormHookRest}
             variant="outlined"
             margin="normal"
-            fullWidth
             id="contract-rent-due-every-month"
             label={t('contractRentDueEveryMonth')}
             className={classes.input}
-            name="rentDueEveryMonth"
             value={contract.rentDueEveryMonth ? contract.rentDueEveryMonth : ''}
             onChange={(event) => {
               setContract({...contract, rentDueEveryMonth: event.target.value});
             }}
-            inputRef={register({
-              pattern: {
-                value: /^\d+$/,
-                message: t('contractErrorMessageRentDueEveryMonth'),
-              },
-            })}
+            inputRef={rentDueEveryMonthRef}
             error={errors.rentDueEveryMonth ? true : false}
-            helperText={errors.rentDueEveryMonth?.message}
+            helperText={
+              errors.rentDueEveryMonth &&
+              t('contractErrorMessageRentDueEveryMonth')
+            }
+            fullWidth
             required
           />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -228,16 +270,16 @@ export default function ContractEditor() {
               console.log('contractRentDueDayOfMonth', event.target.value);
               setContract({...contract, rentDueDayOfMonth: event.target.value});
             }}
-            inputRef={register({
-              pattern: {
-                value: /^\d+$/,
-                message: t('contractErrorMessageRentDueDayOfMonth'),
-              },
-            })}
+            inputRef={rentDueDayOfMonthRef}
             error={errors.rentDueDayOfMonth ? true : false}
-            helperText={errors.rentDueDayOfMonth?.message}
+            helperText={
+              errors.rentDueDayOfMonth &&
+              t('contractErrorMessageRentDueDayOfMonth')
+            }
+            {...rentDueDayOfMonthFormHookRest}
             required
           />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -245,25 +287,17 @@ export default function ContractEditor() {
             label={t('contractAmount')}
             id="contract-amount"
             className={classes.input}
-            name="amount"
             value={contract.amount ? contract.amount : ''}
             onChange={(event) => {
               setContract({...contract, amount: event.target.value});
             }}
-            inputRef={register({
-              required: {
-                value: true,
-                message: t('contractErrorMessageAmount'),
-              },
-              pattern: {
-                value: /^\d+(\.\d{1,2})?$/,
-                message: t('contractErrorMessageAmount'),
-              },
-            })}
-            error={errors.amount ? true : false}
+            inputRef={amountRef}
+            error={!!errors.amount}
             helperText={errors.amount?.message}
+            {...amountFormHookRest}
             required
           />
+
           <DatePicker
             label={t('contractStart')}
             inputFormat={t('dateFormat')}
@@ -277,14 +311,10 @@ export default function ContractEditor() {
                 id="contract-start"
                 fullWidth
                 name="start"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t('contractErrorMessageStart'),
-                  },
-                })}
-                error={errors.start ? true : false}
+                inputRef={startRef}
+                error={!!errors.start}
                 helperText={errors.start?.message}
+                {...startFormHookRest}
                 required
               />
             )}
@@ -308,7 +338,6 @@ export default function ContractEditor() {
                 label={t('contractEnd')}
                 fullWidth
                 name="end"
-                inputRef={register()}
                 error={errors.end ? true : false}
                 helperText={errors.end?.message}
               />

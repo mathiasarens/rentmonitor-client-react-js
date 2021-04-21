@@ -17,7 +17,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {BOOKING_PATH} from '../Constants';
+import {BOOKING_PATH, CONTRACT_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
@@ -220,6 +220,7 @@ export default function Bookings() {
                     maximumFractionDigits: 2,
                   }).format(bookingListItem.amount / 100)}
                 </Grid>
+                {/* ------ booking comment ---- */}
                 <Grid item xs={4} zeroMinWidth>
                   <Typography style={{overflowWrap: 'break-word'}}>
                     <Trans t={t}>{t('bookingComment')}</Trans>
@@ -251,6 +252,20 @@ export default function Bookings() {
                       deleteBooking(bookingListItem.id);
                     }}
                   />
+                </Grid>
+                {/* ------ contract link ---- */}
+                <Grid item>
+                  {bookingListItem.contractId && (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      aria-label="edit"
+                      component={Link}
+                      to={`${CONTRACT_PATH}/edit/${bookingListItem.contractId}`}
+                    >
+                      {t('bookingContractLink')}
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </Grid>

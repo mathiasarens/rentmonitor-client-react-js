@@ -101,6 +101,7 @@ const resources = {
       bookingErrorMessageTenantId: 'Please select a tenant',
       bookingErrorMessageDate: 'Please add a booking date',
       bookingCommentRentDue: 'Rent due',
+      bookingContractLink: 'Contract',
 
       tenantBookingOverview: 'Overview',
       tenantBookingOverviewSum: 'Sum',
@@ -206,6 +207,7 @@ const resources = {
       bookingErrorMessageDate: 'Bitte geben Sie ein Buchungsdatum an',
 
       bookingCommentRentDue: 'Miete fällig',
+      bookingContractLink: 'Vertrag',
 
       tenantBookingOverview: 'Übersicht',
       tenantBookingOverviewSum: 'Summe',

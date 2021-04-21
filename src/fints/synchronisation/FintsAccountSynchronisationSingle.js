@@ -317,10 +317,10 @@ export default function FintsAccountSynchronisationSingle() {
               dispatch({type: SET_FROM_DATE, payload: date});
             }}
             inputFormat={t('dateFormat')}
-            {...fromFormHookRest}
             renderInput={(params) => (
               <TextField
                 {...params}
+                {...fromFormHookRest}
                 variant="outlined"
                 margin="normal"
                 inputRef={fromFormHookRef}
