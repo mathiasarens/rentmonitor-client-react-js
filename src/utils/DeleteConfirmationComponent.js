@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';

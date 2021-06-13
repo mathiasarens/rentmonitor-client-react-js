@@ -1,15 +1,15 @@
-import React from "react";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import { withStyles } from "@material-ui/core/styles";
-import { amber, green } from "@material-ui/core/colors";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ErrorIcon from "@material-ui/icons/Error";
-import InfoIcon from "@material-ui/icons/Info";
-import WarningIcon from "@material-ui/icons/Warning";
-import clsx from "clsx";
-import { SnackbarContent } from "@material-ui/core";
+import {SnackbarContent} from '@material-ui/core';
+import {amber, green} from '@material-ui/core/colors';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CloseIcon from '@material-ui/icons/Close';
+import ErrorIcon from '@material-ui/icons/Error';
+import InfoIcon from '@material-ui/icons/Info';
+import WarningIcon from '@material-ui/icons/Warning';
+import {withStyles} from '@material-ui/styles';
+import clsx from 'clsx';
+import React from 'react';
 
 let openSnackbarFn;
 
@@ -17,40 +17,40 @@ const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,
   error: ErrorIcon,
-  info: InfoIcon
+  info: InfoIcon,
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
   success: {
-    backgroundColor: green[600]
+    backgroundColor: green[600],
   },
   error: {
-    backgroundColor: theme.palette.error.dark
+    backgroundColor: theme.palette.error.dark,
   },
   info: {
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette.primary.main,
   },
   warning: {
-    backgroundColor: amber[700]
+    backgroundColor: amber[700],
   },
   icon: {
-    fontSize: 20
+    fontSize: 20,
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   message: {
-    display: "flex",
-    alignItems: "center"
-  }
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 class Notifier extends React.Component {
   state = {
     open: false,
-    message: "",
-    variant: "info"
+    message: '',
+    variant: 'info',
   };
 
   componentDidMount() {
@@ -60,26 +60,26 @@ class Notifier extends React.Component {
   handleSnackbarRequestClose = () => {
     this.setState({
       open: false,
-      message: ""
+      message: '',
     });
   };
 
-  openSnackbar = ({ message, variant }) => {
-    this.setState({ open: true, message, variant });
+  openSnackbar = ({message, variant}) => {
+    this.setState({open: true, message, variant});
   };
 
   render() {
-    const { classes } = this.props;
+    const {classes} = this.props;
     const Icon = variantIcon[this.state.variant];
 
     return (
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
         autoHideDuration={10000}
         onClose={this.handleSnackbarRequestClose}
         open={this.state.open}
         ContentProps={{
-          "aria-describedby": "snackbar-message-id"
+          'aria-describedby': 'snackbar-message-id',
         }}
       >
         <SnackbarContent
@@ -98,7 +98,7 @@ class Notifier extends React.Component {
               onClick={this.handleSnackbarRequestClose}
             >
               <CloseIcon className={classes.icon} />
-            </IconButton>
+            </IconButton>,
           ]}
         />
       </Snackbar>
@@ -106,8 +106,8 @@ class Notifier extends React.Component {
   }
 }
 
-export function openSnackbar({ message, variant }) {
-  openSnackbarFn({ message, variant });
+export function openSnackbar({message, variant}) {
+  openSnackbarFn({message, variant});
 }
 
 export default withStyles(styles)(Notifier);

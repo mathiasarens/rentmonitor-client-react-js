@@ -3,10 +3,10 @@ import Autocomplete from '@material-ui/core/Autocomplete';
 import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
+import {makeStyles} from '@material-ui/styles';
 import parse from 'date-fns/parse';
 import sub from 'date-fns/sub';
 import React, {useEffect, useReducer} from 'react';
@@ -242,12 +242,10 @@ export default function FintsAccountSynchronisationSingle() {
     tanRequiredJsx = <div></div>;
   }
 
-  const {
-    ref: accountSettingsIdFormHookRef,
-    ...accountSettingsIdFormHookRest
-  } = register('accountSettingsId', {
-    required: true,
-  });
+  const {ref: accountSettingsIdFormHookRef, ...accountSettingsIdFormHookRest} =
+    register('accountSettingsId', {
+      required: true,
+    });
 
   const {ref: fromFormHookRef, ...fromFormHookRest} = register('from', {
     required: true,

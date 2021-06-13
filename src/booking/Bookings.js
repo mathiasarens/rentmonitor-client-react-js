@@ -4,11 +4,11 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import RefershIcon from '@material-ui/icons/Refresh';
+import {makeStyles} from '@material-ui/styles';
 import format from 'date-fns/format';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
@@ -39,9 +39,8 @@ export default function Bookings() {
   const classes = useStyles();
   const [bookings, setBookings] = useState([]);
   const [selectedTenantId, setSelectedTenantId] = useState();
-  const [selectedTenantIdOverriden, setSelectedTenantIdOverriden] = useState(
-    false,
-  );
+  const [selectedTenantIdOverriden, setSelectedTenantIdOverriden] =
+    useState(false);
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const [tenants, setTenants] = useState([]);
   const history = useHistory();

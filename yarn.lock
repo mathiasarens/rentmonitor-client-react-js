@@ -1091,10 +1091,10 @@
     "core-js-pure" "^3.0.0"
     "regenerator-runtime" "^0.13.4"
 
-"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.1", "@babel/runtime@^7.13.10", "@babel/runtime@^7.13.6", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
-  "integrity" "sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw=="
-  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.13.10.tgz"
-  "version" "7.13.10"
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.1", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+  "integrity" "sha512-121rumjddw9c3NCQ55KGkyE1h/nzWhU/owjhw0l4mQrkzz4x9SGS1X8gFLraHwX7td3Yo4QTL+qj0NcIzN87BA=="
+  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.14.5.tgz"
+  "version" "7.14.5"
   dependencies:
     "regenerator-runtime" "^0.13.4"
 
@@ -1212,10 +1212,10 @@
     "source-map" "^0.5.7"
     "stylis" "^4.0.3"
 
-"@emotion/cache@^11.0.0", "@emotion/cache@^11.1.3":
-  "integrity" "sha512-n4OWinUPJVaP6fXxWZD9OUeQ0lY7DvtmtSuqtRWT0Ofo/sBLCVSgb4/Oa0Q5eFxcwablRKjUXqXtNZVyEwCAuA=="
-  "resolved" "https://registry.npmjs.org/@emotion/cache/-/cache-11.1.3.tgz"
-  "version" "11.1.3"
+"@emotion/cache@^11.0.0", "@emotion/cache@^11.4.0":
+  "integrity" "sha512-Zx70bjE7LErRO9OaZrhf22Qye1y4F7iDl+ITjet0J+i+B88PrAOBkKvaAWhxsZf72tDLajwCgfCjJ2dvH77C3g=="
+  "resolved" "https://registry.npmjs.org/@emotion/cache/-/cache-11.4.0.tgz"
+  "version" "11.4.0"
   dependencies:
     "@emotion/memoize" "^0.7.4"
     "@emotion/sheet" "^1.0.0"
@@ -1240,20 +1240,20 @@
   "resolved" "https://registry.npmjs.org/@emotion/memoize/-/memoize-0.7.5.tgz"
   "version" "0.7.5"
 
-"@emotion/react@^11.0.0", "@emotion/react@^11.0.0-rc.0", "@emotion/react@^11.1.5":
-  "integrity" "sha512-xfnZ9NJEv9SU9K2sxXM06lzjK245xSeHRpUh67eARBm3PBHjjKIZlfWZ7UQvD0Obvw6ZKjlC79uHrlzFYpOB/Q=="
-  "resolved" "https://registry.npmjs.org/@emotion/react/-/react-11.1.5.tgz"
-  "version" "11.1.5"
+"@emotion/react@^11.0.0", "@emotion/react@^11.0.0-rc.0", "@emotion/react@^11.4.0":
+  "integrity" "sha512-4XklWsl9BdtatLoJpSjusXhpKv9YVteYKh9hPKP1Sxl+mswEFoUe0WtmtWjxEjkA51DQ2QRMCNOvKcSlCQ7ivg=="
+  "resolved" "https://registry.npmjs.org/@emotion/react/-/react-11.4.0.tgz"
+  "version" "11.4.0"
   dependencies:
-    "@babel/runtime" "^7.7.2"
-    "@emotion/cache" "^11.1.3"
-    "@emotion/serialize" "^1.0.0"
+    "@babel/runtime" "^7.13.10"
+    "@emotion/cache" "^11.4.0"
+    "@emotion/serialize" "^1.0.2"
     "@emotion/sheet" "^1.0.1"
     "@emotion/utils" "^1.0.0"
     "@emotion/weak-memoize" "^0.2.5"
     "hoist-non-react-statics" "^3.3.1"
 
-"@emotion/serialize@^1.0.0", "@emotion/serialize@^1.0.2":
+"@emotion/serialize@^1.0.2":
   "integrity" "sha512-95MgNJ9+/ajxU7QIAruiOAdYNjxZX7G2mhgrtDWswA21VviYIRP1R5QilZ/bDY42xiKsaktP4egJb3QdYQZi1A=="
   "resolved" "https://registry.npmjs.org/@emotion/serialize/-/serialize-1.0.2.tgz"
   "version" "1.0.2"
@@ -1529,18 +1529,18 @@
     "@types/yargs" "^15.0.0"
     "chalk" "^4.0.0"
 
-"@material-ui/core@^5.0.0-alpha.15", "@material-ui/core@^5.0.0-alpha.18", "@material-ui/core@5.0.0-alpha.28":
-  "integrity" "sha512-84m51Xj2TW+EUVnhUrQg7yrypP7grlNqg6KmIejL7QpCZ6ctE1f5Myvp9hClm4j10niwsvyFzqQC0NrVIkFkeA=="
-  "resolved" "https://registry.npmjs.org/@material-ui/core/-/core-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/core@^5.0.0-alpha.36":
+  "integrity" "sha512-14i+hgsycPIGPbBAz+g98gMnxQ5RTMhsqmsG3JgjFJckF5DhzZVFVVhax5N946mp8NUfcAvAUyCze7PvRKdvBg=="
+  "resolved" "https://registry.npmjs.org/@material-ui/core/-/core-5.0.0-alpha.36.tgz"
+  "version" "5.0.0-alpha.36"
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@material-ui/styled-engine" "5.0.0-alpha.25"
-    "@material-ui/styles" "5.0.0-alpha.28"
-    "@material-ui/system" "5.0.0-alpha.28"
-    "@material-ui/types" "5.1.7"
-    "@material-ui/unstyled" "5.0.0-alpha.28"
-    "@material-ui/utils" "5.0.0-alpha.28"
+    "@material-ui/private-theming" "5.0.0-alpha.35"
+    "@material-ui/styled-engine" "5.0.0-alpha.34"
+    "@material-ui/system" "5.0.0-alpha.36"
+    "@material-ui/types" "6.0.1"
+    "@material-ui/unstyled" "5.0.0-alpha.35"
+    "@material-ui/utils" "5.0.0-alpha.35"
     "@popperjs/core" "^2.4.4"
     "@types/react-transition-group" "^4.2.0"
     "clsx" "^1.0.4"
@@ -1550,49 +1550,59 @@
     "react-is" "^17.0.0"
     "react-transition-group" "^4.4.0"
 
-"@material-ui/icons@5.0.0-alpha.28":
-  "integrity" "sha512-RMoIBH7LoKSoXVxwC6twvj9gpvNMT3EQCaKrfSAnKOKu/kibmJjEyFpwrj1CWOdfKzdSakyZqSNkUvOQSGvn5Q=="
-  "resolved" "https://registry.npmjs.org/@material-ui/icons/-/icons-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/icons@^5.0.0-alpha.36":
+  "integrity" "sha512-0nd1MTmgTyx+9lFV1PusbA7/Ow19aL83wsEIpHeAsT5q9Vuz7uS5erwV4YK7vzUj3Dinc5ggx7Wpjtv+2qJCnQ=="
+  "resolved" "https://registry.npmjs.org/@material-ui/icons/-/icons-5.0.0-alpha.36.tgz"
+  "version" "5.0.0-alpha.36"
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@material-ui/lab@5.0.0-alpha.28":
-  "integrity" "sha512-LZXxsvbLWRYyU7zoIVUCGR7hHZ1agwnrAFUzG+aFLHHP752FGZgfkBxgFtfOsbj8JLGJ0H0ps35Shc6AShL19A=="
-  "resolved" "https://registry.npmjs.org/@material-ui/lab/-/lab-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/lab@^5.0.0-alpha.36":
+  "integrity" "sha512-0aJrC4l1iKDZqUTsn85q9xzqVBVZr+qpO8l7rZV1KqI5yKsa4jzUG/wZqbx+dgjhKnxxigB58mQ+Q3Xfbc17jg=="
+  "resolved" "https://registry.npmjs.org/@material-ui/lab/-/lab-5.0.0-alpha.36.tgz"
+  "version" "5.0.0-alpha.36"
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@date-io/date-fns" "^2.10.6"
     "@date-io/dayjs" "^2.10.6"
     "@date-io/luxon" "^2.10.6"
     "@date-io/moment" "^2.10.6"
-    "@material-ui/system" "5.0.0-alpha.28"
-    "@material-ui/utils" "5.0.0-alpha.28"
+    "@material-ui/system" "5.0.0-alpha.36"
+    "@material-ui/utils" "5.0.0-alpha.35"
     "clsx" "^1.0.4"
     "prop-types" "^15.7.2"
     "react-is" "^17.0.0"
     "react-transition-group" "^4.4.1"
     "rifm" "^0.12.0"
 
-"@material-ui/styled-engine@5.0.0-alpha.25":
-  "integrity" "sha512-z9piABOWycFx1yA9Th8MAs/03SfVOobh+4X1owZmOzXVSln3Xm0C3GjsFmfUpYMC8oC0vddFj00IcCCxm0OECg=="
-  "resolved" "https://registry.npmjs.org/@material-ui/styled-engine/-/styled-engine-5.0.0-alpha.25.tgz"
-  "version" "5.0.0-alpha.25"
+"@material-ui/private-theming@5.0.0-alpha.35":
+  "integrity" "sha512-D02L9kYjnMd8PtJUSXpiBk13+FnjQIDWINzBtRJXpwDooA7M3ejtTGPp+YJnP/wYs4nKdh852/+WiRk3VI5q4Q=="
+  "resolved" "https://registry.npmjs.org/@material-ui/private-theming/-/private-theming-5.0.0-alpha.35.tgz"
+  "version" "5.0.0-alpha.35"
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@material-ui/utils" "5.0.0-alpha.35"
+    "prop-types" "^15.7.2"
+
+"@material-ui/styled-engine@5.0.0-alpha.34":
+  "integrity" "sha512-1j+4tIxS6x3McJ+3O9mxwzjkci/uu09nnON7ZDgqX9O3f15D8CP8cmAy0PDm47M4utMwIqj+EaS4Y6d2PZWF5Q=="
+  "resolved" "https://registry.npmjs.org/@material-ui/styled-engine/-/styled-engine-5.0.0-alpha.34.tgz"
+  "version" "5.0.0-alpha.34"
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@emotion/cache" "^11.0.0"
     "prop-types" "^15.7.2"
 
-"@material-ui/styles@5.0.0-alpha.28":
-  "integrity" "sha512-1MUAkvJTXYasyZtcvRHiynonFH3O2GeJkZYBPEsxoH44iIxNRYI7joeIHqoaTKowCJw3FZvpoG9dRE1vw1kMFw=="
-  "resolved" "https://registry.npmjs.org/@material-ui/styles/-/styles-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/styles@^5.0.0-alpha.35":
+  "integrity" "sha512-GQ99bQkKjyC6AJXEdYvRcZ6k4xarZl3ybxQ3UPGlDxlLUbtE5dHT5Mg88NON7kVhSZOS4sTqE+c2ggvvLYja5g=="
+  "resolved" "https://registry.npmjs.org/@material-ui/styles/-/styles-5.0.0-alpha.35.tgz"
+  "version" "5.0.0-alpha.35"
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@emotion/hash" "^0.8.0"
-    "@material-ui/types" "5.1.7"
-    "@material-ui/utils" "5.0.0-alpha.28"
+    "@material-ui/private-theming" "5.0.0-alpha.35"
+    "@material-ui/types" "6.0.1"
+    "@material-ui/utils" "5.0.0-alpha.35"
     "clsx" "^1.0.4"
     "csstype" "^3.0.2"
     "hoist-non-react-statics" "^3.3.2"
@@ -1606,36 +1616,39 @@
     "jss-plugin-vendor-prefixer" "^10.0.3"
     "prop-types" "^15.7.2"
 
-"@material-ui/system@5.0.0-alpha.28":
-  "integrity" "sha512-znud/caYPlPrnOSqcX3xCC088326hUR6B5oCGemu35+HLk96cFCYKCHOXZRDU7NMqaXpiV1dQP1iYQDdik4kiQ=="
-  "resolved" "https://registry.npmjs.org/@material-ui/system/-/system-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/system@5.0.0-alpha.36":
+  "integrity" "sha512-1QqINDfNv5y+5TY/p66qkWAZsQGO+HDPDFpTELXtSC9F7zzuosPdJGMM8YFD7vecY4KdDWhCvA4f2G/vI6x8nw=="
+  "resolved" "https://registry.npmjs.org/@material-ui/system/-/system-5.0.0-alpha.36.tgz"
+  "version" "5.0.0-alpha.36"
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@material-ui/utils" "5.0.0-alpha.28"
+    "@material-ui/styled-engine" "5.0.0-alpha.34"
+    "@material-ui/types" "6.0.1"
+    "@material-ui/utils" "5.0.0-alpha.35"
+    "clsx" "^1.0.4"
     "csstype" "^3.0.2"
     "prop-types" "^15.7.2"
 
-"@material-ui/types@5.1.7":
-  "integrity" "sha512-OSpB0gEKZm5h4izTLyipb34PkfazpvusgQMDTmFkSuqcKoChTshfGejEYX6uaZ+4m5xlT5qzihE6eKA+JnjELg=="
-  "resolved" "https://registry.npmjs.org/@material-ui/types/-/types-5.1.7.tgz"
-  "version" "5.1.7"
+"@material-ui/types@6.0.1":
+  "integrity" "sha512-t53C2BZE59e8ao38EDIZdM2smPDSEo5Xx9XxQ/MNM9Ph63Mu4vj5pmECiXkYp0y2OrvFiiZhcqRWV34SBOA18g=="
+  "resolved" "https://registry.npmjs.org/@material-ui/types/-/types-6.0.1.tgz"
+  "version" "6.0.1"
 
-"@material-ui/unstyled@5.0.0-alpha.28":
-  "integrity" "sha512-cZBfzkav+fXrh/aYC7fBzHgbOjq8r/IdLrr2ijRm14E0VFxnOFephrMW2+YIR15k5UYU7GBAB3JpKkAzYdFaKQ=="
-  "resolved" "https://registry.npmjs.org/@material-ui/unstyled/-/unstyled-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/unstyled@5.0.0-alpha.35":
+  "integrity" "sha512-iTlwlftnH/3w4hU/xaJePMDVsL/JtYJhruJxZ2Tt/2eVzGTvYq88PLQ5+o2VBRROnxQGKRjpNuX3nss+/RudPg=="
+  "resolved" "https://registry.npmjs.org/@material-ui/unstyled/-/unstyled-5.0.0-alpha.35.tgz"
+  "version" "5.0.0-alpha.35"
   dependencies:
     "@babel/runtime" "^7.4.4"
-    "@material-ui/utils" "5.0.0-alpha.28"
+    "@material-ui/utils" "5.0.0-alpha.35"
     "clsx" "^1.0.4"
     "prop-types" "^15.7.2"
     "react-is" "^17.0.0"
 
-"@material-ui/utils@5.0.0-alpha.28":
-  "integrity" "sha512-WNdnF6EapcQ0x1pcQp/jiQwtKiDipg0awnljQpffEfc+mUhDcwebLsNsglo0++J2ZGXs5DeXIXBXN73MWFD52A=="
-  "resolved" "https://registry.npmjs.org/@material-ui/utils/-/utils-5.0.0-alpha.28.tgz"
-  "version" "5.0.0-alpha.28"
+"@material-ui/utils@5.0.0-alpha.35":
+  "integrity" "sha512-Msu+zIXd7Y2JrTU9JIf0xjjjAMdWEIdlj2Tmj9bSYFF6bgStrQ1WXXZxxFz5GmdzT7FcLi5U3PqBynSNX/QDGA=="
+  "resolved" "https://registry.npmjs.org/@material-ui/utils/-/utils-5.0.0-alpha.35.tgz"
+  "version" "5.0.0-alpha.35"
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@types/prop-types" "^15.7.3"
@@ -1983,9 +1996,9 @@
   "version" "1.5.4"
 
 "@types/react-is@^16.7.1 || ^17.0.0":
-  "integrity" "sha512-A0DQ1YWZ0RG2+PV7neAotNCIh8gZ3z7tQnDJyS2xRPDNtAtSPcJ9YyfMP8be36Ha0kQRzbZCrrTMznA4blqO5g=="
-  "resolved" "https://registry.npmjs.org/@types/react-is/-/react-is-17.0.0.tgz"
-  "version" "17.0.0"
+  "integrity" "sha512-X6jVqDIibL2sY0Qtth5EzNeUgPyoCWeBZdmE5xKr7hI4zaQDwN0VaQd7pJnlOB0mDGnOVH0cZZVXg9cnWhztQg=="
+  "resolved" "https://registry.npmjs.org/@types/react-is/-/react-is-17.0.1.tgz"
+  "version" "17.0.1"
   dependencies:
     "@types/react" "*"
 
@@ -4131,10 +4144,10 @@
     "whatwg-mimetype" "^2.3.0"
     "whatwg-url" "^8.0.0"
 
-"date-fns@^2.0.0", "date-fns@^2.20.1":
-  "integrity" "sha512-8P5M8Kxbnovd0zfvOs7ipkiVJ3/zZQ0F/nrBW4x5E+I0uAZVZ80h6CKd24fSXQ5TLK5hXMtI4yb2O5rEZdUt2A=="
-  "resolved" "https://registry.npmjs.org/date-fns/-/date-fns-2.20.1.tgz"
-  "version" "2.20.1"
+"date-fns@^2.0.0", "date-fns@^2.22.1":
+  "integrity" "sha512-yUFPQjrxEmIsMqlHhAhmxkuH769baF21Kk+nZwZGyrMoyLA+LugaQtC0+Tqf9CBUUULWwUJt6Q5ySI3LJDDCGg=="
+  "resolved" "https://registry.npmjs.org/date-fns/-/date-fns-2.22.1.tgz"
+  "version" "2.22.1"
 
 "debug@^2.2.0":
   "integrity" "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA=="
@@ -5840,12 +5853,12 @@
     "relateurl" "^0.2.7"
     "terser" "^4.6.3"
 
-"html-parse-stringify2@^2.0.1":
-  "integrity" "sha1-3FZwtyksoVi3vJFsmmc1rIhyg0o="
-  "resolved" "https://registry.npmjs.org/html-parse-stringify2/-/html-parse-stringify2-2.0.1.tgz"
-  "version" "2.0.1"
+"html-parse-stringify@^3.0.1":
+  "integrity" "sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg=="
+  "resolved" "https://registry.npmjs.org/html-parse-stringify/-/html-parse-stringify-3.0.1.tgz"
+  "version" "3.0.1"
   dependencies:
-    "void-elements" "^2.0.1"
+    "void-elements" "3.1.0"
 
 "html-webpack-plugin@4.5.0":
   "integrity" "sha512-MouoXEYSjTzCrjIxWwg8gxL5fE2X2WZJLmBYXlaJhQUH5K/b5OrqmV7T4dB7iu0xkmJ6JlUuV6fFVtnqbPopZw=="
@@ -5948,17 +5961,17 @@
   "resolved" "https://registry.npmjs.org/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz"
   "version" "1.0.4"
 
-"i18next-browser-languagedetector@^6.1.0":
-  "integrity" "sha512-NXbr/qPqkg6VyUwPrzmVOAafqIk1zdjzhYVxZWoSi338XEGmuOeroEglLdR8nJUJcf5BfOSHva80tqCPwXFTFQ=="
-  "resolved" "https://registry.npmjs.org/i18next-browser-languagedetector/-/i18next-browser-languagedetector-6.1.0.tgz"
-  "version" "6.1.0"
+"i18next-browser-languagedetector@^6.1.1":
+  "integrity" "sha512-hckgbBdCpJPhkGUANe6tsvD52k9R7GuYskG0EaIw89pZz3owUvUEwXHqM5pX1Pn93jz+O65Y09ikwJrMkqtq2Q=="
+  "resolved" "https://registry.npmjs.org/i18next-browser-languagedetector/-/i18next-browser-languagedetector-6.1.1.tgz"
+  "version" "6.1.1"
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"i18next@^20.2.1", "i18next@>= 19.0.0":
-  "integrity" "sha512-JLruWDEQ3T6tKT6P7u+DsNtToMHUwUcQIYOMRcnNBdUhSfKkoIDUKdVDKgGtmqr//LrirxjADUdr3d5Gwbow6g=="
-  "resolved" "https://registry.npmjs.org/i18next/-/i18next-20.2.1.tgz"
-  "version" "20.2.1"
+"i18next@^20.3.1", "i18next@>= 19.0.0":
+  "integrity" "sha512-WTY07KreR5z2LBSzAIKs05zpR5tgUT98C4fD96e7Risbc/HZePwF6AEnb9VkjdeSeRn9PDqQBay7ZkphuXt0Xw=="
+  "resolved" "https://registry.npmjs.org/i18next/-/i18next-20.3.1.tgz"
+  "version" "20.3.1"
   dependencies:
     "@babel/runtime" "^7.12.0"
 
@@ -9530,18 +9543,18 @@
   "resolved" "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.9.tgz"
   "version" "6.0.9"
 
-"react-hook-form@^7.0.5":
-  "integrity" "sha512-NERg22pjSa8URYfNhDhefGVODMTP4DMLlkK+bpuN4GUWKYIh/qiV4YmPuH8bfMAcXKj+bpdh6n7dB5B6jBs74Q=="
-  "resolved" "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.0.5.tgz"
-  "version" "7.0.5"
+"react-hook-form@^7.8.4":
+  "integrity" "sha512-hVh7uAJZS4/c20kNjW4rW+pD7+4RhuMDF3qY82f8wFuuPkoO+Pg5JHSJUqGdPdlI82snOlZ4DK/avIBn5SxItg=="
+  "resolved" "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.8.4.tgz"
+  "version" "7.8.4"
 
-"react-i18next@^11.8.12":
-  "integrity" "sha512-M2PSVP9MzT/7yofXfCOF5gAVotinrM4BXWiguk8uFSznJsfFzTjrp3K9CBWcXitpoCBVZGZJ2AnbaWGSNkJqfw=="
-  "resolved" "https://registry.npmjs.org/react-i18next/-/react-i18next-11.8.12.tgz"
-  "version" "11.8.12"
+"react-i18next@^11.10.0":
+  "integrity" "sha512-Vn0Xw2MczBZHKciWdayx4J+P3S9Im2FWIzUPV2O7iUVFqIOhMv6o9mVTJN1gEi/MA2FZzorjvaEijglCMeehZQ=="
+  "resolved" "https://registry.npmjs.org/react-i18next/-/react-i18next-11.10.0.tgz"
+  "version" "11.10.0"
   dependencies:
-    "@babel/runtime" "^7.13.6"
-    "html-parse-stringify2" "^2.0.1"
+    "@babel/runtime" "^7.14.0"
+    "html-parse-stringify" "^3.0.1"
 
 "react-is@^16.12.0 || ^17.0.0":
   "integrity" "sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA=="
@@ -11739,10 +11752,10 @@
   "resolved" "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"
   "version" "1.1.2"
 
-"void-elements@^2.0.1":
-  "integrity" "sha1-wGavtYK7HLQSjWDqkjkulNXp2+w="
-  "resolved" "https://registry.npmjs.org/void-elements/-/void-elements-2.0.1.tgz"
-  "version" "2.0.1"
+"void-elements@3.1.0":
+  "integrity" "sha1-YU9/v42AHwu18GYfWy9XhXUOTwk="
+  "resolved" "https://registry.npmjs.org/void-elements/-/void-elements-3.1.0.tgz"
+  "version" "3.1.0"
 
 "w3c-hr-time@^1.0.2":
   "integrity" "sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ=="

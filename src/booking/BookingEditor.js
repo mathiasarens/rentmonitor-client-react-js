@@ -1,25 +1,25 @@
 import Autocomplete from '@material-ui/core/Autocomplete';
 import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
+import { makeStyles } from '@material-ui/styles';
 import parse from 'date-fns/parse';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError,
+  handleAuthenticationError
 } from '../authentication/authenticatedFetch';
-import {BOOKING_PATH} from '../Constants';
-import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
-import {openSnackbar} from '../utils/Notifier';
-import {bookingLoader} from './dataaccess/bookingLoader';
+import { BOOKING_PATH } from '../Constants';
+import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
+import { openSnackbar } from '../utils/Notifier';
+import { bookingLoader } from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
