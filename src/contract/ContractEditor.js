@@ -328,6 +328,7 @@ export default function ContractEditor() {
               <DatePicker
                 label={t('contractStart')}
                 inputFormat={t('dateFormat')}
+                mask="__.__.____"
                 value={value}
                 onChange={(date) => onChange(date)}
                 renderInput={(params) => (
@@ -358,6 +359,7 @@ export default function ContractEditor() {
                 disableToolbar
                 variant="inline"
                 inpuFormat={t('dateFormat')}
+                mask="__.__.____"
                 value={value}
                 onChange={(date) => onChange(date)}
                 renderInput={(params) => (
