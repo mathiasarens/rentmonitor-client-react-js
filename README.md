@@ -66,4 +66,66 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
 # rentmonitor-client-react-js
+
+# AWS S3 deployment
+
+Build a prod release to the build directory:
+
+```
+npm run build
+```
+
+Create a S3 bucket:
+
+```
+aws s3 mb s3://rentmonitor-dev
+```
+
+Sync build with bucket.
+
+```
+aws s3 sync build/ s3://rentmonitor-dev
+```
+
+Declare website
+
+```
+aws s3 website s3://rentmonitor-dev/ --index-document index.html --error-document 50x.html
+```
+
+Update CORS configuration over AWS console
+
+```
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "PUT",
+            "POST",
+            "DELETE"
+        ],
+        "AllowedOrigins": [
+            "https://rentmonitor-server-loopback-dev.eba-6atwjbxk.us-east-1.elasticbeanstalk.com"
+        ],
+        "ExposeHeaders": []
+    },
+    {
+        "AllowedHeaders": [],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": []
+    }
+]
+```
+
+Open website:
+
+http://rentmonitor-dev.s3-website-us-east-1.amazonaws.com
