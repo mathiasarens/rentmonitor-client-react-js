@@ -1,25 +1,24 @@
 import Autocomplete from '@material-ui/core/Autocomplete';
 import Button from '@material-ui/core/Button';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
-import { makeStyles } from '@material-ui/styles';
-import parse from 'date-fns/parse';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import {makeStyles} from '@material-ui/styles';
+import React, {useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
-  handleAuthenticationError
+  handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import { BOOKING_PATH } from '../Constants';
-import { tenantsLoader } from '../tenant/dataaccess/tenantLoader';
-import { openSnackbar } from '../utils/Notifier';
-import { bookingLoader } from './dataaccess/bookingLoader';
+import {BOOKING_PATH} from '../Constants';
+import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
+import {openSnackbar} from '../utils/Notifier';
+import {bookingLoader} from './dataaccess/bookingLoader';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -54,33 +53,33 @@ export default function BookingEditor() {
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
   const {bookingId} = useParams();
-  const {register, handleSubmit, errors} = useForm();
-
-  const loadBooking = useCallback(
-    (id) => {
-      bookingLoader(
-        id,
-        history,
-        (data) => {
-          data.amount = data.amount / 100;
-          setBooking(data);
-        },
-        (error) => {
-          openSnackbar({
-            message: t(handleAuthenticationError(error)),
-            variant: 'error',
-          });
-        },
-      );
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      date: '',
+      tenant: null,
+      comment: '',
+      amount: '',
     },
-    [t, history],
-  );
+  });
 
-  const loadTenants = useCallback(() => {
-    tenantsLoader(
+  const loadBooking = (id, tenants) => {
+    bookingLoader(
+      id,
       history,
       (data) => {
-        setTenants(data);
+        data.amount = data.amount / 100;
+        setBooking(data);
+        reset({
+          date: data.date,
+          tenant: tenants.find((tenant) => tenant.id === data.tenantId),
+          comment: data.comment,
+          amount: data.amount,
+        });
       },
       (error) => {
         openSnackbar({
@@ -89,14 +88,30 @@ export default function BookingEditor() {
         });
       },
     );
-  }, [t, history]);
+  };
+
+  const loadTenants = () => {
+    tenantsLoader(
+      history,
+      (data) => {
+        setTenants(data);
+        if (bookingId) {
+          loadBooking(bookingId, data);
+        }
+      },
+      (error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      },
+    );
+  };
 
   useEffect(() => {
     loadTenants();
-    if (bookingId) {
-      loadBooking(bookingId);
-    }
-  }, [loadTenants, loadBooking, bookingId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = (formInputs) => {
     const bookingToSubmit = {};
@@ -109,7 +124,7 @@ export default function BookingEditor() {
     if (booking.accountTransactionId) {
       bookingToSubmit.accountTransactionId = booking.accountTransactionId;
     }
-    bookingToSubmit.date = parse(formInputs.date, t('dateFormat'), new Date());
+    bookingToSubmit.date = formInputs.date;
     bookingToSubmit.comment = formInputs.comment;
     bookingToSubmit.amount = Math.trunc(parseFloat(formInputs.amount) * 100);
     bookingToSubmit.type = booking.type;
@@ -154,105 +169,104 @@ export default function BookingEditor() {
           className={classes.form}
           noValidate
         >
-          <DatePicker
-            disableToolbar
-            label={t('bookingDate')}
-            OpenPickerButtonProps={{
-              'aria-label': 'change booking date',
-            }}
-            inputFormat={t('dateFormat')}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                margin="normal"
-                variant="outlined"
-                name="date"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t('bookingErrorMessageDate'),
-                  },
-                })}
-                error={errors.date ? true : false}
-                helperText={errors.date?.message}
-                required
-                fullWidth
-              />
-            )}
-            value={booking.date ? booking.date : new Date()}
-            onChange={(date) => setBooking({...booking, date: date})}
-          />
-
-          <Autocomplete
-            id="teanant-id"
-            options={tenants}
-            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-            getOptionSelected={(option, value) =>
-              value === undefined || value === '' || option.id === value.id
-            }
-            value={
-              booking.tenantId
-                ? tenants.find((tenant) => tenant.id === booking.tenantId)
-                : ''
-            }
-            onChange={(event, tenant) => {
-              if (tenant !== null) {
-                setBooking({...booking, tenantId: tenant.id});
-              }
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t('tenant')}
-                margin="normal"
-                variant="outlined"
-                name="tenantId"
-                inputRef={register({
-                  required: {
-                    value: true,
-                    message: t('bookingErrorMessageTenantId'),
-                  },
-                })}
-                error={errors.tenantId ? true : false}
-                helperText={errors.tenantId?.message}
-                required
+          <Controller
+            control={control}
+            name="date"
+            rules={{required: true, message: t('bookingErrorMessageDate')}}
+            render={({field: {onChange, value}}) => (
+              <DatePicker
+                disableToolbar
+                label={t('bookingDate')}
+                OpenPickerButtonProps={{
+                  'aria-label': 'change booking date',
+                }}
+                inputFormat={t('dateFormat')}
+                mask="__.__.____"
+                value={value}
+                onChange={(date) => onChange(date)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    margin="normal"
+                    variant="outlined"
+                    error={errors.date ? true : false}
+                    helperText={errors.date?.message}
+                    required
+                    fullWidth
+                  />
+                )}
               />
             )}
           />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('bookingComment')}
-            className={classes.input}
+          <Controller
+            control={control}
+            name="tenant"
+            rules={{required: true, message: t('bookingErrorMessageTenantId')}}
+            render={({field: {onChange, value}}) => (
+              <Autocomplete
+                id="teanant-id"
+                options={tenants}
+                getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+                getOptionSelected={(option, value) => {
+                  console.log('getOptionSelected: ', option, value);
+                  return (
+                    value === null ||
+                    value === undefined ||
+                    value === '' ||
+                    option.id === value.id
+                  );
+                }}
+                value={value}
+                onChange={(event, tenant) => {
+                  console.log('onChange - Tenant: ', tenant);
+                  onChange(tenant);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={t('tenant')}
+                    margin="normal"
+                    variant="outlined"
+                    error={errors.tenant ? true : false}
+                    helperText={errors.tenant?.message}
+                    required
+                  />
+                )}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
             name="comment"
-            value={booking.comment ? booking.comment : ''}
-            onChange={(event) => {
-              setBooking({...booking, comment: event.target.value});
-            }}
-            inputRef={register({
+            rules={{
               maxLength: {
                 value: 255,
                 message: t('bookingErrorMessageComment'),
               },
-            })}
-            error={errors.comment ? true : false}
-            helperText={errors.comment?.message}
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('bookingComment')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={errors.comment ? true : false}
+                helperText={errors.comment?.message}
+              />
+            )}
           />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('bookingAmount')}
-            className={classes.input}
+          <Controller
+            control={control}
             name="amount"
-            value={booking.amount ? booking.amount : ''}
-            onChange={(event) => {
-              setBooking({...booking, amount: event.target.value});
-            }}
-            inputRef={register({
+            rules={{
               required: {
                 value: true,
                 message: t('bookingErrorMessageAmount'),
@@ -261,10 +275,23 @@ export default function BookingEditor() {
                 value: '^-?d+(.d{1,2})?$',
                 message: t('bookingErrorMessageAmount'),
               },
-            })}
-            error={errors.amount ? true : false}
-            helperText={errors.amount?.message}
-            required
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('bookingAmount')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={errors.amount ? true : false}
+                helperText={errors.amount?.message}
+                required
+              />
+            )}
           />
 
           <Button
