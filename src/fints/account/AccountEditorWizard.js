@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/styles';
 import React from 'react';
 import {Redirect} from 'react-router';
 import {Route, Switch} from 'react-router-dom';
+import {ACCOUNT_PATH} from '../../Constants';
 import AccountEditorStepAccountSelection from './AccountEditorStepAccountSelection';
 import AccountEditorStepInitial from './AccountEditorStepInitial';
 import AccountEditorStepTan from './AccountEditorStepTan';
@@ -30,17 +31,21 @@ export default function AccountEditorWizard() {
       <CssBaseline />
       <div className={classes.paper}>
         <Switch>
-          <Redirect from="/account/edit" exact to="/account/edit/step1" />
+          <Redirect
+            exact
+            from={`${ACCOUNT_PATH}/edit`}
+            to={`${ACCOUNT_PATH}/edit/step1`}
+          />
           <Route
-            path="/account/edit/step1"
+            path={`${ACCOUNT_PATH}/edit/step1/:accountId?`}
             component={AccountEditorStepInitial}
           />
           <Route
-            path="/account/edit/step2"
+            path={`${ACCOUNT_PATH}/edit/step2/:accountId?`}
             component={AccountEditorStepAccountSelection}
           />
           <Route
-            path="/account/edit/stepTan"
+            path={`${ACCOUNT_PATH}/edit/stepTan/:accountId?`}
             component={AccountEditorStepTan}
           />
         </Switch>

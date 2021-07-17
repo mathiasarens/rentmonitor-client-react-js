@@ -3,14 +3,15 @@ import {red} from '@material-ui/core/colors';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/styles';
-import React from 'react';
+import React, {useEffect} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
-  stringifyFormData,
 } from '../../authentication/authenticatedFetch';
+import {ACCOUNT_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,43 +33,56 @@ export default function AccountEditorStepInitial() {
   const classes = useStyles();
   const {t} = useTranslation();
   const history = useHistory();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      name: '',
+      fintsBlz: '',
+      fintsUrl: '',
+      fintsUser: '',
+      fintsPassword: '',
+    },
+  });
+  const {accountId} = useParams();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!event.target.checkValidity()) {
-      openSnackbar({
-        message: t('formValidationFailed'),
-        variant: 'error',
-      });
-      return;
-    }
-    const formData = new FormData(event.target);
-
+  const onSubmit = (formInputs) => {
+    console.log('account - onSubmit - formInputs: ', formInputs);
     authenticatedFetch('/account-settings/fints-accounts', history, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: stringifyFormData(formData),
+      body: JSON.stringify(formInputs),
     })
       .then((response) => {
         response
           .json()
           .then((json) => {
-            console.log(json);
-            const formDataClone = convertToJavaScriptObject(formData);
+            console.log(
+              'account - onSubmit - step1 - response status: ',
+              response.status,
+            );
+            console.log('account - onSubmit - step1 - response json: ', json);
             const state = Object.assign(
               {},
-              {form: formDataClone},
+              {form: formInputs},
               {accounts: json},
             );
+            console.log('account - onSubmit - step1 - response state: ', state);
             switch (response.status) {
               case 209:
-                history.push('/account/edit/step2', state);
+                history.push(`${ACCOUNT_PATH}/edit/step2/${accountId}`, state);
                 break;
               case 210:
-                history.push('/account/edit/stepTan', state);
+                history.push(
+                  `${ACCOUNT_PATH}/edit/stepTan/${accountId}`,
+                  state,
+                );
                 break;
               default:
                 console.error(response);
@@ -94,63 +108,191 @@ export default function AccountEditorStepInitial() {
       });
   };
 
+  const loadAccount = (id) => {
+    console.log(`Load account: ${id}`);
+    authenticatedFetch(`/account-settings/${id}`, history, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((accountsettings) => {
+        console.log('Loaded account-settings: ', accountsettings);
+        reset({
+          name: accountsettings.name,
+          fintsBlz: accountsettings.fintsBlz,
+          fintsUrl: accountsettings.fintsUrl,
+          fintsUser: accountsettings.fintsUser,
+        });
+      })
+      .catch(function (error) {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      });
+  };
+
+  useEffect(() => {
+    if (accountId) {
+      loadAccount(accountId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <form onSubmit={handleSubmit} className={classes.form} noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
       <Typography component="h1" variant="h5">
         {t('newAccountSettings')}
       </Typography>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        fullWidth
-        id="name"
-        label="Name"
+
+      <Controller
+        control={control}
         name="name"
-        autoComplete="Name"
-        className={classes.input}
-        autoFocus
-        required
+        rules={{
+          required: {
+            value: true,
+            message: t('accountErrorMessageNameRequired'),
+          },
+        }}
+        render={({field: {onChange, value}}) => (
+          <TextField
+            id="name"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('name')}
+            className={classes.input}
+            value={value}
+            onChange={(event) => {
+              onChange(event.target.value);
+            }}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+            autoFocus
+            required
+          />
+        )}
       />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        fullWidth
+
+      <Controller
+        control={control}
         name="fintsBlz"
-        label={t('fintsBlz')}
-        id="fintsBlz"
-        className={classes.input}
-        required
+        rules={{
+          required: {
+            value: true,
+            message: t('accountErrorMessageFintsBlzRequired'),
+          },
+          pattern: {
+            value: /^\d{8}$/,
+            message: t('accountErrorMessageFintsBlzPatternMismatch'),
+          },
+        }}
+        render={({field: {onChange, value}}) => (
+          <TextField
+            id="fintsBlz"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('fintsBlz')}
+            className={classes.input}
+            value={value}
+            onChange={(event) => {
+              onChange(event.target.value);
+            }}
+            error={!!errors.fintsBlz}
+            helperText={errors.fintsBlz?.message}
+            required
+          />
+        )}
       />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        fullWidth
+
+      <Controller
+        control={control}
         name="fintsUrl"
-        label={t('fintsUrl')}
-        id="fintsUrl"
-        className={classes.input}
-        required
+        rules={{
+          required: {
+            value: true,
+            message: t('accountErrorMessageFintsUrlRequired'),
+          },
+        }}
+        render={({field: {onChange, value}}) => (
+          <TextField
+            id="fintsUrl"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('fintsUrl')}
+            className={classes.input}
+            value={value}
+            onChange={(event) => {
+              onChange(event.target.value);
+            }}
+            error={!!errors.fintsUrl}
+            helperText={errors.fintsUrl?.message}
+            required
+          />
+        )}
       />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        fullWidth
+
+      <Controller
+        control={control}
         name="fintsUser"
-        label={t('fintsUser')}
-        id="fintsUser"
-        className={classes.input}
-        required
+        rules={{
+          required: {
+            value: true,
+            message: t('accountErrorMessageFintsUserRequired'),
+          },
+        }}
+        render={({field: {onChange, value}}) => (
+          <TextField
+            id="fintsUser"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('fintsUser')}
+            className={classes.input}
+            value={value}
+            onChange={(event) => {
+              onChange(event.target.value);
+            }}
+            error={!!errors.fintsUser}
+            helperText={errors.fintsUser?.message}
+            required
+          />
+        )}
       />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        fullWidth
+
+      <Controller
+        control={control}
         name="fintsPassword"
-        label={t('fintsPassword')}
-        id="fintsPassword"
-        type="password"
-        className={classes.input}
-        required
+        rules={{
+          required: {
+            value: true,
+            message: t('accountErrorMessageFintsPasswordRequired'),
+          },
+        }}
+        render={({field: {onChange, value}}) => (
+          <TextField
+            id="fintsPassword"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label={t('fintsPassword')}
+            className={classes.input}
+            type="password"
+            value={value}
+            onChange={(event) => {
+              onChange(event.target.value);
+            }}
+            error={!!errors.fintsPassword}
+            helperText={errors.fintsPassword?.message}
+            required
+          />
+        )}
       />
 
       <Button
@@ -165,12 +307,4 @@ export default function AccountEditorStepInitial() {
       </Button>
     </form>
   );
-}
-
-function convertToJavaScriptObject(formData) {
-  const data = {};
-  for (let key of formData.keys()) {
-    data[key] = formData.get(key);
-  }
-  return data;
 }

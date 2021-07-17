@@ -1,20 +1,15 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {red} from '@material-ui/core/colors';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/styles';
-import React from 'react';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -41,9 +36,18 @@ export default function AccountEditorStepAccountSelection(props) {
   const classes = useStyles();
   const {t} = useTranslation();
   const history = useHistory();
+  const [selectedAccountIban, setSelectedAccountIban] = useState('');
   const step1FormData = props.location.state.form;
   const fintsAccounts = props.location.state.accounts;
-  const rawAccountIdentifier = 'rawAccount';
+  const {accountId} = useParams();
+
+  console.log('account - step2 - start - fintsAccounts: ', fintsAccounts);
+  console.log('account - step2 - start - step1FormData: ', step1FormData);
+
+  const handleRadioButtonChange = (event) => {
+    setSelectedAccountIban(event.target.value);
+    console.log('selectedAccountChanged: ', event.target.value);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,9 +60,8 @@ export default function AccountEditorStepAccountSelection(props) {
       });
       return;
     }
-    const formData = new FormData(event.target);
     const selectedFintsAccount = fintsAccounts.filter(
-      (account) => account.rawstring === formData.get(rawAccountIdentifier),
+      (account) => account.iban === selectedAccountIban,
     )[0];
     const data = Object.assign({}, step1FormData, {
       rawAccount: selectedFintsAccount.rawstring,
@@ -66,14 +69,18 @@ export default function AccountEditorStepAccountSelection(props) {
       iban: selectedFintsAccount.iban,
     });
 
-    authenticatedFetch('/account-settings', history, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+    authenticatedFetch(
+      accountId ? `/account-settings/${accountId}` : '/account-settings',
+      history,
+      {
+        method: accountId ? 'PUT' : 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data, null, 2),
       },
-      body: JSON.stringify(data, null, 2),
-    })
+    )
       .then((json) => {
         console.log(json);
         history.push(ACCOUNT_PATH);
@@ -91,32 +98,27 @@ export default function AccountEditorStepAccountSelection(props) {
       <Typography component="h1" variant="h5">
         {t('fintsAccountSelectionHead')}
       </Typography>
-      <RadioGroup aria-label="account">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>{t('iban')}</TableCell>
-              <TableCell>{t('bic')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+      <FormControl component="fieldset">
+        <RadioGroup
+          aria-label="account"
+          value={selectedAccountIban}
+          onChange={handleRadioButtonChange}
+        >
+          <Grid container marginTop={2} spacing={1} marginBottom={2}>
             {fintsAccounts.map((fintsAccount) => (
-              <TableRow key={fintsAccount.rawstring}>
-                <TableCell>
+              <Grid item xs={12} key={fintsAccount.rawstring}>
+                <Grid container marginTop={1}>
                   <FormControlLabel
-                    name={rawAccountIdentifier}
-                    value={fintsAccount.rawstring}
+                    label={fintsAccount.iban}
+                    value={fintsAccount.iban}
                     control={<Radio />}
                   />
-                </TableCell>
-                <TableCell>{fintsAccount.iban}</TableCell>
-                <TableCell>{fintsAccount.bic}</TableCell>
-              </TableRow>
+                </Grid>
+              </Grid>
             ))}
-          </TableBody>
-        </Table>
-      </RadioGroup>
+          </Grid>
+        </RadioGroup>
+      </FormControl>
       <Button
         type="submit"
         fullWidth

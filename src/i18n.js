@@ -24,6 +24,8 @@ const resources = {
       filter: 'Filter',
       edit: 'Edit',
       delete: 'Delete',
+      synchronize: 'Synchronize',
+      name: 'Name',
 
       connectFints: 'Connect',
       tenant: 'Tenant',
@@ -107,6 +109,18 @@ const resources = {
 
       tenantBookingOverview: 'Overview',
       tenantBookingOverviewSum: 'Sum',
+
+      accountErrorMessageNameRequired: 'Please enter a name for the account',
+      accountErrorMessageFintsBlzRequired:
+        'Please enter a sort code for the account',
+      accountErrorMessageFintsBlzPatternMismatch:
+        'A German bank code consists of 8 digits',
+      accountErrorMessageFintsUrlRequired:
+        'Please enter a FinTs url for the account',
+      accountErrorMessageFintsUserRequired:
+        'Please enter a FinTs user for the account',
+      accountErrorMessageFintsPasswordRequired:
+        'Please enter a FinTs password for the account',
     },
   },
   de: {
@@ -128,6 +142,8 @@ const resources = {
       filter: 'Filter',
       edit: 'Ändern',
       delete: 'Löschen',
+      synchronize: 'Synchronisieren',
+      name: 'Name',
 
       tenant: 'Mieter',
       connectFints: 'Verbinden',
@@ -215,6 +231,19 @@ const resources = {
 
       tenantBookingOverview: 'Übersicht',
       tenantBookingOverviewSum: 'Summe',
+
+      accountErrorMessageNameRequired:
+        'Bitte gib einen Namen für Kontoverbindung an',
+      accountErrorMessageFintsBlzRequired:
+        'Bitte gib eine Bankleitzahl für die Kontoverbindung an',
+      accountErrorMessageFintsBlzPatternMismatch:
+        'Eine Bankleitzahl besteht aus 8 Ziffern',
+      accountErrorMessageFintsUrlRequired:
+        'Bitte gib eine FinTs URL für die Kontoverbindung an',
+      accountErrorMessageFintsUserRequired:
+        'Bitte gib einen FinTs User für die Kontoverbindung an',
+      accountErrorMessageFintsPasswordRequired:
+        'Bitte gib ein FinTs Passwort für die Kontoverbindung an',
     },
   },
 };

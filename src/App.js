@@ -329,44 +329,29 @@ export default function App() {
           <PrivateRoute exact path={TENANT_PATH}>
             <Tenant />
           </PrivateRoute>
-          <PrivateRoute exact path={`${TENANT_PATH}/edit`}>
-            <TenantEditor />
-          </PrivateRoute>
-          <PrivateRoute path={`${TENANT_PATH}/edit/:tenantId`}>
+          <PrivateRoute path={`${TENANT_PATH}/edit/:tenantId?`}>
             <TenantEditor />
           </PrivateRoute>
           <PrivateRoute exact path={CONTRACT_PATH}>
             <Contract />
           </PrivateRoute>
-          <PrivateRoute exact path={`${CONTRACT_PATH}/edit`}>
+          <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId?`}>
             <ContractEditor />
           </PrivateRoute>
-          <PrivateRoute path={`${CONTRACT_PATH}/edit/:contractId`}>
-            <ContractEditor />
-          </PrivateRoute>
-          <PrivateRoute exact path={BOOKINGS_PATH}>
+          <PrivateRoute path={`${BOOKINGS_PATH}/:tenantId?`}>
             <Bookings />
           </PrivateRoute>
-          <PrivateRoute exact path={`${BOOKINGS_PATH}/:tenantId`}>
-            <Bookings />
-          </PrivateRoute>
-          <PrivateRoute exact path={`${BOOKING_PATH}/edit`}>
-            <BookingEditor />
-          </PrivateRoute>
-          <PrivateRoute path={`${BOOKING_PATH}/edit/:bookingId`}>
+          <PrivateRoute path={`${BOOKING_PATH}/edit/:bookingId?`}>
             <BookingEditor />
           </PrivateRoute>
           <PrivateRoute exact path={ACCOUNT_PATH}>
             <Account />
           </PrivateRoute>
-          <PrivateRoute path={`${ACCOUNT_PATH}/edit`}>
+          <PrivateRoute path={`${ACCOUNT_PATH}/edit/:accountId?`}>
             <AccountEditorWizard />
           </PrivateRoute>
-          <PrivateRoute exact path={`${ACCOUNT_PATH}/synchronisation`}>
-            <FintsAccountSynchronisationSingle />
-          </PrivateRoute>
           <PrivateRoute
-            path={`${ACCOUNT_PATH}/synchronisation/:accountSettingsId`}
+            path={`${ACCOUNT_PATH}/synchronisation/:accountSettingsId?`}
           >
             <FintsAccountSynchronisationSingle />
           </PrivateRoute>
