@@ -129,7 +129,7 @@ export default function BookingEditor() {
     if (booking.contractId) {
       bookingToSubmit.contractId = booking.contractId;
     }
-    if (location.state.accountTransactionId) {
+    if (location.state?.accountTransactionId) {
       bookingToSubmit.accountTransactionId =
         location.state.accountTransactionId;
     } else if (booking.accountTransactionId) {
@@ -220,15 +220,6 @@ export default function BookingEditor() {
                 id="teanant-id"
                 options={tenants}
                 getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-                getOptionSelected={(option, value) => {
-                  console.log('getOptionSelected: ', option, value);
-                  return (
-                    value === null ||
-                    value === undefined ||
-                    value === '' ||
-                    option.id === value.id
-                  );
-                }}
                 value={value}
                 onChange={(event, tenant) => {
                   console.log('onChange - Tenant: ', tenant);
