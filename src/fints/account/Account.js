@@ -15,6 +15,7 @@ import {
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
 import {ACCOUNT_PATH} from '../../Constants';
+import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +55,30 @@ export default function Account() {
         });
       });
   }, [t, history]);
+
+  const deleteAccountSettingsItem = useCallback(
+    (id) => {
+      authenticatedFetch(`/account-settings/${id}`, history, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          console.log(response.statusText);
+          if (response.status === 204) {
+            load();
+          }
+        })
+        .catch((error) => {
+          openSnackbar({
+            message: t(handleAuthenticationError(error)),
+            variant: 'error',
+          });
+        });
+    },
+    [t, history, load],
+  );
 
   useEffect(() => {
     load();
@@ -142,6 +167,13 @@ export default function Account() {
                   >
                     {t('synchronize')}
                   </Button>
+                </Grid>
+                <Grid item>
+                  <DeleteConfirmationComponent
+                    onDelete={() => {
+                      deleteAccountSettingsItem(accountSettingsItem.id);
+                    }}
+                  />
                 </Grid>
               </Grid>
             </Grid>

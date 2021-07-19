@@ -39,7 +39,7 @@ export default function FintsAccountTransaction() {
 
   const load = useCallback(() => {
     authenticatedFetch(
-      '/account-transactions?filter[order]=date%20DESC',
+      '/account-transactions?filter[order][0]=date%20DESC&filter[order][1]=name%20ASC',
       history,
       {
         method: 'GET',
@@ -86,11 +86,7 @@ export default function FintsAccountTransaction() {
         .then((response) => {
           console.log(response.statusText);
           if (response.status === 204) {
-            setAccountTransactionList(
-              accountTransactionList.filter(
-                (accountTransactionItem) => accountTransactionItem.id !== id,
-              ),
-            );
+            load();
           }
         })
         .catch((error) => {
@@ -100,7 +96,7 @@ export default function FintsAccountTransaction() {
           });
         });
     },
-    [t, history, accountTransactionList],
+    [t, history, load],
   );
 
   const transactionsToBookings = () => {
