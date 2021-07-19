@@ -38,7 +38,7 @@ export default function Bookings() {
   const {t} = useTranslation();
   const classes = useStyles();
   const [bookings, setBookings] = useState([]);
-  const [selectedTenantId, setSelectedTenantId] = useState();
+  const [selectedTenant, setSelectedTenant] = useState(null);
   const [selectedTenantIdOverriden, setSelectedTenantIdOverriden] =
     useState(false);
   const [tenantsMap, setTenantsMap] = useState(new Map());
@@ -48,6 +48,7 @@ export default function Bookings() {
 
   const loadBookings = useCallback(
     (tenantId) => {
+      console.log('Load bookings for: ', tenantId);
       bookingsLoader(tenantId, history, setBookings, (error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
@@ -92,6 +93,16 @@ export default function Bookings() {
           }, {}),
         );
         setTenants(data.sort((a, b) => a.name.localeCompare(b.name)));
+
+        if (selectedTenantIdParam && !selectedTenantIdOverriden) {
+          const tenant = data.filter(
+            (tenant) => tenant.id === parseInt(selectedTenantIdParam),
+          )[0];
+          console.log('bookings - tenants loaded - data: ', data);
+          console.log('bookings - tenants loaded - selected tenant: ', tenant);
+          setSelectedTenant(tenant);
+        }
+        loadBookings(selectedTenantIdParam);
       },
       (error) => {
         openSnackbar({
@@ -100,21 +111,18 @@ export default function Bookings() {
         });
       },
     );
-  }, [t, history]);
+  }, [
+    t,
+    history,
+    loadBookings,
+    selectedTenantIdOverriden,
+    selectedTenantIdParam,
+  ]);
 
   useEffect(() => {
-    if (selectedTenantIdParam && !selectedTenantIdOverriden) {
-      setSelectedTenantId(selectedTenantIdParam);
-    }
-    loadBookings(selectedTenantId);
     loadTenants();
-  }, [
-    loadBookings,
-    loadTenants,
-    selectedTenantId,
-    selectedTenantIdParam,
-    selectedTenantIdOverriden,
-  ]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Container component="main">
@@ -148,8 +156,9 @@ export default function Bookings() {
                   size="small"
                   aria-label="refresh"
                   onClick={() => {
-                    loadBookings(selectedTenantId);
-                    loadTenants();
+                    loadBookings(
+                      selectedTenant ? selectedTenant.id : undefined,
+                    );
                   }}
                 >
                   <RefershIcon />
@@ -160,21 +169,15 @@ export default function Bookings() {
           <Grid item>
             <Autocomplete
               id="teanant-id"
+              name="tenant"
               options={tenants}
               getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-              getOptionSelected={(option, value) =>
-                value === undefined || value === '' || option.id === value.id
-              }
-              value={
-                tenantsMap[selectedTenantId] ? tenantsMap[selectedTenantId] : ''
-              }
+              value={selectedTenant}
               onChange={(event, tenant, reason) => {
-                if (tenant !== null) {
-                  setSelectedTenantId(tenant.id);
-                } else {
-                  setSelectedTenantId(undefined);
-                }
+                console.log('On change: ', tenant);
+                setSelectedTenant(tenant);
                 setSelectedTenantIdOverriden(true);
+                loadBookings(tenant ? tenant.id : undefined);
               }}
               style={{width: 300}}
               renderInput={(params) => (
@@ -183,7 +186,6 @@ export default function Bookings() {
                   label={t('filter')}
                   margin="none"
                   variant="standard"
-                  name="tenantId"
                   //error={errors.tenantId ? true : false}
                   //helperText={errors.tenantId?.message}
                 />
