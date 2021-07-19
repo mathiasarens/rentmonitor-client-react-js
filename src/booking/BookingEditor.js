@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
@@ -10,12 +11,12 @@ import {makeStyles} from '@material-ui/styles';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory, useParams, useLocation} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {BOOKING_PATH} from '../Constants';
+import {BOOKINGS_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../utils/Notifier';
 import {bookingLoader} from './dataaccess/bookingLoader';
@@ -52,6 +53,7 @@ export default function BookingEditor() {
   const history = useHistory();
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
+  const location = useLocation();
   const {bookingId} = useParams();
   const {
     control,
@@ -66,6 +68,7 @@ export default function BookingEditor() {
       amount: '',
     },
   });
+  console.log('Given props: ', location.state);
 
   const loadBooking = (id, tenants) => {
     bookingLoader(
@@ -97,6 +100,12 @@ export default function BookingEditor() {
         setTenants(data);
         if (bookingId) {
           loadBooking(bookingId, data);
+        } else if (location.state) {
+          reset({
+            date: location.state.date,
+            comment: location.state.comment,
+            amount: location.state.amount / 100,
+          });
         }
       },
       (error) => {
@@ -117,14 +126,17 @@ export default function BookingEditor() {
     const bookingToSubmit = {};
     bookingToSubmit.id = booking.id;
     bookingToSubmit.clientId = booking.clientId;
-    bookingToSubmit.tenantId = booking.tenantId;
     if (booking.contractId) {
       bookingToSubmit.contractId = booking.contractId;
     }
-    if (booking.accountTransactionId) {
+    if (location.state.accountTransactionId) {
+      bookingToSubmit.accountTransactionId =
+        location.state.accountTransactionId;
+    } else if (booking.accountTransactionId) {
       bookingToSubmit.accountTransactionId = booking.accountTransactionId;
     }
     bookingToSubmit.date = formInputs.date;
+    bookingToSubmit.tenantId = formInputs.tenant.id;
     bookingToSubmit.comment = formInputs.comment;
     bookingToSubmit.amount = Math.trunc(parseFloat(formInputs.amount) * 100);
     bookingToSubmit.type = booking.type;
@@ -147,7 +159,7 @@ export default function BookingEditor() {
       },
     )
       .then(function (response) {
-        history.push(BOOKING_PATH);
+        history.push(BOOKINGS_PATH);
       })
       .catch(function (error) {
         openSnackbar({
@@ -293,17 +305,18 @@ export default function BookingEditor() {
               />
             )}
           />
-
-          <Button
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            {t('bookingSave')}
-          </Button>
+          <Grid container marginTop={3} marginBottom={3}>
+            <Button
+              type="submit"
+              fullWidth
+              size="large"
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              {t('bookingSave')}
+            </Button>
+          </Grid>
         </form>
       </div>
     </Container>

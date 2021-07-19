@@ -15,6 +15,7 @@ import {
 } from '../../authentication/authenticatedFetch';
 import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../../utils/Notifier';
+import {BOOKING_PATH} from '../../Constants';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -144,6 +145,16 @@ export default function FintsAccountTransaction() {
       });
   };
 
+  const createBooking = (accountTransactionItem) => {
+    console.log('accountTransactionItem: ', accountTransactionItem);
+    history.push(`${BOOKING_PATH}/edit`, {
+      accountTransactionId: accountTransactionItem.id,
+      date: accountTransactionItem.date,
+      comment: accountTransactionItem.text,
+      amount: accountTransactionItem.amount,
+    });
+  };
+
   return (
     <Container component="main">
       <CssBaseline />
@@ -167,7 +178,7 @@ export default function FintsAccountTransaction() {
                   variant="outlined"
                   onClick={transactionsToBookings}
                 >
-                  {t('fintsAccountTransactionToBookingButton')}
+                  {t('fintsAccountTransactionCreateDueBookingsButton')}
                 </Button>
               </Grid>
             </Grid>
@@ -236,6 +247,18 @@ export default function FintsAccountTransaction() {
                       deleteAccountTransaction(accountTransactionItem.id);
                     }}
                   />
+                </Grid>
+                <Grid item>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    aria-label="create booking"
+                    onClick={() => {
+                      createBooking(accountTransactionItem);
+                    }}
+                  >
+                    {t('fintsAccountTransactionCreateBookingButton')}
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
