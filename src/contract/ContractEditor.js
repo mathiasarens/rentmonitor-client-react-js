@@ -191,15 +191,6 @@ export default function ContractEditor() {
                 id="teanant-id"
                 options={tenants}
                 getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-                getOptionSelected={(option, value) => {
-                  console.log('getOptionSelected: ', option, value);
-                  return (
-                    value === null ||
-                    value === undefined ||
-                    value === '' ||
-                    option.id === value.id
-                  );
-                }}
                 value={value}
                 onChange={(event, tenant) => {
                   console.log('onChange - Tenant: ', tenant);

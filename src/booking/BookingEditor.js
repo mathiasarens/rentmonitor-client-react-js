@@ -11,7 +11,7 @@ import {makeStyles} from '@material-ui/styles';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams, useLocation} from 'react-router-dom';
+import {useHistory, useLocation, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -62,7 +62,7 @@ export default function BookingEditor() {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      date: '',
+      date: new Date(),
       tenant: null,
       comment: '',
       amount: '',
@@ -77,6 +77,7 @@ export default function BookingEditor() {
       (data) => {
         data.amount = data.amount / 100;
         setBooking(data);
+        console.log('Booking loaded: ', data);
         reset({
           date: data.date,
           tenant: tenants.find((tenant) => tenant.id === data.tenantId),
@@ -85,6 +86,7 @@ export default function BookingEditor() {
         });
       },
       (error) => {
+        console.log(error);
         openSnackbar({
           message: t(handleAuthenticationError(error)),
           variant: 'error',
@@ -135,7 +137,14 @@ export default function BookingEditor() {
     } else if (booking.accountTransactionId) {
       bookingToSubmit.accountTransactionId = booking.accountTransactionId;
     }
-    bookingToSubmit.date = formInputs.date;
+    // TODO: this must be a bug in material ui date picker.
+    // the code should be as simple as this: bookingToSubmit.date = formInputs.date
+    bookingToSubmit.date = formInputs.date.getTimezoneOffset
+      ? new Date(
+          formInputs.date.valueOf() -
+            formInputs.date.getTimezoneOffset() * 60 * 1000,
+        )
+      : formInputs.date;
     bookingToSubmit.tenantId = formInputs.tenant.id;
     bookingToSubmit.comment = formInputs.comment;
     bookingToSubmit.amount = Math.trunc(parseFloat(formInputs.amount) * 100);
