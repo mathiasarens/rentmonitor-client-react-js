@@ -78,7 +78,9 @@ export default function Home() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{t('tenant')}</TableCell>
+              <TableCell>
+                {t('tenant')} ({bookingSumPerTenants.length})
+              </TableCell>
               <TableCell>{t('tenantBookingOverviewSum')}</TableCell>
               <TableCell></TableCell>
             </TableRow>
