@@ -6,7 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {useTheme} from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -16,13 +16,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import {makeStyles} from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import deLocale from 'date-fns/locale/de';
-import React, {Fragment} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Redirect} from 'react-router';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Redirect } from 'react-router';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import './App.css';
 import PrivateRoute from './authentication/PrivateRoute';
 import Signin from './authentication/signin/Signin';
@@ -36,7 +36,7 @@ import {
   BOOKING_PATH,
   CONTRACT_PATH,
   TENANT_PATH,
-  TRANSACTION_PATH,
+  TRANSACTION_PATH
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
@@ -44,11 +44,12 @@ import Account from './fints/account/Account';
 import AccountEditorWizard from './fints/account/AccountEditorWizard';
 import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
 import FintsAccountTransaction from './fints/transaction/FintsAccountTransaction';
-import Home from './home/Home';
+import Overview from './overview/Overview';
 import Tenant from './tenant/Tenant';
 import TenantEditor from './tenant/TenantEditor';
 import Notifier from './utils/Notifier';
 import Welcome from './welcome/Welcome';
+
 function getFirstPathElement(path) {
   let pathelements = path.split('/');
   let firstPathelement = '/' + pathelements[1];
@@ -200,15 +201,15 @@ export default function App() {
                     <List>
                       <ListItem
                         button
-                        key="home"
+                        key="overview"
                         onClick={handleDrawerClose}
                         component={Link}
-                        to="/home"
+                        to="/overview"
                       >
                         <ListItemIcon>
                           <MailIcon />
                         </ListItemIcon>
-                        <ListItemText primary={t('home')} />
+                        <ListItemText primary={t('overview')} />
                       </ListItem>
 
                       <ListItem
@@ -323,8 +324,8 @@ export default function App() {
           </Route>
           <Route path="/signup" component={Signup} />
           <Route path="/signin" component={Signin} />
-          <PrivateRoute path="/home">
-            <Home />
+          <PrivateRoute path="/overview">
+            <Overview />
           </PrivateRoute>
           <PrivateRoute exact path={TENANT_PATH}>
             <Tenant />

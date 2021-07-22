@@ -7,7 +7,7 @@ import {initReactI18next} from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      home: 'Home',
+      overview: 'Overview',
       tenants: 'Tenants',
       accounts: 'Accounts',
       account: 'Account',
@@ -126,7 +126,7 @@ const resources = {
   },
   de: {
     translation: {
-      home: 'Übersicht',
+      overview: 'Übersicht',
       tenants: 'Mieter',
       accounts: 'Konten',
       account: 'Konto',
