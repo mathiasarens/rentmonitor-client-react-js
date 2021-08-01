@@ -19,6 +19,7 @@ import {CONTRACT_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
+import {addDueBookingsFromContracts} from './dataaccess/ContractSynchronisation';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -106,46 +107,6 @@ export default function Contract() {
     [t, history, contracts],
   );
 
-  const addDueBookingsFromContracts = () => {
-    const bodyJson = JSON.stringify({}, null, 2);
-    authenticatedFetch('/contract-to-booking', history, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: bodyJson,
-    })
-      .then((response) => {
-        switch (response.status) {
-          case 200:
-            response.json().then((json) => {
-              console.log(json);
-              openSnackbar({
-                message: t('fintsAccountSyncronisationSuccess', {
-                  newBookingsCount: json.newBookings,
-                  unmatchedTransactions: json.unmatchedTransactions,
-                }),
-                variant: 'info',
-              });
-            });
-            break;
-          default:
-            console.error(response);
-            openSnackbar({
-              message: t('connectionError'),
-              variant: 'error',
-            });
-        }
-      })
-      .catch((error) => {
-        openSnackbar({
-          message: t(handleAuthenticationError(error)),
-          variant: 'error',
-        });
-      });
-  };
-
   useEffect(() => {
     loadContracts();
     loadTenants();
@@ -155,19 +116,14 @@ export default function Contract() {
     <Container component="main">
       <CssBaseline />
       <div className={classes.paper}>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          spacing={1}
-        >
-          <Grid item>
+        <Grid container justifyContent="flex-start">
+          <Grid item xs={2}>
             <Typography component="h1" variant="h5">
               {t('contracts')}
             </Typography>
           </Grid>
-          <Grid item>
-            <Grid container spacing={1}>
+          <Grid item xs={10}>
+            <Grid container justifyContent="flex-end" spacing={1}>
               <Grid item>
                 <IconButton
                   size="small"
@@ -190,16 +146,43 @@ export default function Contract() {
                   <RefershIcon />
                 </IconButton>
               </Grid>
+              <Grid item>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() =>
+                    addDueBookingsFromContracts(
+                      history,
+                      (json) => {
+                        console.log(json);
+                        openSnackbar({
+                          message: t('fintsAccountSyncronisationSuccess', {
+                            newBookingsCount: json.newBookings,
+                            unmatchedTransactions: json.unmatchedTransactions,
+                          }),
+                          variant: 'info',
+                        });
+                      },
+                      (response) => {
+                        console.error(response);
+                        openSnackbar({
+                          message: t('connectionError'),
+                          variant: 'error',
+                        });
+                      },
+                      (error) => {
+                        openSnackbar({
+                          message: t(handleAuthenticationError(error)),
+                          variant: 'error',
+                        });
+                      },
+                    )
+                  }
+                >
+                  {t('contractToBookingTitle')}
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item>
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={addDueBookingsFromContracts}
-            >
-              {t('contractToBookingTitle')}
-            </Button>
           </Grid>
         </Grid>
 

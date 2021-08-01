@@ -5,6 +5,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -19,7 +20,8 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {BOOKINGS_PATH} from '../Constants';
+import {ACCOUNT_PATH, BOOKINGS_PATH} from '../Constants';
+import {addDueBookingsFromContracts} from '../contract/dataaccess/ContractSynchronisation';
 import {openSnackbar} from '../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -68,11 +70,60 @@ export default function Home() {
     <Container component="main">
       <CssBaseline />
       <div className={classes.paper}>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
+        <Grid container justifyContent="flex-start">
+          <Grid item xs={2}>
             <Typography component="h1" variant="h5">
               {t('tenantBookingOverview')}
             </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => {
+                    addDueBookingsFromContracts(
+                      history,
+                      (json) => {
+                        openSnackbar({
+                          message: t('fintsAccountSyncronisationSuccess', {
+                            newBookingsCount: json.newBookings,
+                            unmatchedTransactions: json.unmatchedTransactions,
+                          }),
+                          variant: 'info',
+                        });
+                      },
+                      (response) => {
+                        openSnackbar({
+                          message: t('connectionError'),
+                          variant: 'error',
+                        });
+                      },
+                      (error) => {
+                        openSnackbar({
+                          message: t(handleAuthenticationError(error)),
+                          variant: 'error',
+                        });
+                      },
+                    );
+                  }}
+                >
+                  {t('contractToBookingTitle')}
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  aria-label="synchronize"
+                  component={Link}
+                  to={`${ACCOUNT_PATH}/synchronisation`}
+                >
+                  {t('overviewFetchAccountTransactions')}
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Table>

@@ -122,6 +122,8 @@ const resources = {
         'Please enter a FinTs user for the account',
       accountErrorMessageFintsPasswordRequired:
         'Please enter a FinTs password for the account',
+
+      overviewFetchAccountTransactions: 'Fetch transactions',
     },
   },
   de: {
@@ -247,6 +249,8 @@ const resources = {
         'Bitte gib einen FinTs User für die Kontoverbindung an',
       accountErrorMessageFintsPasswordRequired:
         'Bitte gib ein FinTs Passwort für die Kontoverbindung an',
+
+      overviewFetchAccountTransactions: 'Umsätze laden',
     },
   },
 };
