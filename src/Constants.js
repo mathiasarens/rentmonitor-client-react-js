@@ -5,3 +5,4 @@ export const BOOKINGS_PATH = '/bookings';
 export const BOOKING_PATH = '/booking';
 export const CONTRACT_PATH = '/contract';
 export const TRANSACTION_PATH = '/transaction';
+export const OVERVIEW_PATH = '/overview';

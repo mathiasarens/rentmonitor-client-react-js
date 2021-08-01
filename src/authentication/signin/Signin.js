@@ -14,7 +14,7 @@ import {makeStyles} from '@material-ui/styles';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
-import {AUTH_TOKEN} from '../../Constants';
+import {AUTH_TOKEN, OVERVIEW_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
 function MadeWithLove() {
@@ -85,7 +85,7 @@ export default function Signin() {
           });
         } else {
           sessionStorage.setItem(AUTH_TOKEN, data.token);
-          history.push('/home');
+          history.push(`${OVERVIEW_PATH}`);
         }
       })
       .catch((error) => {
