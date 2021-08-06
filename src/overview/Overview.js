@@ -39,6 +39,10 @@ export default function Home() {
   const classes = useStyles();
   const [t] = useTranslation();
   const [bookingSumPerTenants, setBookingSumPerTenants] = useState([]);
+  const [
+    addDueBookingsFromContractsLoading,
+    setAddDueBookingsFromContractsLoading,
+  ] = useState(false);
   const history = useHistory();
 
   const loadTenantBookingOverview = useCallback(() => {
@@ -64,7 +68,8 @@ export default function Home() {
 
   useEffect(() => {
     loadTenantBookingOverview();
-  }, [loadTenantBookingOverview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container component="main">
@@ -82,7 +87,9 @@ export default function Home() {
                 <Button
                   size="small"
                   variant="outlined"
+                  disabled={addDueBookingsFromContractsLoading}
                   onClick={() => {
+                    setAddDueBookingsFromContractsLoading(true);
                     addDueBookingsFromContracts(
                       history,
                       (json) => {
@@ -93,18 +100,21 @@ export default function Home() {
                           }),
                           variant: 'info',
                         });
+                        setAddDueBookingsFromContractsLoading(false);
                       },
                       (response) => {
                         openSnackbar({
                           message: t('connectionError'),
                           variant: 'error',
                         });
+                        setAddDueBookingsFromContractsLoading(false);
                       },
                       (error) => {
                         openSnackbar({
                           message: t(handleAuthenticationError(error)),
                           variant: 'error',
                         });
+                        setAddDueBookingsFromContractsLoading(false);
                       },
                     );
                   }}

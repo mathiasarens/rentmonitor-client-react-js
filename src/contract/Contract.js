@@ -110,7 +110,8 @@ export default function Contract() {
   useEffect(() => {
     loadContracts();
     loadTenants();
-  }, [loadContracts, loadTenants]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container component="main">

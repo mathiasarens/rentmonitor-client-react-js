@@ -1,5 +1,6 @@
 import {Button} from '@material-ui/core';
 import Autocomplete from '@material-ui/core/Autocomplete';
+import Box from '@material-ui/core/Box';
 import {red} from '@material-ui/core/colors';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,10 +8,9 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import DatePicker from '@material-ui/lab/DatePicker';
 import {makeStyles} from '@material-ui/styles';
-import parse from 'date-fns/parse';
 import sub from 'date-fns/sub';
-import React, {useEffect, useReducer} from 'react';
-import {useForm} from 'react-hook-form';
+import React, {useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useHistory, useParams} from 'react-router-dom';
 import {
@@ -43,71 +43,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FintsAccountSynchronisationSingle() {
-  const SET_ACCOUNT_SETTINGS_LIST = 'SET_ACCOUNT_SETTINGS_LIST';
-  const SET_CHALLENGE_TEXT = 'SET_CHALLENGE_TEXT';
-  const SET_ACCOUNT_ID = 'SET_ACCOUNT_ID';
-  const SET_FROM_DATE = 'SET_FROM_DATE';
-  const SET_TO_DATE = 'SET_TO_DATE';
-
   const {t} = useTranslation();
   const classes = useStyles();
   const history = useHistory();
   const {accountSettingsId} = useParams();
+  const [accountSettingsItems, setAccountSettingsItems] = useState([]);
+  const [challengeText, setChallengeText] = useState('');
+  const [loading, setLoading] = useState(false);
   const {
-    register,
+    control,
+    reset,
     handleSubmit,
     formState: {errors},
-  } = useForm();
-
-  const initialState = {
-    accountSettingsList: [],
-    fromDate: sub(new Date(), {months: 2}),
-    toDate: new Date(),
-    challengeText: '',
-    accountSettingsIdSelected: '',
-    labelWidth: 0,
-  };
+  } = useForm({
+    defaultValues: {
+      accountSettingsItem: null,
+      from: sub(new Date(), {months: 2}),
+      to: new Date(),
+    },
+  });
 
   let tanRequiredJsx;
-
-  const reducer = (state, {type, payload}) => {
-    switch (type) {
-      case SET_ACCOUNT_SETTINGS_LIST:
-        console.log('Reducer set accountSettingsList: ', payload);
-        return {
-          ...state,
-          accountSettingsList: payload,
-        };
-      case SET_CHALLENGE_TEXT:
-        return {
-          ...state,
-          challengeText: payload,
-        };
-      case SET_ACCOUNT_ID:
-        console.log(
-          'Reducer set accountSettingsIdSelected: ',
-          payload,
-          typeof payload,
-        );
-        return {
-          ...state,
-          accountSettingsIdSelected: payload,
-        };
-      case SET_FROM_DATE:
-        return {
-          ...state,
-          fromDate: payload,
-        };
-      case SET_TO_DATE:
-        return {
-          ...state,
-          toDate: payload,
-        };
-      default:
-        throw new Error(`Action type ${type} unknown`);
-    }
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     authenticatedFetch('/account-settings', history, {
@@ -118,10 +74,7 @@ export default function FintsAccountSynchronisationSingle() {
     })
       .then((response) => {
         response.json().then((responseAccountSettingsList) => {
-          dispatch({
-            type: SET_ACCOUNT_SETTINGS_LIST,
-            payload: responseAccountSettingsList,
-          });
+          setAccountSettingsItems(responseAccountSettingsList);
           if (accountSettingsId) {
             if (
               responseAccountSettingsList.filter(
@@ -133,9 +86,19 @@ export default function FintsAccountSynchronisationSingle() {
                 'Account Settings loaded. Set accountSettingsId ',
                 accountSettingsId,
               );
-              dispatch({
-                type: SET_ACCOUNT_ID,
-                payload: parseInt(accountSettingsId),
+              reset({
+                accountSettingsItem: responseAccountSettingsList.filter(
+                  (accountSettings) =>
+                    accountSettings.id === parseInt(accountSettingsId),
+                )[0],
+              });
+            }
+          } else {
+            if (responseAccountSettingsList.length > 0) {
+              reset({
+                accountSettingsItem: responseAccountSettingsList[0],
+                from: sub(new Date(), {months: 2}),
+                to: new Date(),
               });
             }
           }
@@ -147,14 +110,16 @@ export default function FintsAccountSynchronisationSingle() {
           variant: 'error',
         });
       });
-  }, [dispatch, history, t, accountSettingsId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = (formInputs) => {
     console.log('formInputs', formInputs);
+    setLoading(true);
     const request = {};
-    request.from = parse(formInputs.from, t('dateFormat'), state.fromDate);
-    request.to = parse(formInputs.to, t('dateFormat'), state.toDate);
-    request.accountSettingsId = state.accountSettingsIdSelected;
+    request.from = formInputs.from;
+    request.to = formInputs.to;
+    request.accountSettingsId = formInputs.accountSettingsItem.id;
     const bodyJson = JSON.stringify(request, null, 2);
     console.log(bodyJson);
     authenticatedFetch('/account-synchronization/single', history, {
@@ -179,16 +144,15 @@ export default function FintsAccountSynchronisationSingle() {
               });
             });
             clearTanForm();
+            setLoading(false);
             break;
           case 210:
             response
               .json()
               .then((json) => {
                 console.log(json);
-                dispatch({
-                  type: SET_CHALLENGE_TEXT,
-                  payload: json.challengeText,
-                });
+                setChallengeText(json.challengeText);
+                setLoading(false);
               })
               .catch((error) => {
                 console.error(error);
@@ -197,6 +161,7 @@ export default function FintsAccountSynchronisationSingle() {
                   variant: 'error',
                 });
                 clearTanForm();
+                setLoading(false);
               });
             break;
           default:
@@ -206,6 +171,7 @@ export default function FintsAccountSynchronisationSingle() {
               variant: 'error',
             });
             clearTanForm();
+            setLoading(false);
         }
       })
       .catch((error) => {
@@ -214,18 +180,19 @@ export default function FintsAccountSynchronisationSingle() {
           variant: 'error',
         });
         clearTanForm();
+        setLoading(false);
       });
   };
 
   function clearTanForm() {
-    dispatch({type: SET_CHALLENGE_TEXT, payload: ''});
+    setChallengeText('');
   }
 
-  if (state.challengeText.length > 0) {
+  if (challengeText.length > 0) {
     tanRequiredJsx = (
       <div>
         <Typography component="h6" variant="h6">
-          {state.challengeText}
+          {challengeText}
         </Typography>
         <TextField
           id="tanId"
@@ -242,19 +209,6 @@ export default function FintsAccountSynchronisationSingle() {
     tanRequiredJsx = <div></div>;
   }
 
-  const {ref: accountSettingsIdFormHookRef, ...accountSettingsIdFormHookRest} =
-    register('accountSettingsId', {
-      required: true,
-    });
-
-  const {ref: fromFormHookRef, ...fromFormHookRest} = register('from', {
-    required: true,
-  });
-
-  const {ref: toFormHookRef, ...toFormHookRest} = register('to', {
-    required: true,
-  });
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -267,104 +221,114 @@ export default function FintsAccountSynchronisationSingle() {
           className={classes.form}
           noValidate
         >
-          <Autocomplete
-            id="account-settings-id"
-            options={state.accountSettingsList}
-            getOptionLabel={(accountSettings) =>
-              accountSettings.name ? accountSettings.name : ''
-            }
-            getOptionSelected={(option, value) =>
-              value === undefined || value === '' || option.id === value.id
-            }
-            value={
-              state.accountSettingsIdSelected
-                ? state.accountSettingsList.find(
-                    (accountSettings) =>
-                      accountSettings.id === state.accountSettingsIdSelected,
-                  )
-                : ''
-            }
-            onChange={(event, accountSettings) => {
-              console.log('SET_ACCOUNT_ID onChange called');
-              if (accountSettings !== null) {
-                dispatch({type: SET_ACCOUNT_ID, payload: accountSettings.id});
-              }
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                {...accountSettingsIdFormHookRest}
-                label={t('account')}
-                margin="normal"
-                variant="outlined"
-                inputRef={accountSettingsIdFormHookRef}
-                error={errors.accountSettingsId ? true : false}
-                helperText={
-                  errors.accountSettingsId &&
-                  t('fintsAccountSynchronisationErrorAccountSettingsId')
+          <Controller
+            control={control}
+            name="accountSettingsItem"
+            rules={{required: true}}
+            render={({field: {onChange, value}}) => (
+              <Autocomplete
+                id="account-settings-item-id"
+                options={accountSettingsItems}
+                getOptionLabel={(accountSettings) =>
+                  accountSettings.name ? accountSettings.name : ''
                 }
-                required
+                value={value}
+                onChange={(event, accountSettingsItem) => {
+                  console.log(
+                    'onChange - accountSettingsItem: ',
+                    accountSettingsItem,
+                  );
+                  onChange(accountSettingsItem);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={t('account')}
+                    margin="normal"
+                    variant="outlined"
+                    error={errors.accountSettingsId ? true : false}
+                    helperText={
+                      errors.accountSettingsId &&
+                      t('fintsAccountSynchronisationErrorAccountSettingsId')
+                    }
+                    required
+                  />
+                )}
               />
             )}
           />
-
-          <DatePicker
-            label={t('fintsAccountSyncronisationFrom')}
-            value={state.fromDate}
-            onChange={(date) => {
-              dispatch({type: SET_FROM_DATE, payload: date});
-            }}
-            inputFormat={t('dateFormat')}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                {...fromFormHookRest}
-                variant="outlined"
-                margin="normal"
-                inputRef={fromFormHookRef}
-                error={errors.from ? true : false}
-                helperText={
-                  errors.from && t('fintsAccountSynchronisationErrorFrom')
-                }
-                fullWidth
-                required
+          <Controller
+            control={control}
+            name="from"
+            rules={{required: true}}
+            render={({field: {onChange, value}}) => (
+              <DatePicker
+                label={t('fintsAccountSyncronisationFrom')}
+                disableToolbar
+                variant="inline"
+                inpuFormat={t('dateFormat')}
+                mask="__.__.____"
+                value={value}
+                onChange={(date) => onChange(date)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    margin="normal"
+                    error={errors.from ? true : false}
+                    helperText={
+                      errors.from && t('fintsAccountSynchronisationErrorFrom')
+                    }
+                    fullWidth
+                    required
+                  />
+                )}
               />
             )}
           />
-
-          <DatePicker
-            label={t('fintsAccountSyncronisationTo')}
-            value={state.toDate}
-            onChange={(date) => {
-              dispatch({type: SET_TO_DATE, payload: date});
-            }}
-            inputFormat={t('dateFormat')}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                {...toFormHookRest}
-                variant="outlined"
-                margin="normal"
-                inputRef={toFormHookRef}
-                error={errors.to ? true : false}
-                helperText={errors.to && t('fintsAccountSynchronisationToFrom')}
-                fullWidth
+          <Controller
+            control={control}
+            name="to"
+            rules={{required: false}}
+            render={({field: {onChange, value}}) => (
+              <DatePicker
+                label={t('fintsAccountSyncronisationTo')}
+                disableToolbar
+                variant="inline"
+                inpuFormat={t('dateFormat')}
+                mask="__.__.____"
+                value={value}
+                onChange={(date) => onChange(date)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    margin="normal"
+                    error={errors.to ? true : false}
+                    helperText={
+                      errors.to && t('fintsAccountSynchronisationToFrom')
+                    }
+                    fullWidth
+                  />
+                )}
               />
             )}
           />
 
           {tanRequiredJsx}
-
-          <Button
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            {t('fintsAccountSynchronisationButton')}
-          </Button>
+          <Box marginTop={2} marginBottom={2}>
+            <Button
+              type="submit"
+              fullWidth
+              size="large"
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              disabled={loading}
+            >
+              {t('fintsAccountSynchronisationButton')}
+            </Button>
+          </Box>
         </form>
       </div>
     </Container>
