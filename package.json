@@ -1,6 +1,6 @@
 {
   "name": "rentmonitor-client-react-js",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.0",

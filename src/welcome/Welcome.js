@@ -61,11 +61,8 @@ export default function Welcome() {
         <Typography component="h1" variant="h5">
           Rent Monitor
         </Typography>
-        <Typography component="h3" variant="h6">
-          Backend {process.env.REACT_APP_BACKEND_URL_PREFIX}
-        </Typography>
       </div>
-      <Grid container>
+      <Grid container mt={5}>
         <Grid item xs style={{textAlign: 'center'}}>
           <Button component={SignInLink}>{t('signin')}</Button>
         </Grid>
@@ -75,6 +72,14 @@ export default function Welcome() {
       </Grid>
       <Box mt={5}>
         <MadeWithLove />
+      </Box>
+      <Box>
+        <Typography variant="body2" color="textSecondary" align="center">
+          Backend: {process.env.REACT_APP_BACKEND_URL_PREFIX}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" align="center">
+          Version: {process.env.REACT_APP_VERSION}
+        </Typography>
       </Box>
     </Container>
   );
