@@ -1,3 +1,4 @@
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,9 +14,9 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
+import {BOOKING_PATH} from '../../Constants';
 import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../../utils/Notifier';
-import {BOOKING_PATH} from '../../Constants';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -34,45 +35,67 @@ const useStyles = makeStyles((theme) => ({
 export default function FintsAccountTransaction() {
   const {t} = useTranslation();
   const classes = useStyles();
-  const [accountTransactionList, setAccountTransactionList] = useState([]);
+  const [accountTransactionLists, setAccountTransactionLists] = useState([]);
   const history = useHistory();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [lastPageSize, setLastPageSize] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const load = useCallback(() => {
-    authenticatedFetch(
-      '/account-transactions?filter[order][0]=date%20DESC&filter[order][1]=name%20ASC',
-      history,
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
+  const loadIncrement = () => {
+    setPage(page + 1);
+    console.log('Page: ', page);
+    load(page + 1, accountTransactionLists);
+  };
+
+  const load = useCallback(
+    (page, currentListOfLists) => {
+      setLoading(true);
+      authenticatedFetch(
+        `/account-transactions?filter[limit]=${pageSize}&filter[skip]=${
+          page * pageSize
+        }&filter[order][0]=date%20DESC&filter[order][1]=name%20ASC`,
+        history,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
         },
-      },
-    )
-      .then((response) => {
-        response
-          .json()
-          .then((json) => {
-            console.log(json);
-            setAccountTransactionList(json);
-          })
-          .catch((error) => {
-            console.log(error);
-            openSnackbar({
-              message: t('connectionError'),
-              variant: 'error',
+      )
+        .then((response) => {
+          response
+            .json()
+            .then((json) => {
+              console.log('Result list: ', json);
+              console.log('Existing lists: ', currentListOfLists);
+              setAccountTransactionLists([...currentListOfLists, json]);
+              console.log('Number of transactions: ', json.length);
+              setLastPageSize(json.length);
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              openSnackbar({
+                message: t('connectionError'),
+                variant: 'error',
+              });
+              setLoading(false);
             });
+        })
+        .catch((error) => {
+          openSnackbar({
+            message: t(handleAuthenticationError(error)),
+            variant: 'error',
           });
-      })
-      .catch((error) => {
-        openSnackbar({
-          message: t(handleAuthenticationError(error)),
-          variant: 'error',
+          setLoading(false);
         });
-      });
-  }, [t, history]);
+    },
+    [t, history],
+  );
 
   useEffect(() => {
-    load();
+    load(page, accountTransactionLists);
   }, [load]);
 
   const deleteAccountTransaction = useCallback(
@@ -180,86 +203,102 @@ export default function FintsAccountTransaction() {
             </Grid>
           </Grid>
         </Grid>
-        {accountTransactionList.map((accountTransactionItem) => (
-          <Grid
-            container
-            marginTop={2}
-            spacing={1}
-            key={accountTransactionItem.id}
+        {accountTransactionLists.map((accountTransactionList) =>
+          accountTransactionList.map((accountTransactionItem) => (
+            <Grid
+              container
+              marginTop={2}
+              spacing={1}
+              key={accountTransactionItem.id}
+            >
+              <Grid item xs={12} sm={10}>
+                <Grid container>
+                  <Grid item xs={4}>
+                    {t('fintsAccountTransactionDate')}:
+                  </Grid>
+                  <Grid item xs={8}>
+                    {new Intl.DateTimeFormat('de-DE', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    }).format(new Date(accountTransactionItem.date))}
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    {t('fintsAccountTransactionName')}:
+                  </Grid>
+                  <Grid item xs={8}>
+                    {accountTransactionItem.name}
+                  </Grid>
+
+                  <Grid item xs={4} zeroMinWidth>
+                    <Typography style={{overflowWrap: 'break-word'}}>
+                      {t('fintsAccountTransactionText')}:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={8} zeroMinWidth>
+                    <Typography style={{overflowWrap: 'break-word'}}>
+                      {accountTransactionItem.text}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    {t('fintsAccountTransactionAmount')}:
+                  </Grid>
+                  <Grid item xs={8}>
+                    {new Intl.NumberFormat('de-DE', {
+                      style: 'currency',
+                      currency: 'EUR',
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(accountTransactionItem.amount / 100)}
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <Grid container spacing={1} marginTop={1}>
+                  <Grid item>
+                    <Button size="small" variant="outlined" aria-label="edit">
+                      {t('edit')}
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <DeleteConfirmationComponent
+                      onDelete={() => {
+                        deleteAccountTransaction(accountTransactionItem.id);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      aria-label="create booking"
+                      onClick={() => {
+                        createBooking(accountTransactionItem);
+                      }}
+                    >
+                      {t('fintsAccountTransactionCreateBookingButton')}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          )),
+        )}
+        <Box mt={3} mb={3}>
+          <Button
+            disabled={lastPageSize !== pageSize && loading}
+            type="submit"
+            margin="normal"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            onClick={loadIncrement}
           >
-            <Grid item xs={12} sm={10}>
-              <Grid container>
-                <Grid item xs={4}>
-                  {t('fintsAccountTransactionDate')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {new Intl.DateTimeFormat('de-DE', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  }).format(new Date(accountTransactionItem.date))}
-                </Grid>
-
-                <Grid item xs={4}>
-                  {t('fintsAccountTransactionName')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {accountTransactionItem.name}
-                </Grid>
-
-                <Grid item xs={4} zeroMinWidth>
-                  <Typography style={{overflowWrap: 'break-word'}}>
-                    {t('fintsAccountTransactionText')}:
-                  </Typography>
-                </Grid>
-                <Grid item xs={8} zeroMinWidth>
-                  <Typography style={{overflowWrap: 'break-word'}}>
-                    {accountTransactionItem.text}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  {t('fintsAccountTransactionAmount')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {new Intl.NumberFormat('de-DE', {
-                    style: 'currency',
-                    currency: 'EUR',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }).format(accountTransactionItem.amount / 100)}
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <Grid container spacing={1} marginTop={1}>
-                <Grid item>
-                  <Button size="small" variant="outlined" aria-label="edit">
-                    {t('edit')}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <DeleteConfirmationComponent
-                    onDelete={() => {
-                      deleteAccountTransaction(accountTransactionItem.id);
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    aria-label="create booking"
-                    onClick={() => {
-                      createBooking(accountTransactionItem);
-                    }}
-                  >
-                    {t('fintsAccountTransactionCreateBookingButton')}
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        ))}
+            {t('fintsAccountTransactionLoadNextBookingsButton')}
+          </Button>
+        </Box>
       </div>
     </Container>
   );
