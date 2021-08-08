@@ -38,18 +38,22 @@ export default function FintsAccountTransaction() {
   const [accountTransactionLists, setAccountTransactionLists] = useState([]);
   const history = useHistory();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(10);
   const [lastPageSize, setLastPageSize] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const loadIncrement = () => {
     setPage(page + 1);
     console.log('Page: ', page);
-    load(page + 1, accountTransactionLists);
+    load(page + 1, pageSize, accountTransactionLists);
+  };
+
+  const reload = () => {
+    load(0, page * pageSize, []);
   };
 
   const load = useCallback(
-    (page, currentListOfLists) => {
+    (page, pageSize, currentListOfLists) => {
       setLoading(true);
       authenticatedFetch(
         `/account-transactions?filter[limit]=${pageSize}&filter[skip]=${
@@ -91,12 +95,14 @@ export default function FintsAccountTransaction() {
           setLoading(false);
         });
     },
-    [t, history],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   useEffect(() => {
-    load(page, accountTransactionLists);
-  }, [load]);
+    load(page, pageSize, accountTransactionLists);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const deleteAccountTransaction = useCallback(
     (id) => {
@@ -187,7 +193,7 @@ export default function FintsAccountTransaction() {
           <Grid item>
             <Grid container spacing={1}>
               <Grid item>
-                <IconButton size="small" aria-label="refresh" onClick={load}>
+                <IconButton size="small" aria-label="refresh" onClick={reload}>
                   <RefershIcon />
                 </IconButton>
               </Grid>
