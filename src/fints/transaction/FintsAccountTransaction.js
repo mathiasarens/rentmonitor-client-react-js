@@ -49,7 +49,7 @@ export default function FintsAccountTransaction() {
   };
 
   const reload = () => {
-    load(0, page * pageSize, []);
+    load(0, (page + 1) * pageSize, []);
   };
 
   const load = useCallback(
