@@ -76,13 +76,16 @@ export default function AccountEditorStepInitial() {
             console.log('account - onSubmit - step1 - response state: ', state);
             switch (response.status) {
               case 209:
-                history.push(`${ACCOUNT_PATH}/edit/step2/${accountId}`, state);
+                const urlStep2 = accountId
+                  ? `${ACCOUNT_PATH}/edit/step2/${accountId}`
+                  : `${ACCOUNT_PATH}/edit/step2`;
+                history.push(urlStep2, state);
                 break;
               case 210:
-                history.push(
-                  `${ACCOUNT_PATH}/edit/stepTan/${accountId}`,
-                  state,
-                );
+                const urlStepTan = accountId
+                  ? `${ACCOUNT_PATH}/edit/stepTan/${accountId}`
+                  : `${ACCOUNT_PATH}/edit/stepTan`;
+                history.push(urlStepTan, state);
                 break;
               default:
                 console.error(response);
