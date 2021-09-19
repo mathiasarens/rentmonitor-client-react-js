@@ -1,6 +1,6 @@
 {
   "name": "rentmonitor-client-react-js",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.0",
@@ -15,7 +15,7 @@
     "install": "^0.13.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-hook-form": "^7.12.2",
+    "react-hook-form": "^7.15.4",
     "react-i18next": "^11.11.4",
     "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3"
