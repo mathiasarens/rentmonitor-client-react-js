@@ -80,7 +80,9 @@ export default function ContractEditor() {
     }
     contractToSubmit.rentDueEveryMonth = parseInt(formInputs.rentDueEveryMonth);
     contractToSubmit.rentDueDayOfMonth = parseInt(formInputs.rentDueDayOfMonth);
-    contractToSubmit.amount = Math.trunc(parseFloat(formInputs.amount) * 100);
+    contractToSubmit.amount = parseInt(
+      (parseFloat(formInputs.amount) * 100).toFixed(0),
+    );
 
     console.log('before send', contractToSubmit);
     authenticatedFetch(

@@ -147,7 +147,9 @@ export default function BookingEditor() {
       : formInputs.date;
     bookingToSubmit.tenantId = formInputs.tenant.id;
     bookingToSubmit.comment = formInputs.comment;
-    bookingToSubmit.amount = Math.trunc(parseFloat(formInputs.amount) * 100);
+    bookingToSubmit.amount = parseInt(
+      (parseFloat(formInputs.amount) * 100).toFixed(0),
+    );
     bookingToSubmit.type = booking.type;
     console.log(
       'onSubmit - before submit: ',
