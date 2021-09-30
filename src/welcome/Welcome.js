@@ -7,7 +7,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {makeStyles} from '@material-ui/styles';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link as RLink} from 'react-router-dom';
 
@@ -52,6 +52,29 @@ const SignInLink = React.forwardRef((props, ref) => (
 export default function Welcome() {
   const {t} = useTranslation();
   const classes = useStyles();
+  const [version, setVersion] = useState('down');
+
+  const loadVersion = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL_PREFIX}/version`,
+      );
+      if (!response.ok) {
+        return 'down';
+      } else {
+        return response.text();
+      }
+    } catch {
+      return 'down';
+    }
+  };
+
+  useEffect(() => {
+    loadVersion().then((response) => {
+      setVersion(response);
+    });
+  }, []);
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -75,10 +98,13 @@ export default function Welcome() {
       </Box>
       <Box>
         <Typography variant="body2" color="textSecondary" align="center">
+          Version: {process.env.REACT_APP_VERSION}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" align="center">
           Backend: {process.env.REACT_APP_BACKEND_URL_PREFIX}
         </Typography>
         <Typography variant="body2" color="textSecondary" align="center">
-          Version: {process.env.REACT_APP_VERSION}
+          Backend version: {version}
         </Typography>
       </Box>
     </Container>
