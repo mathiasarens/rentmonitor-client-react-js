@@ -243,6 +243,19 @@ export default function Contract() {
                     ? format(new Date(contractListItem.end), t('dateFormat'))
                     : ''}
                 </Grid>
+                <Grid item xs={4}>
+                  {t('contractDeposit')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {!contractListItem.deposit
+                    ? ''
+                    : new Intl.NumberFormat('de-DE', {
+                        style: 'currency',
+                        currency: 'EUR',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }).format(contractListItem.deposit / 100)}
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} sm={2}>

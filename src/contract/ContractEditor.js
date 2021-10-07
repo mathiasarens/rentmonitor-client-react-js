@@ -63,6 +63,7 @@ export default function ContractEditor() {
       rentDueEveryMonth: '',
       rentDueDayOfMonth: '',
       amount: '',
+      deposit: '',
       start: '',
       end: '',
     },
@@ -82,6 +83,9 @@ export default function ContractEditor() {
     contractToSubmit.rentDueDayOfMonth = parseInt(formInputs.rentDueDayOfMonth);
     contractToSubmit.amount = parseInt(
       (parseFloat(formInputs.amount) * 100).toFixed(0),
+    );
+    contractToSubmit.deposit = parseInt(
+      (parseFloat(formInputs.deposit) * 100).toFixed(0),
     );
 
     console.log('before send', contractToSubmit);
@@ -133,6 +137,7 @@ export default function ContractEditor() {
           rentDueEveryMonth: contract.rentDueEveryMonth,
           rentDueDayOfMonth: contract.rentDueDayOfMonth,
           amount: contract.amount,
+          deposit: contract.deposit,
           start: contract.start,
           end: contract.end,
         });
@@ -303,6 +308,38 @@ export default function ContractEditor() {
                 }}
                 error={!!errors.amount}
                 helperText={errors.amount?.message}
+                required
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="deposit"
+            rules={{
+              required: {
+                value: true,
+                message: t('contractErrorMessageDeposit'),
+              },
+              pattern: {
+                value: /^\d+(\.\d{1,2})?$/,
+                message: t('contractErrorMessageDeposit'),
+              },
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                id="contract-deposit"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('contractDeposit')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={!!errors.deposit}
+                helperText={errors.deposit?.message}
                 required
               />
             )}
