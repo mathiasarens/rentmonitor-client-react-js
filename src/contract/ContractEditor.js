@@ -317,10 +317,6 @@ export default function ContractEditor() {
             control={control}
             name="deposit"
             rules={{
-              required: {
-                value: true,
-                message: t('contractErrorMessageDeposit'),
-              },
               pattern: {
                 value: /^\d+(\.\d{1,2})?$/,
                 message: t('contractErrorMessageDeposit'),
@@ -340,7 +336,6 @@ export default function ContractEditor() {
                 }}
                 error={!!errors.deposit}
                 helperText={errors.deposit?.message}
-                required
               />
             )}
           />
