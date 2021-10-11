@@ -70,7 +70,7 @@ export default function ContractEditor() {
   });
 
   const onSubmit = (formInputs) => {
-    console.log('before send', formInputs);
+    console.log('before send - formInputs: ', formInputs);
     const contractToSubmit = {};
     contractToSubmit.id = contract.id;
     contractToSubmit.clientId = contract.clientId;
@@ -84,11 +84,13 @@ export default function ContractEditor() {
     contractToSubmit.amount = parseInt(
       (parseFloat(formInputs.amount) * 100).toFixed(0),
     );
-    contractToSubmit.deposit = parseInt(
-      (parseFloat(formInputs.deposit) * 100).toFixed(0),
-    );
+    if (formInputs.deposit) {
+      contractToSubmit.deposit = parseInt(
+        (parseFloat(formInputs.deposit) * 100).toFixed(0),
+      );
+    }
 
-    console.log('before send', contractToSubmit);
+    console.log('before send - contractToSubmit: ', contractToSubmit);
     authenticatedFetch(
       contract.id ? `/contracts/${contractToSubmit.id}` : '/contracts',
       history,
