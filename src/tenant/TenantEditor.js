@@ -1,13 +1,13 @@
-import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import {makeStyles} from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import {red} from '@mui/material/colors';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TenantEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [tenant, setTenant] = useState({});
   const {tenantId} = useParams();
 
@@ -53,7 +53,7 @@ export default function TenantEditor() {
     (id) => {
       tenantLoader(
         id,
-        history,
+        navigate,
         (data) => {
           setTenant(data);
         },
@@ -65,7 +65,7 @@ export default function TenantEditor() {
         },
       );
     },
-    [t, history],
+    [t, navigate],
   );
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function TenantEditor() {
 
     authenticatedFetch(
       tenant.id ? `/tenants/${tenant.id}` : '/tenants',
-      history,
+      navigate,
       {
         method: tenant.id ? 'PUT' : 'POST',
         headers: {
@@ -97,7 +97,7 @@ export default function TenantEditor() {
       },
     )
       .then(function (response) {
-        history.push(TENANT_PATH);
+        navigate(TENANT_PATH);
       })
       .catch(function (error) {
         openSnackbar({

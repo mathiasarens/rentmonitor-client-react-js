@@ -1,21 +1,15 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import EditIcon from '@material-ui/icons/Edit';
-import {makeStyles} from '@material-ui/styles';
+import EditIcon from '@mui/icons-material/Edit';
+import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -43,10 +37,10 @@ export default function Home() {
     addDueBookingsFromContractsLoading,
     setAddDueBookingsFromContractsLoading,
   ] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const loadTenantBookingOverview = useCallback(() => {
-    authenticatedFetch('/tenant-booking-overview', history, {
+    authenticatedFetch('/tenant-booking-overview', navigate, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -64,7 +58,7 @@ export default function Home() {
           variant: 'error',
         });
       });
-  }, [t, history]);
+  }, [t, navigate]);
 
   useEffect(() => {
     loadTenantBookingOverview();
@@ -91,7 +85,7 @@ export default function Home() {
                   onClick={() => {
                     setAddDueBookingsFromContractsLoading(true);
                     addDueBookingsFromContracts(
-                      history,
+                      navigate,
                       (json) => {
                         openSnackbar({
                           message: t('fintsAccountSyncronisationSuccess', {

@@ -1,15 +1,15 @@
-import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Typography from '@material-ui/core/Typography';
-import {makeStyles} from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import {red} from '@mui/material/colors';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AccountEditorStepAccountSelection(props) {
   const classes = useStyles();
   const {t} = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [selectedAccountIban, setSelectedAccountIban] = useState('');
   const step1FormData = props.location.state.form;
   const fintsAccounts = props.location.state.accounts;
@@ -71,7 +71,7 @@ export default function AccountEditorStepAccountSelection(props) {
 
     authenticatedFetch(
       accountId ? `/account-settings/${accountId}` : '/account-settings',
-      history,
+      navigate,
       {
         method: accountId ? 'PUT' : 'POST',
         headers: {
@@ -83,7 +83,7 @@ export default function AccountEditorStepAccountSelection(props) {
     )
       .then((json) => {
         console.log(json);
-        history.push(ACCOUNT_PATH);
+        navigate(ACCOUNT_PATH);
       })
       .catch((error) => {
         openSnackbar({

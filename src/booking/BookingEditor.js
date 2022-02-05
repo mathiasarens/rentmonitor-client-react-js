@@ -1,17 +1,17 @@
-import Autocomplete from '@material-ui/core/Autocomplete';
-import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import DatePicker from '@material-ui/lab/DatePicker';
-import {makeStyles} from '@material-ui/styles';
+import DatePicker from '@mui/lab/DatePicker';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import {red} from '@mui/material/colors';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useLocation, useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 export default function BookingEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
   const location = useLocation();
@@ -73,7 +73,7 @@ export default function BookingEditor() {
   const loadBooking = (id, tenants) => {
     bookingLoader(
       id,
-      history,
+      navigate,
       (data) => {
         data.amount = data.amount / 100;
         setBooking(data);
@@ -97,7 +97,7 @@ export default function BookingEditor() {
 
   const loadTenants = () => {
     tenantsLoader(
-      history,
+      navigate,
       (data) => {
         setTenants(data);
         if (bookingId) {
@@ -159,7 +159,7 @@ export default function BookingEditor() {
     );
     authenticatedFetch(
       booking.id ? `/bookings/${booking.id}` : '/bookings',
-      history,
+      navigate,
       {
         method: booking.id ? 'PUT' : 'POST',
         headers: {
@@ -170,7 +170,7 @@ export default function BookingEditor() {
       },
     )
       .then(function (response) {
-        history.push(BOOKINGS_PATH);
+        navigate(BOOKINGS_PATH);
       })
       .catch(function (error) {
         openSnackbar({

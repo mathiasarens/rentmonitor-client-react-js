@@ -1,7 +1,7 @@
 import {authenticatedFetch} from '../../authentication/authenticatedFetch';
 
-export function tenantsLoader(history, callback, callbackError) {
-  authenticatedFetch('/tenants?filter[order]=name%20ASC', history, {
+export function tenantsLoader(navigate, callback, callbackError) {
+  authenticatedFetch('/tenants?filter[order]=name%20ASC', navigate, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -18,8 +18,8 @@ export function tenantsLoader(history, callback, callbackError) {
     });
 }
 
-export function tenantLoader(id, history, callback, callbackError) {
-  authenticatedFetch(`/tenants/${id}`, history, {
+export function tenantLoader(id, navigate, callback, callbackError) {
+  authenticatedFetch(`/tenants/${id}`, navigate, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

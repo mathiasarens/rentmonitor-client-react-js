@@ -1,16 +1,16 @@
-import Autocomplete from '@material-ui/core/Autocomplete';
-import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import DatePicker from '@material-ui/lab/DatePicker';
-import {makeStyles} from '@material-ui/styles';
+import DatePicker from '@mui/lab/DatePicker';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import {red} from '@mui/material/colors';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ContractEditor() {
   const {t} = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [tenants, setTenants] = useState([]);
   const [contract, setContract] = useState({});
   const {contractId} = useParams();
@@ -93,7 +93,7 @@ export default function ContractEditor() {
     console.log('before send - contractToSubmit: ', contractToSubmit);
     authenticatedFetch(
       contract.id ? `/contracts/${contractToSubmit.id}` : '/contracts',
-      history,
+      navigate,
       {
         method: contractToSubmit.id ? 'PUT' : 'POST',
         headers: {
@@ -104,7 +104,7 @@ export default function ContractEditor() {
       },
     )
       .then(function (response) {
-        history.push(CONTRACT_PATH);
+        navigate(CONTRACT_PATH);
       })
       .catch(function (error) {
         openSnackbar({
@@ -115,7 +115,7 @@ export default function ContractEditor() {
   };
 
   const loadContract = (id, tenants) => {
-    authenticatedFetch(`/contracts/${id}`, history, {
+    authenticatedFetch(`/contracts/${id}`, navigate, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -154,7 +154,7 @@ export default function ContractEditor() {
 
   const loadTenants = () => {
     tenantsLoader(
-      history,
+      navigate,
       (data) => {
         console.log('Set tenants', data);
         setTenants(data);

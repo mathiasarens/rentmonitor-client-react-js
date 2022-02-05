@@ -1,17 +1,17 @@
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {makeStyles} from '@material-ui/styles';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {AUTH_TOKEN} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
@@ -58,7 +58,7 @@ export default function Signup(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [clientName, setClientName] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const signup = (evt) => {
     evt.preventDefault();
@@ -88,7 +88,7 @@ export default function Signup(props) {
           });
         } else {
           sessionStorage.setItem(AUTH_TOKEN, data.token);
-          history.push('/home');
+          navigate('/home');
         }
       })
       .catch((error) => {

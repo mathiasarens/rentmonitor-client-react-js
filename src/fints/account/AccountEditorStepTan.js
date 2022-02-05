@@ -1,11 +1,11 @@
-import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import {makeStyles} from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import {red} from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AccountEditorStepTan() {
   const classes = useStyles();
   const {t} = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -43,7 +43,7 @@ export default function AccountEditorStepTan() {
     }
     const data = new FormData(event.target);
 
-    authenticatedFetch('/account-settings', history, {
+    authenticatedFetch('/account-settings', navigate, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -56,7 +56,7 @@ export default function AccountEditorStepTan() {
           .json()
           .then((json) => {
             console.log(json);
-            history.push('/fints/accounts');
+            navigate('/fints/accounts');
           })
           .catch((error) => {
             openSnackbar({

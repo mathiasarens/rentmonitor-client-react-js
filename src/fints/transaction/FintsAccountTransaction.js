@@ -1,15 +1,15 @@
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import RefershIcon from '@material-ui/icons/Refresh';
-import {makeStyles} from '@material-ui/styles';
+import RefershIcon from '@mui/icons-material/Refresh';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -36,7 +36,7 @@ export default function FintsAccountTransaction() {
   const {t} = useTranslation();
   const classes = useStyles();
   const [accountTransactionLists, setAccountTransactionLists] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [pageSize] = useState(10);
   const [lastPageSize, setLastPageSize] = useState(0);
@@ -59,7 +59,7 @@ export default function FintsAccountTransaction() {
         `/account-transactions?filter[limit]=${pageSize}&filter[skip]=${
           page * pageSize
         }&filter[order][0]=date%20DESC&filter[order][1]=name%20ASC`,
-        history,
+        navigate,
         {
           method: 'GET',
           headers: {
@@ -106,7 +106,7 @@ export default function FintsAccountTransaction() {
 
   const deleteAccountTransaction = useCallback(
     (id) => {
-      authenticatedFetch(`/account-transactions/${id}`, history, {
+      authenticatedFetch(`/account-transactions/${id}`, navigate, {
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
@@ -125,14 +125,14 @@ export default function FintsAccountTransaction() {
           });
         });
     },
-    [t, history, load],
+    [t, navigate, load],
   );
 
   const transactionsToBookings = () => {
     const request = {};
     const bodyJson = JSON.stringify(request, null, 2);
     console.log(bodyJson);
-    authenticatedFetch('/transaction-to-booking', history, {
+    authenticatedFetch('/transaction-to-booking', navigate, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -172,7 +172,7 @@ export default function FintsAccountTransaction() {
 
   const createBooking = (accountTransactionItem) => {
     console.log('accountTransactionItem: ', accountTransactionItem);
-    history.push(`${BOOKING_PATH}/edit`, {
+    navigate(`${BOOKING_PATH}/edit`, {
       accountTransactionId: accountTransactionItem.id,
       date: accountTransactionItem.date,
       comment: accountTransactionItem.text,

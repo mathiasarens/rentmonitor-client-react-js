@@ -1,12 +1,12 @@
-import Button from '@material-ui/core/Button';
-import {red} from '@material-ui/core/colors';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import {makeStyles} from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import {red} from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useEffect} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AccountEditorStepInitial() {
   const classes = useStyles();
   const {t} = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -51,7 +51,7 @@ export default function AccountEditorStepInitial() {
 
   const onSubmit = (formInputs) => {
     console.log('account - onSubmit - formInputs: ', formInputs);
-    authenticatedFetch('/account-settings/fints-accounts', history, {
+    authenticatedFetch('/account-settings/fints-accounts', navigate, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -79,13 +79,13 @@ export default function AccountEditorStepInitial() {
                 const urlStep2 = accountId
                   ? `${ACCOUNT_PATH}/edit/step2/${accountId}`
                   : `${ACCOUNT_PATH}/edit/step2`;
-                history.push(urlStep2, state);
+                navigate(urlStep2, state);
                 break;
               case 210:
                 const urlStepTan = accountId
                   ? `${ACCOUNT_PATH}/edit/stepTan/${accountId}`
                   : `${ACCOUNT_PATH}/edit/stepTan`;
-                history.push(urlStepTan, state);
+                navigate(urlStepTan, state);
                 break;
               default:
                 console.error(response);
@@ -113,7 +113,7 @@ export default function AccountEditorStepInitial() {
 
   const loadAccount = (id) => {
     console.log(`Load account: ${id}`);
-    authenticatedFetch(`/account-settings/${id}`, history, {
+    authenticatedFetch(`/account-settings/${id}`, navigate, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
