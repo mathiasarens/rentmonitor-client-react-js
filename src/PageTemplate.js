@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Frame() {
+export default function PageTemplate() {
   const {t} = useTranslation();
   const classes = useStyles();
   const location = useLocation();

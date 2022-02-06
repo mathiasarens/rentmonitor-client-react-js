@@ -22,8 +22,8 @@ import AccountEditorStepInitial from './fints/account/AccountEditorStepInitial';
 import AccountEditorStepTan from './fints/account/AccountEditorStepTan';
 import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
 import FintsAccountTransaction from './fints/transaction/FintsAccountTransaction';
-import Frame from './Frame';
 import Overview from './overview/Overview';
+import PageTemplate from './PageTemplate';
 import Tenant from './tenant/Tenant';
 import TenantEditor from './tenant/TenantEditor';
 
@@ -32,14 +32,8 @@ Amplify.configure(awsExports);
 function App() {
   return (
     <BrowserRouter>
+      <PageTemplate />
       <Routes>
-        <Frame />
-        {/*
-          <Route path="/" element={() => <Navigate to="/welcome" />} />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Signin />} />
-          */}
         <Route path="/overview" element={<Overview />} />
         <Route path={TENANT_PATH} element={<Tenant />}>
           <Route path="edit/:tenantId" element={<TenantEditor />} />
