@@ -1,12 +1,13 @@
 {
   "auth": {
-    "rentmonitor6b7743f5": {
+    "rentmonitorclient8febbdcd": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
-        "loginMechanisms": [
+        "socialProviders": [],
+        "usernameAttributes": [
           "EMAIL"
         ],
         "signupAttributes": [

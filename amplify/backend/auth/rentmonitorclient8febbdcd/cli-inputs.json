@@ -1,14 +1,16 @@
 {
-    "identityPoolName": "rentmonitor6b7743f5_identitypool_6b7743f5",
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "rentmonitorclient8febbdcd_identitypool_8febbdcd",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "rentmo6b7743f5",
-    "userPoolName": "rentmonitor6b7743f5_userpool_6b7743f5",
+    "resourceNameTruncated": "rentmo8febbdcd",
+    "userPoolName": "rentmonitorclient8febbdcd_userpool_8febbdcd",
     "autoVerifiedAttributes": [
-        "email"
+      "email"
     ],
     "mfaConfiguration": "OFF",
     "mfaTypes": [
-        "SMS Text Message"
+      "SMS Text Message"
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
@@ -18,40 +20,29 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-        "email"
+      "email"
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
-        "email"
+      "email"
     ],
     "userpoolClientReadAttributes": [
-        "email"
+      "email"
     ],
-    "userpoolClientLambdaRole": "rentmo6b7743f5_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "rentmo8febbdcd_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "6b7743f5",
-    "resourceName": "rentmonitor6b7743f5",
+    "sharedId": "8febbdcd",
+    "resourceName": "rentmonitorclient8febbdcd",
     "authSelections": "identityPoolAndUserPool",
-    "authRoleArn": {
-        "Fn::GetAtt": [
-            "AuthRole",
-            "Arn"
-        ]
-    },
-    "unauthRoleArn": {
-        "Fn::GetAtt": [
-            "UnauthRole",
-            "Arn"
-        ]
-    },
     "useDefault": "default",
     "usernameAttributes": [
-        "email"
+      "email"
     ],
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "dependsOn": []
+    "useEnabledMfas": true
+  }
 }
