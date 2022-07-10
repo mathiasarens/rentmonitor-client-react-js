@@ -14,7 +14,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import {BOOKING_PATH} from '../../Constants';
+import {BOOKINGS_PATH} from '../../Constants';
 import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../../utils/Notifier';
 
@@ -172,7 +172,7 @@ export default function FintsAccountTransaction() {
 
   const createBooking = (accountTransactionItem) => {
     console.log('accountTransactionItem: ', accountTransactionItem);
-    navigate(`/${BOOKING_PATH}/edit`, {
+    navigate(`/${BOOKINGS_PATH}/edit`, {
       replace: false,
       state: {
         accountTransactionId: accountTransactionItem.id,

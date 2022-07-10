@@ -10,7 +10,6 @@ import Bookings from './booking/Bookings';
 import {
   ACCOUNT_PATH,
   BOOKINGS_PATH,
-  BOOKING_PATH,
   CONTRACT_PATH,
   OVERVIEW_PATH,
   TENANTS_PATH,
@@ -46,7 +45,7 @@ function App() {
         <Route path={BOOKINGS_PATH} element={<Bookings />}>
           <Route path=":tenantId" element={<Bookings />} />
         </Route>
-        <Route path={BOOKING_PATH}>
+        <Route path={`${BOOKINGS_PATH}/edit`} element={<BookingEditor />}>
           <Route path=":bookingId" element={<BookingEditor />} />
         </Route>
         <Route path={ACCOUNT_PATH} element={<Account />}>
