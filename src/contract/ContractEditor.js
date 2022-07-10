@@ -104,7 +104,7 @@ export default function ContractEditor() {
       },
     )
       .then(function (response) {
-        navigate(CONTRACT_PATH);
+        navigate(`/${CONTRACT_PATH}`);
       })
       .catch(function (error) {
         openSnackbar({

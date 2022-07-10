@@ -46,7 +46,7 @@ function App() {
         <Route path={BOOKINGS_PATH} element={<Bookings />}>
           <Route path=":tenantId" element={<Bookings />} />
         </Route>
-        <Route path={`${BOOKING_PATH}/edit`} element={<BookingEditor />}>
+        <Route path={BOOKING_PATH}>
           <Route path=":bookingId" element={<BookingEditor />} />
         </Route>
         <Route path={ACCOUNT_PATH} element={<Account />}>

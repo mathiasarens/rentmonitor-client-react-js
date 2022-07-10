@@ -5,7 +5,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useNavigate, useParams} from 'react-router-dom';
 import {
@@ -48,52 +49,71 @@ export default function TenantEditor() {
   const navigate = useNavigate();
   const [tenant, setTenant] = useState({});
   const {tenantId} = useParams();
-
-  const loadTenant = useCallback(
-    (id) => {
-      tenantLoader(
-        id,
-        navigate,
-        (data) => {
-          setTenant(data);
-        },
-        (error) => {
-          openSnackbar({
-            message: t(handleAuthenticationError(error)),
-            variant: 'error',
-          });
-        },
-      );
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      accountSynchronisationName: '',
     },
-    [t, navigate],
-  );
+  });
+
+  const loadTenant = (id) => {
+    tenantLoader(
+      id,
+      navigate,
+      (data) => {
+        setTenant(data);
+        //console.log(`Loaded tenant: ${JSON.stringify(data)}`);
+        reset({
+          name: data.name !== null ? data.name : '',
+          email: data.email !== null ? data.email : '',
+          phone: data.phone !== null ? data.phone : '',
+          accountSynchronisationName:
+            data.accountSynchronisationName !== null
+              ? data.accountSynchronisationName
+              : '',
+        });
+      },
+      (error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+      },
+    );
+  };
 
   useEffect(() => {
     if (tenantId) {
       loadTenant(tenantId);
     }
-  }, [loadTenant, tenantId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!event.target.checkValidity()) {
-      openSnackbar({
-        message: t('formValidationFailed'),
-        variant: 'error',
-      });
-      return;
-    }
-
+  const onSubmit = (formInputs) => {
+    const updatedTenant = tenant;
+    updatedTenant.name = formInputs.name;
+    updatedTenant.email = formInputs.email;
+    updatedTenant.phone = formInputs.phone;
+    updatedTenant.accountSynchronisationName =
+      formInputs.accountSynchronisationName;
+    setTenant(updatedTenant);
     authenticatedFetch(
-      tenant.id ? `/tenants/${tenant.id}` : '/tenants',
+      updatedTenant.id ? `/tenants/${updatedTenant.id}` : '/tenants',
       navigate,
       {
-        method: tenant.id ? 'PUT' : 'POST',
+        method: updatedTenant.id ? 'PUT' : 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(tenant),
+        body: JSON.stringify(updatedTenant),
       },
     )
       .then(function (response) {
@@ -114,73 +134,100 @@ export default function TenantEditor() {
         <Typography component="h1" variant="h5">
           {t('tenant')}
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="name"
-            label="Name"
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={classes.form}
+          noValidate
+        >
+          <Controller
+            control={control}
             name="name"
-            autoComplete="Name"
-            className={classes.input}
-            value={tenant.name ? tenant.name : ''}
-            onChange={(event) => {
-              setTenant({...tenant, name: event.target.value});
-            }}
-            autoFocus
-            required
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id="name"
+                label="Name"
+                autoComplete="Name"
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                autoFocus
+                required
+              />
+            )}
           />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
+          <Controller
+            control={control}
             name="email"
-            label={t('email')}
-            type="email"
-            id="email"
-            autoComplete="your@email.com"
-            className={classes.input}
-            value={tenant.email ? tenant.email : ''}
-            onChange={(event) => {
-              setTenant({...tenant, email: event.target.value});
-            }}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="phone"
-            label={t('phone')}
-            type="phone"
-            id="phone"
-            autoComplete="+49 170 123456789"
-            className={classes.input}
-            value={tenant.phone ? tenant.phone : ''}
-            onChange={(event) => {
-              setTenant({...tenant, phone: event.target.value});
-            }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('email')}
+                type="email"
+                id="email"
+                autoComplete="your@email.com"
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+              />
+            )}
           />
 
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('tenantAccountSynchronizationName')}
-            id="tenant-account-sync-name"
-            className={classes.input}
-            value={
-              tenant.accountSynchronisationName
-                ? tenant.accountSynchronisationName
-                : ''
-            }
-            onChange={(event) => {
-              setTenant({
-                ...tenant,
-                accountSynchronisationName: event.target.value,
-              });
+          <Controller
+            control={control}
+            name="phone"
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('phone')}
+                type="phone"
+                id="phone"
+                autoComplete="+49 170 123456789"
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="accountSynchronisationName"
+            rules={{
+              maxLength: {
+                value: 255,
+                message: t('tenantErrorMessageAccountSynchronisationName'),
+              },
             }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('tenantAccountSynchronizationName')}
+                id="tenant-account-sync-name"
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={errors.accountSynchronisationName ? true : false}
+                helperText={errors.accountSynchronisationName?.message}
+              />
+            )}
           />
 
           <Button

@@ -154,7 +154,7 @@ const resources = {
       tenant: 'Mieter',
       connectFints: 'Verbinden',
       tenantSave: 'Speichern',
-      tenantAccountSynchronizationName: 'Name auf Auszug',
+      tenantAccountSynchronizationName: 'Name auf Kontoauszug',
       formValidationFailed: 'Bitte korrigieren Sie Ihre Eingaben',
       newAccountSettings: 'Neue Kontoeinstellungen',
       fintsBlz: 'FinTs BLZ',

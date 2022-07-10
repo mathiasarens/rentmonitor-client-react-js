@@ -237,12 +237,13 @@ export default function Bookings() {
             <Grid item xs={12} sm={2}>
               <Grid container spacing={1} marginTop={1}>
                 <Grid item>
+                  {/* ------ edit booking link ---- */}
                   <Button
                     size="small"
                     variant="outlined"
                     aria-label="edit"
                     component={Link}
-                    to={`${BOOKING_PATH}/edit/${bookingListItem.id}`}
+                    to={`/${BOOKING_PATH}/${bookingListItem.id}`}
                   >
                     {t('edit')}
                   </Button>
