@@ -1,4 +1,3 @@
-import DatePicker from '@mui/lab/DatePicker';
 import {Button} from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
@@ -8,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
+import {DatePicker} from '@mui/x-date-pickers';
 import sub from 'date-fns/sub';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';

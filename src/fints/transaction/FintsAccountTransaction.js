@@ -172,11 +172,14 @@ export default function FintsAccountTransaction() {
 
   const createBooking = (accountTransactionItem) => {
     console.log('accountTransactionItem: ', accountTransactionItem);
-    navigate(`${BOOKING_PATH}/edit`, {
-      accountTransactionId: accountTransactionItem.id,
-      date: accountTransactionItem.date,
-      comment: accountTransactionItem.text,
-      amount: accountTransactionItem.amount,
+    navigate(`/${BOOKING_PATH}/edit`, {
+      replace: false,
+      state: {
+        accountTransactionId: accountTransactionItem.id,
+        date: accountTransactionItem.date,
+        comment: accountTransactionItem.text,
+        amount: accountTransactionItem.amount,
+      },
     });
   };
 

@@ -12,7 +12,8 @@ import {
   BOOKINGS_PATH,
   BOOKING_PATH,
   CONTRACT_PATH,
-  TENANT_PATH,
+  OVERVIEW_PATH,
+  TENANTS_PATH,
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
@@ -34,19 +35,21 @@ function App() {
     <BrowserRouter>
       <PageTemplate />
       <Routes>
-        <Route path="/overview" element={<Overview />} />
-        <Route path={TENANT_PATH} element={<Tenant />}>
-          <Route path="edit/:tenantId" element={<TenantEditor />} />
+        <Route path={OVERVIEW_PATH} element={<Overview />} />
+        <Route path={TENANTS_PATH}>
+          <Route index element={<Tenant />} />
+          <Route path=":tenantId" element={<TenantEditor />} />
         </Route>
         <Route path={CONTRACT_PATH} element={<Contract />}>
           <Route path="edit/:contractId" element={<ContractEditor />} />
         </Route>
-        <Route path={`${BOOKINGS_PATH}/:tenantId?`} element={<Bookings />} />
-        <Route
-          path={`${BOOKING_PATH}/edit/:bookingId?`}
-          element={<BookingEditor />}
-        />
-        <Route path={`${ACCOUNT_PATH}/*`} element={<Account />}>
+        <Route path={BOOKINGS_PATH} element={<Bookings />}>
+          <Route path=":tenantId" element={<Bookings />} />
+        </Route>
+        <Route path={`${BOOKING_PATH}/edit`} element={<BookingEditor />}>
+          <Route path=":bookingId" element={<BookingEditor />} />
+        </Route>
+        <Route path={ACCOUNT_PATH} element={<Account />}>
           <Route
             from="edit"
             render={<Navigate to={`${ACCOUNT_PATH}/edit/step1`} />}
@@ -63,13 +66,17 @@ function App() {
             path="edit/stepTan/:accountId?"
             element={<AccountEditorStepTan />}
           />
-
+        </Route>
+        <Route
+          path="accountsynchronisation"
+          element={<FintsAccountSynchronisationSingle />}
+        >
           <Route
-            path="synchronisation/:accountSettingsId"
+            path=":accountSettingsId"
             element={<FintsAccountSynchronisationSingle />}
           />
         </Route>
-        <Route path="/transaction" element={<FintsAccountTransaction />} />
+        <Route path="transaction" element={<FintsAccountTransaction />} />
       </Routes>
     </BrowserRouter>
   );

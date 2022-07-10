@@ -14,7 +14,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {ACCOUNT_PATH, BOOKINGS_PATH} from '../Constants';
+import {BOOKINGS_PATH} from '../Constants';
 import {addDueBookingsFromContracts} from '../contract/dataaccess/ContractSynchronisation';
 import {openSnackbar} from '../utils/Notifier';
 
@@ -122,7 +122,7 @@ export default function Home() {
                   variant="outlined"
                   aria-label="synchronize"
                   component={Link}
-                  to={`${ACCOUNT_PATH}/synchronisation`}
+                  to="/accountsynchronisation"
                 >
                   {t('overviewFetchAccountTransactions')}
                 </Button>
@@ -157,7 +157,7 @@ export default function Home() {
                     size="small"
                     aria-label="edit"
                     component={Link}
-                    to={`${BOOKINGS_PATH}/${bookingSumPerTenantItem.tenant.id}`}
+                    to={`/${BOOKINGS_PATH}/${bookingSumPerTenantItem.tenant.id}`}
                   >
                     <EditIcon />
                   </IconButton>

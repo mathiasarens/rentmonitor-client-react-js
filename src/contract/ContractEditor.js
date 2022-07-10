@@ -1,4 +1,3 @@
-import DatePicker from '@mui/lab/DatePicker';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import {red} from '@mui/material/colors';
@@ -7,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
+import {DatePicker} from '@mui/x-date-pickers';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';

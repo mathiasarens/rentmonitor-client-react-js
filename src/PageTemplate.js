@@ -23,7 +23,7 @@ import {
   BOOKINGS_PATH,
   BOOKING_PATH,
   CONTRACT_PATH,
-  TENANT_PATH,
+  TENANTS_PATH,
   TRANSACTION_PATH,
 } from './Constants';
 import theme from './theme';
@@ -115,7 +115,7 @@ export default function PageTemplate() {
         return t('contracts');
       case ACCOUNT_PATH:
         return t('accounts');
-      case TENANT_PATH:
+      case TENANTS_PATH:
         return t('tenants');
       case BOOKING_PATH:
       case BOOKINGS_PATH:
@@ -191,7 +191,7 @@ export default function PageTemplate() {
               key="tenants"
               onClick={handleDrawerClose}
               component={Link}
-              to={TENANT_PATH}
+              to={TENANTS_PATH}
             >
               <ListItemIcon>
                 <MailIcon />

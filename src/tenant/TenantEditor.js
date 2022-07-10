@@ -12,7 +12,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {TENANT_PATH} from '../Constants';
+import {TENANTS_PATH} from '../Constants';
 import {openSnackbar} from '../utils/Notifier';
 import {tenantLoader} from './dataaccess/tenantLoader';
 
@@ -97,7 +97,7 @@ export default function TenantEditor() {
       },
     )
       .then(function (response) {
-        navigate(TENANT_PATH);
+        navigate(`/${TENANTS_PATH}`);
       })
       .catch(function (error) {
         openSnackbar({
