@@ -1,20 +1,20 @@
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
-import RefershIcon from '@material-ui/icons/Refresh';
+import AddIcon from '@mui/icons-material/Add';
+import RefershIcon from '@mui/icons-material/Refresh';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {TENANT_PATH} from '../Constants';
+import {TENANTS_PATH} from '../Constants';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
 import {tenantsLoader} from './dataaccess/tenantLoader';
@@ -22,20 +22,20 @@ import {tenantsLoader} from './dataaccess/tenantLoader';
 export default function Tenant() {
   const {t} = useTranslation();
   const [tenants, setTenants] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const loadTenants = useCallback(() => {
-    tenantsLoader(history, setTenants, (error) => {
+    tenantsLoader(navigate, setTenants, (error) => {
       openSnackbar({
         message: t(handleAuthenticationError(error)),
         variant: 'error',
       });
     });
-  }, [t, history]);
+  }, [t, navigate]);
 
   const deleteTenant = useCallback(
     (id) => {
-      authenticatedFetch(`/tenants/${id}`, history, {
+      authenticatedFetch(`/tenants/${id}`, navigate, {
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
@@ -53,7 +53,7 @@ export default function Tenant() {
           });
         });
     },
-    [t, history, tenants],
+    [t, navigate, tenants],
   );
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function Tenant() {
                   size="small"
                   aria-label="add"
                   component={Link}
-                  to={`${TENANT_PATH}/edit`}
+                  to={`/${TENANTS_PATH}/edit`}
                 >
                   <AddIcon />
                 </IconButton>
@@ -138,7 +138,7 @@ export default function Tenant() {
                       variant="outlined"
                       aria-label="edit"
                       component={Link}
-                      to={`${TENANT_PATH}/edit/${tenantListItem.id}`}
+                      to={`/${TENANTS_PATH}/${tenantListItem.id}`}
                     >
                       {t('edit')}
                     </Button>

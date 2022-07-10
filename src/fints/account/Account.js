@@ -1,15 +1,15 @@
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
-import RefershIcon from '@material-ui/icons/Refresh';
-import {makeStyles} from '@material-ui/styles';
+import AddIcon from '@mui/icons-material/Add';
+import RefershIcon from '@mui/icons-material/Refresh';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -33,10 +33,10 @@ export default function Account() {
   const {t} = useTranslation();
   const classes = useStyles();
   const [accountSettingsList, setAccountSettingsList] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const load = useCallback(() => {
-    authenticatedFetch('/account-settings', history, {
+    authenticatedFetch('/account-settings', navigate, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -54,11 +54,11 @@ export default function Account() {
           variant: 'error',
         });
       });
-  }, [t, history]);
+  }, [t, navigate]);
 
   const deleteAccountSettingsItem = useCallback(
     (id) => {
-      authenticatedFetch(`/account-settings/${id}`, history, {
+      authenticatedFetch(`/account-settings/${id}`, navigate, {
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
@@ -77,7 +77,7 @@ export default function Account() {
           });
         });
     },
-    [t, history, load],
+    [t, navigate, load],
   );
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import {authenticatedFetch} from '../../authentication/authenticatedFetch';
 
-export function bookingsLoader(tenantId, history, callback, callbackError) {
+export function bookingsLoader(tenantId, navigate, callback, callbackError) {
   const url = tenantId
     ? '/bookings?filter[where][tenantId]=' + tenantId
     : '/bookings';
-  authenticatedFetch(url, history, {
+  authenticatedFetch(url, navigate, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -21,8 +21,8 @@ export function bookingsLoader(tenantId, history, callback, callbackError) {
     });
 }
 
-export function bookingLoader(id, history, callback, callbackError) {
-  authenticatedFetch(`/bookings/${id}`, history, {
+export function bookingLoader(id, navigate, callback, callbackError) {
+  authenticatedFetch(`/bookings/${id}`, navigate, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

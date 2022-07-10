@@ -1,18 +1,18 @@
-import {Button} from '@material-ui/core';
-import Autocomplete from '@material-ui/core/Autocomplete';
-import Box from '@material-ui/core/Box';
-import {red} from '@material-ui/core/colors';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import DatePicker from '@material-ui/lab/DatePicker';
-import {makeStyles} from '@material-ui/styles';
+import {Button} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import {red} from '@mui/material/colors';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import {makeStyles} from '@mui/styles';
+import {DatePicker} from '@mui/x-date-pickers';
 import sub from 'date-fns/sub';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function FintsAccountSynchronisationSingle() {
   const {t} = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const {accountSettingsId} = useParams();
   const [accountSettingsItems, setAccountSettingsItems] = useState([]);
   const [challengeText, setChallengeText] = useState('');
@@ -66,7 +66,7 @@ export default function FintsAccountSynchronisationSingle() {
   let tanRequiredJsx;
 
   useEffect(() => {
-    authenticatedFetch('/account-settings', history, {
+    authenticatedFetch('/account-settings', navigate, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -122,7 +122,7 @@ export default function FintsAccountSynchronisationSingle() {
     request.accountSettingsId = formInputs.accountSettingsItem.id;
     const bodyJson = JSON.stringify(request, null, 2);
     console.log(bodyJson);
-    authenticatedFetch('/account-synchronization/single', history, {
+    authenticatedFetch('/account-synchronization/single', navigate, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

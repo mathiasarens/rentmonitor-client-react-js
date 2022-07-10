@@ -1,9 +1,15 @@
-import {AUTH_TOKEN} from '../Constants';
+import {Auth} from 'aws-amplify';
 
-export function authenticatedFetch(urlSuffix, history, options) {
-  options.headers['Authorization'] = `Bearer ${sessionStorage.getItem(
-    AUTH_TOKEN,
-  )}`;
+export async function authenticatedFetch(urlSuffix, navigate, options) {
+  const amplifySession = await Auth.currentSession();
+
+  options.headers['Authorization'] = `Bearer ${amplifySession
+    .getAccessToken()
+    .getJwtToken()}`;
+  options.headers['Authentication'] = `Bearer ${amplifySession
+    .getIdToken()
+    .getJwtToken()}`;
+
   return fetch(
     `${process.env.REACT_APP_BACKEND_URL_PREFIX}${urlSuffix}`,
     options,
@@ -11,8 +17,7 @@ export function authenticatedFetch(urlSuffix, history, options) {
     if (!response.ok) {
       if ([401, 403].indexOf(response.status) !== -1) {
         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-        sessionStorage.removeItem(AUTH_TOKEN);
-        history.push('/signin');
+        Auth.signOut();
       }
       return Promise.reject(response);
     } else {

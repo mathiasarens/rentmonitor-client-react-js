@@ -1,13 +1,13 @@
 import {authenticatedFetch} from '../../authentication/authenticatedFetch';
 
 export function addDueBookingsFromContracts(
-  history,
+  navigate,
   callback,
   callbackConnectionError,
   callbackError,
 ) {
   const bodyJson = JSON.stringify({}, null, 2);
-  authenticatedFetch('/contract-to-booking', history, {
+  authenticatedFetch('/contract-to-booking', navigate, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
