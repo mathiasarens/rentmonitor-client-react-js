@@ -1,6 +1,6 @@
 {
   "auth": {
-    "rentmonitorclient8febbdcd": {
+    "rentmonitorclient2b496b5a": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
