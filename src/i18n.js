@@ -173,7 +173,7 @@ const resources = {
       connectionError:
         'Verbindungsfehler. Bitte versuchen Sie es später noch einmal.',
       unauthenticatedError: 'Sie wurden ausgeloggt.',
-      fintsAccountSynchronisationTitle: 'Kontoabgleich mit der Bank',
+      fintsAccountSynchronisationTitle: 'Kontoabgleich',
       fintsAccountSynchronisationButton: 'Starten',
       fintsAccountSynchronisationStep2Button: 'Speichern',
       fintsAccountTransactionTitle: 'Umsätze',

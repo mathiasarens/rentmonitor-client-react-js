@@ -20,7 +20,7 @@ import Account from './fints/account/Account';
 import AccountEditorStepAccountSelection from './fints/account/AccountEditorStepAccountSelection';
 import AccountEditorStepInitial from './fints/account/AccountEditorStepInitial';
 import AccountEditorStepTan from './fints/account/AccountEditorStepTan';
-import FintsAccountSynchronisationSingle from './fints/synchronisation/FintsAccountSynchronisationSingle';
+import FintsAccountSynchronisationOverview from './fints/synchronisation/FintsAccountSynchronisationOverview';
 import FintsAccountTransaction from './fints/transaction/FintsAccountTransaction';
 import Overview from './overview/Overview';
 import PageTemplate from './PageTemplate';
@@ -68,13 +68,8 @@ function App() {
         </Route>
         <Route
           path="accountsynchronisation"
-          element={<FintsAccountSynchronisationSingle />}
-        >
-          <Route
-            path=":accountSettingsId"
-            element={<FintsAccountSynchronisationSingle />}
-          />
-        </Route>
+          element={<FintsAccountSynchronisationOverview />}
+        />
         <Route path="transaction" element={<FintsAccountTransaction />} />
       </Routes>
     </BrowserRouter>
