@@ -24,7 +24,7 @@ import {
   BOOKING_PATH,
   CONTRACT_PATH,
   TENANTS_PATH,
-  TRANSACTION_PATH,
+  TRANSACTIONS_PATH,
 } from './Constants';
 import theme from './theme';
 import Notifier from './utils/Notifier';
@@ -120,7 +120,7 @@ export default function PageTemplate() {
       case BOOKING_PATH:
       case BOOKINGS_PATH:
         return t('bookings');
-      case TRANSACTION_PATH:
+      case TRANSACTIONS_PATH:
         return t('transactions');
       default:
         return 'Rent Monitor';
@@ -243,7 +243,7 @@ export default function PageTemplate() {
               key="transactions"
               onClick={handleDrawerClose}
               component={Link}
-              to={TRANSACTION_PATH}
+              to={TRANSACTIONS_PATH}
             >
               <ListItemIcon>
                 <MailIcon />

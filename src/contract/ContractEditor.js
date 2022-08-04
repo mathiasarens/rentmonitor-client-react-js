@@ -173,9 +173,7 @@ export default function ContractEditor() {
   };
 
   useEffect(() => {
-    console.log('useEffect()');
     loadTenants();
-    console.log('Tenants - useEffect', tenants);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

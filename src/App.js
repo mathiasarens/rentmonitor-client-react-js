@@ -10,9 +10,11 @@ import Bookings from './booking/Bookings';
 import {
   ACCOUNT_PATH,
   BOOKINGS_PATH,
+  BOOKING_PATH,
   CONTRACT_PATH,
   OVERVIEW_PATH,
   TENANTS_PATH,
+  TRANSACTIONS_PATH,
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
@@ -21,7 +23,7 @@ import AccountEditorStepAccountSelection from './fints/account/AccountEditorStep
 import AccountEditorStepInitial from './fints/account/AccountEditorStepInitial';
 import AccountEditorStepTan from './fints/account/AccountEditorStepTan';
 import FintsAccountSynchronisationOverview from './fints/synchronisation/FintsAccountSynchronisationOverview';
-import FintsAccountTransaction from './fints/transaction/FintsAccountTransaction';
+import FintsAccountTransactions from './fints/transaction/FintsAccountTransactions';
 import Overview from './overview/Overview';
 import PageTemplate from './PageTemplate';
 import Tenant from './tenant/Tenant';
@@ -45,7 +47,7 @@ function App() {
         <Route path={BOOKINGS_PATH} element={<Bookings />}>
           <Route path=":tenantId" element={<Bookings />} />
         </Route>
-        <Route path={`${BOOKINGS_PATH}/edit`} element={<BookingEditor />}>
+        <Route path={BOOKING_PATH} element={<BookingEditor />}>
           <Route path=":bookingId" element={<BookingEditor />} />
         </Route>
         <Route path={ACCOUNT_PATH} element={<Account />}>
@@ -70,7 +72,10 @@ function App() {
           path="accountsynchronisation"
           element={<FintsAccountSynchronisationOverview />}
         />
-        <Route path="transaction" element={<FintsAccountTransaction />} />
+        <Route
+          path={TRANSACTIONS_PATH}
+          element={<FintsAccountTransactions />}
+        />
       </Routes>
     </BrowserRouter>
   );

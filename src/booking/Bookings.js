@@ -9,9 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
-import format from 'date-fns/format';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
@@ -21,8 +20,8 @@ import {BOOKING_PATH, CONTRACT_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
+import {Booking} from './Booking';
 import {bookingsLoader} from './dataaccess/bookingLoader';
-
 const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
@@ -146,7 +145,7 @@ export default function Bookings() {
                   size="small"
                   aria-label="add"
                   component={Link}
-                  to={`${BOOKING_PATH}/edit`}
+                  to={`/${BOOKING_PATH}`}
                 >
                   <AddIcon />
                 </IconButton>
@@ -197,42 +196,10 @@ export default function Bookings() {
         {bookings.map((bookingListItem) => (
           <Grid container marginTop={2} spacing={1} key={bookingListItem.id}>
             <Grid item xs={12} sm={10}>
-              <Grid container>
-                <Grid item xs={4}>
-                  {t('bookingDate')}
-                </Grid>
-                <Grid item xs={8}>
-                  {format(new Date(bookingListItem.date), t('dateFormat'))}
-                </Grid>
-                <Grid item xs={4}>
-                  {t('tenant')}
-                </Grid>
-                <Grid item xs={8}>
-                  {tenantsMap[bookingListItem.tenantId]?.name}
-                </Grid>
-                <Grid item xs={4}>
-                  {t('bookingAmount')}
-                </Grid>
-                <Grid item xs={8}>
-                  {new Intl.NumberFormat('de-DE', {
-                    style: 'currency',
-                    currency: 'EUR',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }).format(bookingListItem.amount / 100)}
-                </Grid>
-                {/* ------ booking comment ---- */}
-                <Grid item xs={4} zeroMinWidth>
-                  <Typography style={{overflowWrap: 'break-word'}}>
-                    <Trans t={t}>{t('bookingComment')}</Trans>
-                  </Typography>
-                </Grid>
-                <Grid item xs={8}>
-                  {(bookingListItem.type === 'RENT_DUE'
-                    ? t('bookingCommentRentDue') + ' '
-                    : '') + bookingListItem.comment}
-                </Grid>
-              </Grid>
+              <Booking
+                bookingListItem={bookingListItem}
+                tenantsMap={tenantsMap}
+              />
             </Grid>
             <Grid item xs={12} sm={2}>
               <Grid container spacing={1} marginTop={1}>

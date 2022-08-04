@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
 import sub from 'date-fns/sub';
@@ -14,7 +15,10 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
+import {Booking} from '../../booking/Booking';
+import {tenantsLoader} from '../../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../../utils/Notifier';
+import {FintsAccountTransaction} from '../transaction/FintsAccountTransaction';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -47,7 +51,11 @@ export default function FintsAccountSynchronisationOverview() {
   const [accountSettingsItems, setAccountSettingsItems] = useState([]);
   const [synchronizationButtonActive, setSynchronizationButtonActive] =
     useState(false);
+  const [accountSynchronizationStarted, setAccountSynchronizationStarted] =
+    useState(false);
   const [numOfExpectedResponses, setNumOfExpectedResponses] = useState(0);
+  const [syncResults, setSyncResults] = useState([]);
+  const [tenantsMap, setTenantsMap] = useState(new Map());
   const {reset, handleSubmit} = useForm({
     defaultValues: {
       accountSettingsItem: null,
@@ -56,7 +64,7 @@ export default function FintsAccountSynchronisationOverview() {
     },
   });
 
-  const loadTenants = () => {
+  const loadAccountSettings = () => {
     authenticatedFetch('/account-settings', navigate, {
       method: 'GET',
       headers: {
@@ -84,84 +92,114 @@ export default function FintsAccountSynchronisationOverview() {
       });
   };
 
-  useEffect(() => {
-    loadTenants();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const synchronizeAccount = (request) => {
-    const bodyJson = JSON.stringify(request, null, 2);
-    authenticatedFetch('/account-synchronization/test', navigate, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+  const loadTenants = () => {
+    tenantsLoader(
+      navigate,
+      (data) => {
+        setTenantsMap(
+          data.reduce((map, tenant) => {
+            map[tenant.id] = tenant;
+            return map;
+          }, {}),
+        );
       },
-      body: bodyJson,
-    })
-      .then((response) => {
-        switch (response.status) {
-          case 200:
-            response.json().then((json) => {
-              console.log(json);
-              openSnackbar({
-                message: t('fintsAccountSyncronisationSuccess', {
-                  newBookingsCount: json.newBookings,
-                  unmatchedTransactions: json.unmatchedTransactions,
-                }),
-                variant: 'info',
-              });
-            });
-            setNumOfExpectedResponses(numOfExpectedResponses - 1);
-            break;
-          case 210:
-            response
-              .json()
-              .then((json) => {
-                console.log(json);
-                setNumOfExpectedResponses(numOfExpectedResponses - 1);
-              })
-              .catch((error) => {
-                console.error(error);
-                openSnackbar({
-                  message: t('connectionError'),
-                  variant: 'error',
-                });
-                setNumOfExpectedResponses(numOfExpectedResponses - 1);
-              });
-            break;
-          default:
-            console.error(response);
-            openSnackbar({
-              message: t('connectionError'),
-              variant: 'error',
-            });
-            setNumOfExpectedResponses(numOfExpectedResponses - 1);
-        }
-      })
-      .catch((error) => {
+      (error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
           variant: 'error',
         });
-        setNumOfExpectedResponses(numOfExpectedResponses - 1);
-      });
+      },
+    );
   };
 
   const onSubmit = (formInputs) => {
-    console.log('formInputs', formInputs);
     setNumOfExpectedResponses(accountSettingsItems.length);
-    accountSettingsItems.forEach((accountSettingsItem) => {
-      const request = {};
-      request.from = sub(new Date(), {months: 2});
-      request.to = new Date();
-      request.accountSettingsId = accountSettingsItem.id;
-      synchronizeAccount(request);
-    });
+    setAccountSynchronizationStarted(true);
   };
 
+  useEffect(() => {
+    loadAccountSettings();
+    loadTenants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const synchronizeAccount = (request) => {
+      const bodyJson = JSON.stringify(request, null, 2);
+      authenticatedFetch('/account-synchronization/single', navigate, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: bodyJson,
+      })
+        .then((response) => {
+          switch (response.status) {
+            case 200:
+              response.json().then((json) => {
+                console.log(
+                  'Sync result received for: ' +
+                    json.accountName +
+                    ' (' +
+                    json.accountSettingsId +
+                    ')',
+                );
+                console.log(json);
+                //console.log(syncResults);
+                setSyncResults((prevSyncResults) => [...prevSyncResults, json]);
+              });
+              setNumOfExpectedResponses((n) => n - 1);
+              break;
+            case 210:
+              response
+                .json()
+                .then((json) => {
+                  console.log(json);
+                  setNumOfExpectedResponses((n) => n - 1);
+                })
+                .catch((error) => {
+                  console.error(error);
+                  openSnackbar({
+                    message: t('connectionError'),
+                    variant: 'error',
+                  });
+                  setNumOfExpectedResponses((n) => n - 1);
+                });
+              break;
+            default:
+              console.error(response);
+              openSnackbar({
+                message: t('connectionError'),
+                variant: 'error',
+              });
+              setNumOfExpectedResponses((n) => n - 1);
+          }
+        })
+        .catch((error) => {
+          openSnackbar({
+            message: t(handleAuthenticationError(error)),
+            variant: 'error',
+          });
+          setNumOfExpectedResponses((n) => n - 1);
+        });
+    };
+    if (accountSynchronizationStarted) {
+      setAccountSynchronizationStarted(false);
+      setSyncResults([]);
+      console.log('Use effect called');
+      accountSettingsItems.forEach((accountSettingsItem) => {
+        const request = {};
+        request.from = sub(new Date(), {months: 2});
+        request.to = new Date();
+        request.accountSettingsId = accountSettingsItem.id;
+        synchronizeAccount(request);
+      });
+    }
+  }, [accountSynchronizationStarted, accountSettingsItems, navigate, t]);
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
@@ -194,13 +232,58 @@ export default function FintsAccountSynchronisationOverview() {
           </Box>
         </form>
         <Typography component="h1" variant="h5">
-          {t('fintsAccountSynchronisationTitle')}
+          {t('fintsAccountSynchronisationResult')}
         </Typography>
-        <Box>
-          {accountSettingsItems.map((accountSettingsItem) => (
-            <Box key={accountSettingsItem.id}>{accountSettingsItem.name}</Box>
-          ))}
-        </Box>
+        {syncResults.map((syncResult) => (
+          <Box key={syncResult.accountSettingsId} marginTop={2}>
+            <Typography component="h2" variant="h6">
+              {syncResult.accountName}
+            </Typography>
+            <Box>
+              {syncResult.newBookings && (
+                <Typography component="h3" variant="h7">
+                  {t('fintsAccountSynchronisationResultNewBookings')}
+                </Typography>
+              )}
+              {syncResult.newBookings?.map((newBooking) => (
+                <Grid
+                  container
+                  marginTop={2}
+                  spacing={1}
+                  key={`newBookings${syncResult.accountSettingsId}${newBooking.id}`}
+                >
+                  <Grid item xs={12}>
+                    <Booking
+                      bookingListItem={newBooking}
+                      tenantsMap={tenantsMap}
+                    />
+                  </Grid>
+                </Grid>
+              ))}
+            </Box>
+            <Box marginTop={2}>
+              {syncResult.unmatchedTransactions && (
+                <Typography component="h3" variant="h7">
+                  {t('fintsAccountSynchronisationResultNewTransactions')}
+                </Typography>
+              )}
+              {syncResult.unmatchedTransactions?.map((unmatchedTransaction) => (
+                <Grid
+                  container
+                  marginTop={2}
+                  spacing={1}
+                  key={`unmatchedTransaction${syncResult.accountSettingsId}${unmatchedTransaction.id}`}
+                >
+                  <Grid item xs={12}>
+                    <FintsAccountTransaction
+                      accountTransactionItem={unmatchedTransaction}
+                    />
+                  </Grid>
+                </Grid>
+              ))}
+            </Box>
+          </Box>
+        ))}
       </div>
     </Container>
   );
