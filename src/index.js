@@ -1,7 +1,7 @@
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import {LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import deLocale from 'date-fns/locale/de';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -13,7 +13,7 @@ import theme from './theme';
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
-    <LocalizationProvider dateAdapter={AdapterDateFns} locale={deLocale}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={deLocale}>
       <App />
     </LocalizationProvider>
   </ThemeProvider>,
