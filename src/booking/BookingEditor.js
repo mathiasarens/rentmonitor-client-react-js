@@ -230,6 +230,7 @@ export default function BookingEditor() {
               <Autocomplete
                 id="teanant-id"
                 options={tenants}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
                 value={value}
                 onChange={(event, tenant) => {
