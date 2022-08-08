@@ -34,10 +34,11 @@ export default function Welcome() {
   const classes = useStyles();
   const [version, setVersion] = useState('down');
 
-  const loadVersion = async () => {
+  const loadVersion = async (abortController) => {
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL_PREFIX}/version`,
+        {signal: abortController.signal},
       );
       if (!response.ok) {
         return 'down';
@@ -51,9 +52,13 @@ export default function Welcome() {
 
   useEffect(() => {
     console.log('Welcome - useEffect');
-    loadVersion().then((response) => {
+    const abortController = new AbortController();
+    loadVersion(abortController).then((response) => {
       setVersion(response);
     });
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   return (

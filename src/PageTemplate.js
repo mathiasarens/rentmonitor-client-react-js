@@ -115,6 +115,7 @@ export default function PageTemplate(props) {
     if (logoutCounter > 0) {
       Auth.signOut().then(() => {
         console.log('logged out');
+        handleDrawerClose();
         props.setLoginStateCounter((n) => n + 1);
         navigate(`/${WELCOME_PATH}`);
       });
