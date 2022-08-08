@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -18,6 +19,7 @@ import {
 import {BOOKINGS_PATH} from '../Constants';
 import {addDueBookingsFromContracts} from '../contract/dataaccess/ContractSynchronisation';
 import {openSnackbar} from '../utils/Notifier';
+
 const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
@@ -37,10 +39,12 @@ export default function Home() {
     addDueBookingsFromContractsLoading,
     setAddDueBookingsFromContractsLoading,
   ] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const loadTenantBookingOverview = useCallback(() => {
     console.log('Overview - loadTenantBookingOverview');
+    setLoading(true);
     authenticatedFetch('/tenant-booking-overview', navigate, {
       method: 'GET',
       headers: {
@@ -52,12 +56,14 @@ export default function Home() {
       })
       .then((data) => {
         setBookingSumPerTenants(data);
+        setLoading(false);
       })
       .catch((error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
           variant: 'error',
         });
+        setLoading(false);
       });
   }, [t, navigate]);
 
@@ -150,31 +156,50 @@ export default function Home() {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {bookingSumPerTenants.map((bookingSumPerTenantItem) => (
-              <TableRow key={bookingSumPerTenantItem.tenant.id}>
-                <TableCell>{bookingSumPerTenantItem.tenant.name}</TableCell>
-                <TableCell>
-                  {new Intl.NumberFormat('de-DE', {
-                    style: 'currency',
-                    currency: 'EUR',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }).format(bookingSumPerTenantItem.sum / 100)}
-                </TableCell>
-                <TableCell>
-                  <IconButton
-                    size="small"
-                    aria-label="edit"
-                    component={Link}
-                    to={`/${BOOKINGS_PATH}/${bookingSumPerTenantItem.tenant.id}`}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {!loading && (
+            <TableBody>
+              {bookingSumPerTenants.map((bookingSumPerTenantItem) => (
+                <TableRow key={bookingSumPerTenantItem.tenant.id}>
+                  <TableCell>{bookingSumPerTenantItem.tenant.name}</TableCell>
+                  <TableCell>
+                    {new Intl.NumberFormat('de-DE', {
+                      style: 'currency',
+                      currency: 'EUR',
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(bookingSumPerTenantItem.sum / 100)}
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      size="small"
+                      aria-label="edit"
+                      component={Link}
+                      to={`/${BOOKINGS_PATH}/${bookingSumPerTenantItem.tenant.id}`}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
+          {loading && (
+            <TableBody>
+              {[1, 2, 3, 4, 5].map((item) => (
+                <TableRow key={`LoadingRow${item}`}>
+                  <TableCell>
+                    <Skeleton variant="text" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton variant="text" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton variant="text" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </div>
     </Container>
