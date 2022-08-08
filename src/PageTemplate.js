@@ -14,17 +14,21 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
+import {Auth} from 'aws-amplify';
 import clsx from 'clsx';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {
   ACCOUNT_PATH,
   BOOKINGS_PATH,
   BOOKING_PATH,
   CONTRACT_PATH,
+  OVERVIEW_PATH,
+  SIGNIN_PATH,
   TENANTS_PATH,
   TRANSACTIONS_PATH,
+  WELCOME_PATH,
 } from './Constants';
 import theme from './theme';
 import Notifier from './utils/Notifier';
@@ -95,11 +99,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PageTemplate() {
+export default function PageTemplate(props) {
   const {t} = useTranslation();
   const classes = useStyles();
   const location = useLocation();
-  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [logoutCounter, setLogoutCounter] = useState(0);
+  const logout = () => {
+    setLogoutCounter((n) => n + 1);
+  };
+
+  useEffect(() => {
+    console.log('Auth.signOut - effect');
+    if (logoutCounter > 0) {
+      Auth.signOut().then(() => {
+        console.log('logged out');
+        props.setLoginStateCounter((n) => n + 1);
+        navigate(`/${WELCOME_PATH}`);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logoutCounter]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -171,86 +192,110 @@ export default function PageTemplate() {
             </IconButton>
           </div>
           <Divider />
+          {!props.loggedIn && (
+            <List>
+              <ListItem
+                button
+                key="signin"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={SIGNIN_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('signin')} />
+              </ListItem>
+            </List>
+          )}
+          {props.loggedIn && (
+            <List>
+              <ListItem
+                button
+                key="overview"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={OVERVIEW_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('overview')} />
+              </ListItem>
 
-          <List>
-            <ListItem
-              button
-              key="overview"
-              onClick={handleDrawerClose}
-              component={Link}
-              to="/overview"
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('overview')} />
-            </ListItem>
+              <ListItem
+                button
+                key="tenants"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={TENANTS_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('tenants')} />
+              </ListItem>
 
-            <ListItem
-              button
-              key="tenants"
-              onClick={handleDrawerClose}
-              component={Link}
-              to={TENANTS_PATH}
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('tenants')} />
-            </ListItem>
+              <ListItem
+                button
+                key="contracts"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={CONTRACT_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('contracts')} />
+              </ListItem>
 
-            <ListItem
-              button
-              key="contracts"
-              onClick={handleDrawerClose}
-              component={Link}
-              to={CONTRACT_PATH}
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('contracts')} />
-            </ListItem>
+              <ListItem
+                button
+                key="bookings"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={BOOKINGS_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('bookings')} />
+              </ListItem>
 
-            <ListItem
-              button
-              key="bookings"
-              onClick={handleDrawerClose}
-              component={Link}
-              to={BOOKINGS_PATH}
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('bookings')} />
-            </ListItem>
+              <ListItem
+                button
+                key="accounts"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={ACCOUNT_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('accounts')} />
+              </ListItem>
 
-            <ListItem
-              button
-              key="accounts"
-              onClick={handleDrawerClose}
-              component={Link}
-              to={ACCOUNT_PATH}
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('accounts')} />
-            </ListItem>
+              <ListItem
+                button
+                key="transactions"
+                onClick={handleDrawerClose}
+                component={Link}
+                to={TRANSACTIONS_PATH}
+              >
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('transactions')} />
+              </ListItem>
 
-            <ListItem
-              button
-              key="transactions"
-              onClick={handleDrawerClose}
-              component={Link}
-              to={TRANSACTIONS_PATH}
-            >
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={t('transactions')} />
-            </ListItem>
-          </List>
+              <ListItem button key="logout" onClick={logout}>
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={t('logout')} />
+              </ListItem>
+            </List>
+          )}
         </Drawer>
 
         <main

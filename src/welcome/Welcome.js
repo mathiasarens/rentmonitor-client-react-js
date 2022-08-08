@@ -4,24 +4,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link as RLink} from 'react-router-dom';
-
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
+import {Link} from 'react-router-dom';
+import {SIGNIN_PATH} from '../Constants';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -40,14 +28,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
 }));
-
-const SignUpLink = React.forwardRef((props, ref) => (
-  <RLink innerRef={ref} to="/signup" {...props} />
-));
-
-const SignInLink = React.forwardRef((props, ref) => (
-  <RLink innerRef={ref} to="/signin" {...props} />
-));
 
 export default function Welcome() {
   const {t} = useTranslation();
@@ -70,13 +50,14 @@ export default function Welcome() {
   };
 
   useEffect(() => {
+    console.log('Welcome - useEffect');
     loadVersion().then((response) => {
       setVersion(response);
     });
   }, []);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main">
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -87,15 +68,16 @@ export default function Welcome() {
       </div>
       <Grid container mt={5}>
         <Grid item xs style={{textAlign: 'center'}}>
-          <Button component={SignInLink}>{t('signin')}</Button>
+          <Button component={Link} to={`/${SIGNIN_PATH}`}>
+            {t('signin')}
+          </Button>
         </Grid>
         <Grid item xs style={{textAlign: 'center'}}>
-          <Button component={SignUpLink}>{t('signup')}</Button>
+          <Button component={Link} to={`/${SIGNIN_PATH}`}>
+            {t('signup')}
+          </Button>
         </Grid>
       </Grid>
-      <Box mt={5}>
-        <MadeWithLove />
-      </Box>
       <Box>
         <Typography variant="body2" color="textSecondary" align="center">
           Version: {process.env.REACT_APP_VERSION}

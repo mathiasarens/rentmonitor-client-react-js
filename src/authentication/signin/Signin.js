@@ -1,6 +1,6 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
@@ -11,23 +11,12 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
-import React, {useState} from 'react';
+import {Auth} from 'aws-amplify';
+import React, {useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
-import {AUTH_TOKEN, OVERVIEW_PATH} from '../../Constants';
-import {openSnackbar} from '../../utils/Notifier';
-
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
+import {OVERVIEW_PATH} from '../../Constants';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -54,48 +43,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Signin() {
+export function SignIn(props) {
   const classes = useStyles();
   const {t} = useTranslation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [formInputs, setFormInputs] = useState(undefined);
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    fetch(`${process.env.REACT_APP_BACKEND_URL_PREFIX}/users/login`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({email: email, password: password}),
-    })
-      .then((response) => {
-        console.log(response.statusText);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (data.error) {
-          console.error(data.error);
-          openSnackbar({
-            message: data.error.message,
-            variant: 'error',
-          });
-        } else {
-          sessionStorage.setItem(AUTH_TOKEN, data.token);
-          navigate(`${OVERVIEW_PATH}`);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        openSnackbar({
-          message: t('connectionError'),
-          variant: 'error',
-        });
-      });
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: {errors},
+    clearErrors,
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = (formInputs) => {
+    console.log('SignIn - onSubmit: ' + JSON.stringify(formInputs));
+    setFormInputs(formInputs);
   };
+
+  const onError = (error) => {
+    console.log('SignIn - onError: ' + JSON.stringify(error));
+  };
+
+  useEffect(() => {
+    console.log('SignIn - useEffect: ' + JSON.stringify(formInputs));
+    if (formInputs) {
+      console.log(
+        'SignIn - useEffect - formInputs: ' + JSON.stringify(formInputs),
+      );
+      Auth.signIn(formInputs.email, formInputs.password)
+        .then((data) => {
+          console.log('SignIn - LoggedIn: ' + JSON.stringify(data));
+          props.setLoginStateCounter((n) => n + 1);
+          navigate(`/${OVERVIEW_PATH}`);
+        })
+        .catch((error) => {
+          console.error(`SignIn - Error: ${JSON.stringify(error)}`);
+          setError('loginState', {type: 'custom', message: t('signInError')});
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formInputs]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -107,31 +101,73 @@ export default function Signin() {
         <Typography component="h1" variant="h5">
           {t('signinHeadline')}
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label={t('emailAddress')}
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={(e) => {
+            clearErrors();
+            handleSubmit(onSubmit, onError)(e);
+          }}
+        >
+          {errors.loginState && (
+            <Alert severity="error">{errors.loginState.message}</Alert>
+          )}
+          <Controller
+            control={control}
             name="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            rules={{
+              maxLength: {
+                value: 255,
+                message: t('bookingErrorMessageComment'),
+              },
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                className={classes.input}
+                required
+                fullWidth
+                label={t('emailAddress')}
+                autoFocus
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={errors.email ? true : false}
+                helperText={errors.email?.message}
+              />
+            )}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
+
+          <Controller
+            control={control}
             name="password"
-            label={t('password')}
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            rules={{
+              maxLength: {
+                value: 255,
+                message: t('bookingErrorMessageComment'),
+              },
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                className={classes.input}
+                required
+                fullWidth
+                label={t('password')}
+                type="password"
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={errors.password ? true : false}
+                helperText={errors.password?.message}
+              />
+            )}
           />
+
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label={t('signinRemmeberMe')}
@@ -159,9 +195,6 @@ export default function Signin() {
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <MadeWithLove />
-      </Box>
     </Container>
   );
 }
