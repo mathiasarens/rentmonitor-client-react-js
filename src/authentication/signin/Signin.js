@@ -48,6 +48,7 @@ export function SignIn(props) {
   const {t} = useTranslation();
   const navigate = useNavigate();
   const [formInputs, setFormInputs] = useState(undefined);
+  const [signInButtonActive, setSignInButtonActive] = useState(true);
 
   const {
     control,
@@ -77,15 +78,17 @@ export function SignIn(props) {
       console.log(
         'SignIn - useEffect - formInputs: ' + JSON.stringify(formInputs),
       );
+      setSignInButtonActive(false);
       Auth.signIn(formInputs.email, formInputs.password)
         .then((data) => {
           console.log('SignIn - LoggedIn: ' + JSON.stringify(data));
-          props.setLoginStateCounter((n) => n + 1);
+          props.loadCurrentAuthenticatedUser();
           navigate(`/${OVERVIEW_PATH}`);
         })
         .catch((error) => {
           console.error(`SignIn - Error: ${JSON.stringify(error)}`);
           setError('loginState', {type: 'custom', message: t('signInError')});
+          setSignInButtonActive(true);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,6 +181,7 @@ export function SignIn(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={!signInButtonActive}
           >
             {t('signinButton')}
           </Button>

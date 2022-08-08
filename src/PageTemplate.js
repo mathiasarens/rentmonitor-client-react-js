@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
 import {Auth} from 'aws-amplify';
 import clsx from 'clsx';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {
@@ -105,23 +105,17 @@ export default function PageTemplate(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [logoutCounter, setLogoutCounter] = useState(0);
-  const logout = () => {
-    setLogoutCounter((n) => n + 1);
-  };
 
-  useEffect(() => {
+  const logout = useCallback(() => {
     console.log('Auth.signOut - effect');
-    if (logoutCounter > 0) {
-      Auth.signOut().then(() => {
-        console.log('logged out');
-        handleDrawerClose();
-        props.setLoginStateCounter((n) => n + 1);
-        navigate(`/${WELCOME_PATH}`);
-      });
-    }
+    Auth.signOut().then(() => {
+      console.log('logged out');
+      handleDrawerClose();
+      props.loadCurrentAuthenticatedUser();
+      navigate(`/${WELCOME_PATH}`);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logoutCounter]);
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);

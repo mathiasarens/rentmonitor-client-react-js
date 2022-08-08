@@ -1,4 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
+import RefershIcon from '@mui/icons-material/Refresh';
 import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -17,7 +18,6 @@ import {
 import {BOOKINGS_PATH} from '../Constants';
 import {addDueBookingsFromContracts} from '../contract/dataaccess/ContractSynchronisation';
 import {openSnackbar} from '../utils/Notifier';
-
 const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
@@ -40,6 +40,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   const loadTenantBookingOverview = useCallback(() => {
+    console.log('Overview - loadTenantBookingOverview');
     authenticatedFetch('/tenant-booking-overview', navigate, {
       method: 'GET',
       headers: {
@@ -77,6 +78,15 @@ export default function Home() {
           </Grid>
           <Grid item xs={10}>
             <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <IconButton
+                  size="small"
+                  aria-label="refresh"
+                  onClick={loadTenantBookingOverview}
+                >
+                  <RefershIcon />
+                </IconButton>
+              </Grid>
               <Grid item>
                 <Button
                   size="small"

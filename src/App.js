@@ -1,6 +1,6 @@
 import '@aws-amplify/ui-react/styles.css';
 import {Amplify, Auth} from 'aws-amplify';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import './App.css';
 import {SignIn} from './authentication/signin/SignIn';
@@ -36,9 +36,8 @@ Amplify.configure(awsExports);
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [loginStateCounter, setLoginStateCounter] = useState(0);
-  useEffect(() => {
-    console.log('App - Auth.currentAuthenticatedUser - effect');
+
+  const loadCurrentAuthenticatedUser = useCallback(() => {
     Auth.currentAuthenticatedUser()
       .then((session) => {
         console.log(
@@ -50,19 +49,28 @@ function App() {
         setLoggedIn(false);
         console.log('App - Not logged In');
       });
-  }, [loginStateCounter]);
+  }, []);
+
+  useEffect(() => {
+    console.log('App - Auth.currentAuthenticatedUser - effect');
+    loadCurrentAuthenticatedUser();
+  }, [loadCurrentAuthenticatedUser]);
 
   return (
     <BrowserRouter>
       <PageTemplate
         loggedIn={loggedIn}
-        setLoginStateCounter={setLoginStateCounter}
+        loadCurrentAuthenticatedUser={loadCurrentAuthenticatedUser}
       />
       {!loggedIn && (
         <Routes>
           <Route
             path={SIGNIN_PATH}
-            element={<SignIn setLoginStateCounter={setLoginStateCounter} />}
+            element={
+              <SignIn
+                loadCurrentAuthenticatedUser={loadCurrentAuthenticatedUser}
+              />
+            }
           />
           <Route path={WELCOME_PATH} element={<Welcome />} />
           <Route path="*" element={<Welcome />} />
