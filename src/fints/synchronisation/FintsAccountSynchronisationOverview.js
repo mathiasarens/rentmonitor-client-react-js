@@ -1,4 +1,4 @@
-import {Button} from '@mui/material';
+import {Button, Skeleton, Stack} from '@mui/material';
 import Box from '@mui/material/Box';
 import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
@@ -211,9 +211,18 @@ export default function FintsAccountSynchronisationOverview() {
           noValidate
         >
           <Box>
-            {accountSettingsItems.map((accountSettingsItem) => (
-              <Box key={accountSettingsItem.id}>{accountSettingsItem.name}</Box>
-            ))}
+            {synchronizationButtonActive &&
+              accountSettingsItems.map((accountSettingsItem) => (
+                <Box key={accountSettingsItem.id} sx={{display: 'flex'}}>
+                  {accountSettingsItem.name}
+                </Box>
+              ))}
+            {!synchronizationButtonActive && (
+              <Stack>
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+              </Stack>
+            )}
           </Box>
           <Box marginTop={2} marginBottom={2}>
             <Button
