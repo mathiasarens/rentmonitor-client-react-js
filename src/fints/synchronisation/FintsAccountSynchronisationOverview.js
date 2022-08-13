@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
 import sub from 'date-fns/sub';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
@@ -51,9 +51,7 @@ export default function FintsAccountSynchronisationOverview() {
   const [accountSettingsItems, setAccountSettingsItems] = useState([]);
   const [synchronizationButtonActive, setSynchronizationButtonActive] =
     useState(false);
-  const [accountSynchronizationStarted, setAccountSynchronizationStarted] =
-    useState(false);
-  const [numOfExpectedResponses, setNumOfExpectedResponses] = useState(0);
+  const [expectedSyncResults, setExpectedSyncResults] = useState([]);
   const [syncResults, setSyncResults] = useState([]);
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const {reset, handleSubmit} = useForm({
@@ -112,18 +110,13 @@ export default function FintsAccountSynchronisationOverview() {
     );
   };
 
-  const onSubmit = (formInputs) => {
-    setNumOfExpectedResponses(accountSettingsItems.length);
-    setAccountSynchronizationStarted(true);
-  };
-
   useEffect(() => {
     loadAccountSettings();
     loadTenants();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  const sync = useCallback(() => {
     const synchronizeAccount = (request) => {
       const bodyJson = JSON.stringify(request, null, 2);
       authenticatedFetch('/account-synchronization/single', navigate, {
@@ -149,14 +142,20 @@ export default function FintsAccountSynchronisationOverview() {
                 //console.log(syncResults);
                 setSyncResults((prevSyncResults) => [...prevSyncResults, json]);
               });
-              setNumOfExpectedResponses((n) => n - 1);
+              setExpectedSyncResults((arr) => {
+                arr.pop();
+                return arr;
+              });
               break;
             case 210:
               response
                 .json()
                 .then((json) => {
                   console.log(json);
-                  setNumOfExpectedResponses((n) => n - 1);
+                  setExpectedSyncResults((arr) => {
+                    arr.pop();
+                    return arr;
+                  });
                 })
                 .catch((error) => {
                   console.error(error);
@@ -164,7 +163,10 @@ export default function FintsAccountSynchronisationOverview() {
                     message: t('connectionError'),
                     variant: 'error',
                   });
-                  setNumOfExpectedResponses((n) => n - 1);
+                  setExpectedSyncResults((arr) => {
+                    arr.pop();
+                    return arr;
+                  });
                 });
               break;
             default:
@@ -173,7 +175,10 @@ export default function FintsAccountSynchronisationOverview() {
                 message: t('connectionError'),
                 variant: 'error',
               });
-              setNumOfExpectedResponses((n) => n - 1);
+              setExpectedSyncResults((arr) => {
+                arr.pop();
+                return arr;
+              });
           }
         })
         .catch((error) => {
@@ -181,118 +186,148 @@ export default function FintsAccountSynchronisationOverview() {
             message: t(handleAuthenticationError(error)),
             variant: 'error',
           });
-          setNumOfExpectedResponses((n) => n - 1);
+          setExpectedSyncResults((arr) => {
+            arr.pop();
+            return arr;
+          });
         });
     };
-    if (accountSynchronizationStarted) {
-      setAccountSynchronizationStarted(false);
-      setSyncResults([]);
-      console.log('Use effect called');
-      accountSettingsItems.forEach((accountSettingsItem) => {
-        const request = {};
-        request.from = sub(new Date(), {months: 2});
-        request.to = new Date();
-        request.accountSettingsId = accountSettingsItem.id;
-        synchronizeAccount(request);
-      });
-    }
-  }, [accountSynchronizationStarted, accountSettingsItems, navigate, t]);
+
+    setExpectedSyncResults(new Array(accountSettingsItems.length).fill(0));
+    setSyncResults([]);
+    console.log('Use effect called');
+    accountSettingsItems.forEach((accountSettingsItem) => {
+      const request = {};
+      request.from = sub(new Date(), {months: 2});
+      request.to = new Date();
+      request.accountSettingsId = accountSettingsItem.id;
+      synchronizeAccount(request);
+    });
+  }, [accountSettingsItems, navigate, t]);
+
+  const onSubmit = (formInputs) => {
+    sync();
+  };
 
   return (
     <Container component="main">
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          {t('fintsAccountSynchronisationTitle')}
-        </Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-start"
+          spacing={2}
         >
-          <Box>
-            {synchronizationButtonActive &&
-              accountSettingsItems.map((accountSettingsItem) => (
-                <Box key={accountSettingsItem.id} sx={{display: 'flex'}}>
-                  {accountSettingsItem.name}
-                </Box>
-              ))}
-            {!synchronizationButtonActive && (
-              <Stack>
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-              </Stack>
-            )}
-          </Box>
-          <Box marginTop={2} marginBottom={2}>
-            <Button
-              type="submit"
-              fullWidth
-              size="large"
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              disabled={
-                !synchronizationButtonActive || numOfExpectedResponses > 0
-              }
-            >
-              {t('fintsAccountSynchronisationButton')}
-            </Button>
-          </Box>
-        </form>
-        <Typography component="h1" variant="h5">
-          {t('fintsAccountSynchronisationResult')}
-        </Typography>
-        {syncResults.map((syncResult) => (
-          <Box key={syncResult.accountSettingsId} marginTop={2}>
-            <Typography component="h2" variant="h6">
-              {syncResult.accountName}
+          <Grid item xs={12} sm={4}>
+            <Typography component="h1" variant="h5">
+              {t('fintsAccountSynchronisationTitle')}
             </Typography>
-            <Box>
-              {syncResult.newBookings && (
-                <Typography component="h3" variant="h7">
-                  {t('fintsAccountSynchronisationResultNewBookings')}
-                </Typography>
-              )}
-              {syncResult.newBookings?.map((newBooking) => (
-                <Grid
-                  container
-                  marginTop={2}
-                  spacing={1}
-                  key={`newBookings${syncResult.accountSettingsId}${newBooking.id}`}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className={classes.form}
+              noValidate
+            >
+              <Box>
+                {synchronizationButtonActive &&
+                  accountSettingsItems.map((accountSettingsItem) => (
+                    <Box key={accountSettingsItem.id} sx={{display: 'flex'}}>
+                      {accountSettingsItem.name}
+                    </Box>
+                  ))}
+                {!synchronizationButtonActive && (
+                  <Stack>
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                  </Stack>
+                )}
+              </Box>
+              <Box marginTop={2} marginBottom={2}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  disabled={
+                    !(
+                      synchronizationButtonActive &&
+                      expectedSyncResults.length === 0
+                    )
+                  }
                 >
-                  <Grid item xs={12}>
-                    <Booking
-                      bookingListItem={newBooking}
-                      tenantsMap={tenantsMap}
-                    />
-                  </Grid>
-                </Grid>
-              ))}
-            </Box>
-            <Box marginTop={2}>
-              {syncResult.unmatchedTransactions && (
-                <Typography component="h3" variant="h7">
-                  {t('fintsAccountSynchronisationResultNewTransactions')}
+                  {t('fintsAccountSynchronisationButton')}
+                </Button>
+              </Box>
+            </form>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            {syncResults.map((syncResult) => (
+              <Box key={syncResult.accountSettingsId} marginTop={2}>
+                <Typography component="h2" variant="h6">
+                  {syncResult.accountName}
                 </Typography>
-              )}
-              {syncResult.unmatchedTransactions?.map((unmatchedTransaction) => (
-                <Grid
-                  container
-                  marginTop={2}
-                  spacing={1}
-                  key={`unmatchedTransaction${syncResult.accountSettingsId}${unmatchedTransaction.id}`}
-                >
-                  <Grid item xs={12}>
-                    <FintsAccountTransaction
-                      accountTransactionItem={unmatchedTransaction}
-                    />
-                  </Grid>
-                </Grid>
+                <Box>
+                  {syncResult.newBookings?.length > 0 && (
+                    <Typography component="h3" variant="h7">
+                      {t('fintsAccountSynchronisationResultNewBookings')}
+                    </Typography>
+                  )}
+                  {syncResult.newBookings?.map((newBooking) => (
+                    <Grid
+                      container
+                      marginTop={2}
+                      spacing={1}
+                      key={`newBookings${syncResult.accountSettingsId}${newBooking.id}`}
+                    >
+                      <Grid item xs={12}>
+                        <Booking
+                          bookingListItem={newBooking}
+                          tenantsMap={tenantsMap}
+                        />
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Box>
+                <Box marginTop={2}>
+                  {syncResult.unmatchedTransactions?.length > 0 && (
+                    <Typography component="h3" variant="h7">
+                      {t('fintsAccountSynchronisationResultNewTransactions')}
+                    </Typography>
+                  )}
+                  {syncResult.unmatchedTransactions?.map(
+                    (unmatchedTransaction) => (
+                      <Grid
+                        container
+                        marginTop={2}
+                        spacing={1}
+                        key={`unmatchedTransaction${syncResult.accountSettingsId}${unmatchedTransaction.id}`}
+                      >
+                        <Grid item xs={12}>
+                          <FintsAccountTransaction
+                            accountTransactionItem={unmatchedTransaction}
+                          />
+                        </Grid>
+                      </Grid>
+                    ),
+                  )}
+                </Box>
+                {syncResult.newBookings?.length === 0 &&
+                  syncResult.unmatchedTransactions?.length === 0 && (
+                    <Typography component="h5" variant="h7">
+                      {t('fintsAccountSynchronisationResultNoTransactions')}
+                    </Typography>
+                  )}
+              </Box>
+            ))}
+            <Stack>
+              {expectedSyncResults.map((item, index) => (
+                <Skeleton key={`expectedSyncResults-${index}`} variant="text" />
               ))}
-            </Box>
-          </Box>
-        ))}
+            </Stack>
+          </Grid>
+        </Grid>
       </div>
     </Container>
   );
