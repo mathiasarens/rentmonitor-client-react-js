@@ -220,7 +220,7 @@ export default function FintsAccountSynchronisationOverview() {
           spacing={2}
         >
           <Grid item xs={12} sm={4}>
-            <Typography component="h1" variant="h5">
+            <Typography component="h2" variant="h5">
               {t('fintsAccountSynchronisationTitle')}
             </Typography>
             <form
@@ -264,8 +264,8 @@ export default function FintsAccountSynchronisationOverview() {
           </Grid>
           <Grid item xs={12} sm={6}>
             {syncResults.map((syncResult) => (
-              <Box key={syncResult.accountSettingsId} marginTop={2}>
-                <Typography component="h2" variant="h6">
+              <Box key={syncResult.accountSettingsId} marginBottom={2}>
+                <Typography component="h2" variant="h5">
                   {syncResult.accountName}
                 </Typography>
                 <Box>

@@ -1,4 +1,5 @@
 import {Auth} from 'aws-amplify';
+import {WELCOME_PATH} from '../Constants';
 
 export async function authenticatedFetch(urlSuffix, navigate, options) {
   const amplifySession = await Auth.currentSession();
@@ -17,7 +18,7 @@ export async function authenticatedFetch(urlSuffix, navigate, options) {
     if (!response.ok) {
       if ([401, 403].indexOf(response.status) !== -1) {
         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-        Auth.signOut();
+        Auth.signOut().then(() => navigate(`/${WELCOME_PATH}`));
       }
       return Promise.reject(response);
     } else {
