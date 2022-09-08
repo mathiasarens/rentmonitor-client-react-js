@@ -152,7 +152,7 @@ export default function Account() {
                     variant="outlined"
                     aria-label="edit"
                     component={Link}
-                    to={`${ACCOUNT_PATH}/edit/step1/${accountSettingsItem.id}`}
+                    to={`/${ACCOUNT_PATH}/step1/${accountSettingsItem.id}`}
                   >
                     {t('edit')}
                   </Button>
@@ -163,7 +163,7 @@ export default function Account() {
                     variant="outlined"
                     aria-label="synchronize"
                     component={Link}
-                    to={`${ACCOUNT_PATH}/synchronisation/${accountSettingsItem.id}`}
+                    to={`/${ACCOUNT_PATH}/synchronisation/${accountSettingsItem.id}`}
                   >
                     {t('synchronize')}
                   </Button>

@@ -1,3 +1,4 @@
+export const ACCOUNTS_PATH = 'accounts';
 export const ACCOUNT_PATH = 'account';
 export const TENANTS_PATH = 'tenants';
 export const BOOKINGS_PATH = 'bookings';

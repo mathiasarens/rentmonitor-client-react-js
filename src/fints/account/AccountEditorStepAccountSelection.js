@@ -1,5 +1,7 @@
 import Button from '@mui/material/Button';
 import {red} from '@mui/material/colors';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -18,6 +20,18 @@ import {ACCOUNT_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: theme.spacing(4),
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -94,41 +108,46 @@ export default function AccountEditorStepAccountSelection(props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={classes.form} noValidate>
-      <Typography component="h1" variant="h5">
-        {t('fintsAccountSelectionHead')}
-      </Typography>
-      <FormControl component="fieldset">
-        <RadioGroup
-          aria-label="account"
-          value={selectedAccountIban}
-          onChange={handleRadioButtonChange}
-        >
-          <Grid container marginTop={2} spacing={1} marginBottom={2}>
-            {fintsAccounts.map((fintsAccount) => (
-              <Grid item xs={12} key={fintsAccount.rawstring}>
-                <Grid container marginTop={1}>
-                  <FormControlLabel
-                    label={fintsAccount.iban}
-                    value={fintsAccount.iban}
-                    control={<Radio />}
-                  />
-                </Grid>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <Typography component="h1" variant="h5">
+            {t('fintsAccountSelectionHead')}
+          </Typography>
+          <FormControl component="fieldset">
+            <RadioGroup
+              aria-label="account"
+              value={selectedAccountIban}
+              onChange={handleRadioButtonChange}
+            >
+              <Grid container marginTop={2} spacing={1} marginBottom={2}>
+                {fintsAccounts.map((fintsAccount) => (
+                  <Grid item xs={12} key={fintsAccount.rawstring}>
+                    <Grid container marginTop={1}>
+                      <FormControlLabel
+                        label={fintsAccount.iban}
+                        value={fintsAccount.iban}
+                        control={<Radio />}
+                      />
+                    </Grid>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-        </RadioGroup>
-      </FormControl>
-      <Button
-        type="submit"
-        fullWidth
-        size="large"
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-      >
-        {t('fintsAccountSynchronisationStep2Button')}
-      </Button>
-    </form>
+            </RadioGroup>
+          </FormControl>
+          <Button
+            type="submit"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {t('fintsAccountSynchronisationStep2Button')}
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 }

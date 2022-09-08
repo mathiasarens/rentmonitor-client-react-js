@@ -1,13 +1,14 @@
 import '@aws-amplify/ui-react/styles.css';
 import {Amplify, Auth} from 'aws-amplify';
 import React, {useCallback, useEffect, useState} from 'react';
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css';
 import {SignIn} from './authentication/signin/SignIn';
 import awsExports from './aws-exports';
 import BookingEditor from './booking/BookingEditor';
 import Bookings from './booking/Bookings';
 import {
+  ACCOUNTS_PATH,
   ACCOUNT_PATH,
   BOOKINGS_PATH,
   BOOKING_PATH,
@@ -92,23 +93,18 @@ function App() {
           <Route path={BOOKING_PATH} element={<BookingEditor />}>
             <Route path=":bookingId" element={<BookingEditor />} />
           </Route>
-          <Route path={ACCOUNT_PATH} element={<Account />}>
-            <Route
-              from="edit"
-              render={<Navigate to={`${ACCOUNT_PATH}/edit/step1`} />}
-            />
-            <Route
-              path="edit/step1/:accountId?"
-              element={<AccountEditorStepInitial />}
-            />
-            <Route
-              path="edit/step2/:accountId?"
-              element={<AccountEditorStepAccountSelection />}
-            />
-            <Route
-              path="edit/stepTan/:accountId?"
-              element={<AccountEditorStepTan />}
-            />
+          <Route path={ACCOUNTS_PATH} element={<Account />}></Route>
+          <Route path={ACCOUNT_PATH} element={<AccountEditorStepInitial />}>
+            <Route path="step1" element={<AccountEditorStepInitial />}>
+              <Route path=":accountId" element={<AccountEditorStepInitial />} />
+            </Route>
+            <Route path="step2" element={<AccountEditorStepAccountSelection />}>
+              <Route
+                path=":accountId"
+                element={<AccountEditorStepAccountSelection />}
+              />
+            </Route>
+            <Route path="stepTan" element={<AccountEditorStepTan />} />
           </Route>
           <Route
             path="accountsynchronisation"

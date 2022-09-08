@@ -1,5 +1,7 @@
 import Button from '@mui/material/Button';
 import {red} from '@mui/material/colors';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
@@ -11,10 +13,21 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import {ACCOUNT_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: theme.spacing(4),
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -76,15 +89,13 @@ export default function AccountEditorStepInitial() {
             console.log('account - onSubmit - step1 - response state: ', state);
             switch (response.status) {
               case 209:
-                const urlStep2 = accountId
-                  ? `${ACCOUNT_PATH}/edit/step2/${accountId}`
-                  : `${ACCOUNT_PATH}/edit/step2`;
+                const urlStep2 = accountId ? `step2/${accountId}` : `step2`;
                 navigate(urlStep2, state);
                 break;
               case 210:
                 const urlStepTan = accountId
-                  ? `${ACCOUNT_PATH}/edit/stepTan/${accountId}`
-                  : `${ACCOUNT_PATH}/edit/stepTan`;
+                  ? `stepTan/${accountId}`
+                  : `stepTan`;
                 navigate(urlStepTan, state);
                 break;
               default:
@@ -147,167 +158,176 @@ export default function AccountEditorStepInitial() {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={classes.form} noValidate>
-      <Typography component="h1" variant="h5">
-        {t('newAccountSettings')}
-      </Typography>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={classes.form}
+          noValidate
+        >
+          <Typography component="h1" variant="h5">
+            {t('newAccountSettings')}
+          </Typography>
 
-      <Controller
-        control={control}
-        name="name"
-        rules={{
-          required: {
-            value: true,
-            message: t('accountErrorMessageNameRequired'),
-          },
-        }}
-        render={({field: {onChange, value}}) => (
-          <TextField
-            id="name"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('name')}
-            className={classes.input}
-            value={value}
-            onChange={(event) => {
-              onChange(event.target.value);
+          <Controller
+            control={control}
+            name="name"
+            rules={{
+              required: {
+                value: true,
+                message: t('accountErrorMessageNameRequired'),
+              },
             }}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-            autoFocus
-            required
+            render={({field: {onChange, value}}) => (
+              <TextField
+                id="name"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('name')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                autoFocus
+                required
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="fintsBlz"
-        rules={{
-          required: {
-            value: true,
-            message: t('accountErrorMessageFintsBlzRequired'),
-          },
-          pattern: {
-            value: /^\d{8}$/,
-            message: t('accountErrorMessageFintsBlzPatternMismatch'),
-          },
-        }}
-        render={({field: {onChange, value}}) => (
-          <TextField
-            id="fintsBlz"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('fintsBlz')}
-            className={classes.input}
-            value={value}
-            onChange={(event) => {
-              onChange(event.target.value);
+          <Controller
+            control={control}
+            name="fintsBlz"
+            rules={{
+              required: {
+                value: true,
+                message: t('accountErrorMessageFintsBlzRequired'),
+              },
+              pattern: {
+                value: /^\d{8}$/,
+                message: t('accountErrorMessageFintsBlzPatternMismatch'),
+              },
             }}
-            error={!!errors.fintsBlz}
-            helperText={errors.fintsBlz?.message}
-            required
+            render={({field: {onChange, value}}) => (
+              <TextField
+                id="fintsBlz"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('fintsBlz')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={!!errors.fintsBlz}
+                helperText={errors.fintsBlz?.message}
+                required
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="fintsUrl"
-        rules={{
-          required: {
-            value: true,
-            message: t('accountErrorMessageFintsUrlRequired'),
-          },
-        }}
-        render={({field: {onChange, value}}) => (
-          <TextField
-            id="fintsUrl"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('fintsUrl')}
-            className={classes.input}
-            value={value}
-            onChange={(event) => {
-              onChange(event.target.value);
+          <Controller
+            control={control}
+            name="fintsUrl"
+            rules={{
+              required: {
+                value: true,
+                message: t('accountErrorMessageFintsUrlRequired'),
+              },
             }}
-            error={!!errors.fintsUrl}
-            helperText={errors.fintsUrl?.message}
-            required
+            render={({field: {onChange, value}}) => (
+              <TextField
+                id="fintsUrl"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('fintsUrl')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={!!errors.fintsUrl}
+                helperText={errors.fintsUrl?.message}
+                required
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="fintsUser"
-        rules={{
-          required: {
-            value: true,
-            message: t('accountErrorMessageFintsUserRequired'),
-          },
-        }}
-        render={({field: {onChange, value}}) => (
-          <TextField
-            id="fintsUser"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('fintsUser')}
-            className={classes.input}
-            value={value}
-            onChange={(event) => {
-              onChange(event.target.value);
+          <Controller
+            control={control}
+            name="fintsUser"
+            rules={{
+              required: {
+                value: true,
+                message: t('accountErrorMessageFintsUserRequired'),
+              },
             }}
-            error={!!errors.fintsUser}
-            helperText={errors.fintsUser?.message}
-            required
+            render={({field: {onChange, value}}) => (
+              <TextField
+                id="fintsUser"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('fintsUser')}
+                className={classes.input}
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={!!errors.fintsUser}
+                helperText={errors.fintsUser?.message}
+                required
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="fintsPassword"
-        rules={{
-          required: {
-            value: true,
-            message: t('accountErrorMessageFintsPasswordRequired'),
-          },
-        }}
-        render={({field: {onChange, value}}) => (
-          <TextField
-            id="fintsPassword"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={t('fintsPassword')}
-            className={classes.input}
-            type="password"
-            value={value}
-            onChange={(event) => {
-              onChange(event.target.value);
+          <Controller
+            control={control}
+            name="fintsPassword"
+            rules={{
+              required: {
+                value: true,
+                message: t('accountErrorMessageFintsPasswordRequired'),
+              },
             }}
-            error={!!errors.fintsPassword}
-            helperText={errors.fintsPassword?.message}
-            required
+            render={({field: {onChange, value}}) => (
+              <TextField
+                id="fintsPassword"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={t('fintsPassword')}
+                className={classes.input}
+                type="password"
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+                error={!!errors.fintsPassword}
+                helperText={errors.fintsPassword?.message}
+                required
+              />
+            )}
           />
-        )}
-      />
 
-      <Button
-        type="submit"
-        fullWidth
-        size="large"
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-      >
-        {t('connectFints')}
-      </Button>
-    </form>
+          <Button
+            type="submit"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {t('connectFints')}
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 }

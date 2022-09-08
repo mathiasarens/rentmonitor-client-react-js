@@ -20,6 +20,7 @@ import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {
+  ACCOUNTS_PATH,
   ACCOUNT_PATH,
   BOOKINGS_PATH,
   BOOKING_PATH,
@@ -129,6 +130,8 @@ export default function PageTemplate(props) {
     switch (getFirstPathElement(fullLocation.pathname)) {
       case CONTRACT_PATH:
         return t('contracts');
+      case ACCOUNTS_PATH:
+        return t('accounts');
       case ACCOUNT_PATH:
         return t('accounts');
       case TENANTS_PATH:
@@ -262,7 +265,7 @@ export default function PageTemplate(props) {
                 key="accounts"
                 onClick={handleDrawerClose}
                 component={Link}
-                to={ACCOUNT_PATH}
+                to={ACCOUNTS_PATH}
               >
                 <ListItemIcon>
                   <MailIcon />
