@@ -12,6 +12,7 @@ import {
   ACCOUNT_PATH,
   BOOKINGS_PATH,
   BOOKING_PATH,
+  CONTRACTS_PATH,
   CONTRACT_PATH,
   OVERVIEW_PATH,
   SIGNIN_PATH,
@@ -19,8 +20,8 @@ import {
   TRANSACTIONS_PATH,
   WELCOME_PATH,
 } from './Constants';
-import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
+import Contract from './contract/Contracts';
 import AccountEditorStepAccountSelection from './fints/account/AccountEditorStepAccountSelection';
 import AccountEditorStepInitial from './fints/account/AccountEditorStepInitial';
 import AccountEditorStepTan from './fints/account/AccountEditorStepTan';
@@ -84,8 +85,10 @@ function App() {
             <Route index element={<Tenant />} />
             <Route path=":tenantId" element={<TenantEditor />} />
           </Route>
-          <Route path={CONTRACT_PATH} element={<Contract />}>
-            <Route path="edit/:contractId" element={<ContractEditor />} />
+          <Route path={CONTRACTS_PATH} element={<Contract />}></Route>
+          <Route path={CONTRACT_PATH}>
+            <Route index element={<ContractEditor />} />
+            <Route path=":contractId" element={<ContractEditor />} />
           </Route>
           <Route path={BOOKINGS_PATH} element={<Bookings />}>
             <Route path=":tenantId" element={<Bookings />} />

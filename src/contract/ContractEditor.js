@@ -15,7 +15,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {CONTRACT_PATH} from '../Constants';
+import {CONTRACTS_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../utils/Notifier';
 
@@ -105,7 +105,7 @@ export default function ContractEditor() {
       },
     )
       .then(function (response) {
-        navigate(`/${CONTRACT_PATH}`);
+        navigate(`/${CONTRACTS_PATH}`);
       })
       .catch(function (error) {
         openSnackbar({
@@ -198,6 +198,7 @@ export default function ContractEditor() {
               <Autocomplete
                 id="teanant-id"
                 options={tenants}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
                 value={value}
                 onChange={(event, tenant) => {

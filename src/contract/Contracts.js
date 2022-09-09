@@ -130,7 +130,7 @@ export default function Contract() {
                   size="small"
                   aria-label="add"
                   component={Link}
-                  to={`${CONTRACT_PATH}/edit`}
+                  to={`/${CONTRACT_PATH}`}
                 >
                   <AddIcon />
                 </IconButton>
@@ -266,7 +266,7 @@ export default function Contract() {
                     variant="outlined"
                     aria-label="edit"
                     component={Link}
-                    to={`${CONTRACT_PATH}/edit/${contractListItem.id}`}
+                    to={`/${CONTRACT_PATH}/${contractListItem.id}`}
                   >
                     {t('edit')}
                   </Button>

@@ -24,6 +24,7 @@ import {
   ACCOUNT_PATH,
   BOOKINGS_PATH,
   BOOKING_PATH,
+  CONTRACTS_PATH,
   CONTRACT_PATH,
   OVERVIEW_PATH,
   SIGNIN_PATH,
@@ -128,6 +129,7 @@ export default function PageTemplate(props) {
 
   const renderHeadlineFromLocationPathname = (fullLocation) => {
     switch (getFirstPathElement(fullLocation.pathname)) {
+      case CONTRACTS_PATH:
       case CONTRACT_PATH:
         return t('contracts');
       case ACCOUNTS_PATH:
@@ -239,7 +241,7 @@ export default function PageTemplate(props) {
                 key="contracts"
                 onClick={handleDrawerClose}
                 component={Link}
-                to={CONTRACT_PATH}
+                to={CONTRACTS_PATH}
               >
                 <ListItemIcon>
                   <MailIcon />
