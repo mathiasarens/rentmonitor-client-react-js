@@ -9,14 +9,15 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
-import React, {useState} from 'react';
+import React from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
-import {ACCOUNT_PATH} from '../../Constants';
+import {ACCOUNTS_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,36 +47,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AccountEditorStepAccountSelection(props) {
+export default function AccountEditorStepAccountSelection() {
   const classes = useStyles();
   const {t} = useTranslation();
   const navigate = useNavigate();
-  const [selectedAccountIban, setSelectedAccountIban] = useState('');
-  const step1FormData = props.location.state.form;
-  const fintsAccounts = props.location.state.accounts;
-  const {accountId} = useParams();
+  const location = useLocation();
 
+  const step1FormData = location.state.form;
+  const fintsAccounts = location.state.accounts;
+  const {accountId} = useParams();
+  const {control, handleSubmit} = useForm({
+    defaultValues: {
+      account: '',
+    },
+  });
   console.log('account - step2 - start - fintsAccounts: ', fintsAccounts);
   console.log('account - step2 - start - step1FormData: ', step1FormData);
 
-  const handleRadioButtonChange = (event) => {
-    setSelectedAccountIban(event.target.value);
-    console.log('selectedAccountChanged: ', event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (formInputs) => {
+    console.log('AccountEditorStepAccountSelection - onSubmit');
+    console.log(formInputs);
     console.log(step1FormData);
     console.log(fintsAccounts);
-    if (!event.target.checkValidity()) {
-      openSnackbar({
-        message: t('formValidationFailed'),
-        variant: 'error',
-      });
-      return;
-    }
     const selectedFintsAccount = fintsAccounts.filter(
-      (account) => account.iban === selectedAccountIban,
+      (account) => account.iban === formInputs.account,
     )[0];
     const data = Object.assign({}, step1FormData, {
       rawAccount: selectedFintsAccount.rawstring,
@@ -97,7 +92,7 @@ export default function AccountEditorStepAccountSelection(props) {
     )
       .then((json) => {
         console.log(json);
-        navigate(ACCOUNT_PATH);
+        navigate(`/${ACCOUNTS_PATH}`);
       })
       .catch((error) => {
         openSnackbar({
@@ -111,30 +106,44 @@ export default function AccountEditorStepAccountSelection(props) {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={classes.form}
+          noValidate
+        >
           <Typography component="h1" variant="h5">
             {t('fintsAccountSelectionHead')}
           </Typography>
+
           <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="account"
-              value={selectedAccountIban}
-              onChange={handleRadioButtonChange}
-            >
-              <Grid container marginTop={2} spacing={1} marginBottom={2}>
-                {fintsAccounts.map((fintsAccount) => (
-                  <Grid item xs={12} key={fintsAccount.rawstring}>
-                    <Grid container marginTop={1}>
-                      <FormControlLabel
-                        label={fintsAccount.iban}
-                        value={fintsAccount.iban}
-                        control={<Radio />}
-                      />
-                    </Grid>
+            <Controller
+              control={control}
+              name="account"
+              rules={{required: true}}
+              render={({field: {onChange, value}}) => (
+                <RadioGroup
+                  aria-label="account"
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event.target.value);
+                  }}
+                >
+                  <Grid container marginTop={2} spacing={1} marginBottom={2}>
+                    {fintsAccounts.map((fintsAccount) => (
+                      <Grid item xs={12} key={fintsAccount.rawstring}>
+                        <Grid container marginTop={1}>
+                          <FormControlLabel
+                            label={fintsAccount.iban}
+                            value={fintsAccount.iban}
+                            control={<Radio />}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
                   </Grid>
-                ))}
-              </Grid>
-            </RadioGroup>
+                </RadioGroup>
+              )}
+            />
           </FormControl>
           <Button
             type="submit"

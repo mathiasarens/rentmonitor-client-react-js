@@ -13,6 +13,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../../authentication/authenticatedFetch';
+import {ACCOUNT_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
 const useStyles = makeStyles((theme) => ({
@@ -81,21 +82,19 @@ export default function AccountEditorStepInitial() {
               response.status,
             );
             console.log('account - onSubmit - step1 - response json: ', json);
-            const state = Object.assign(
-              {},
-              {form: formInputs},
-              {accounts: json},
-            );
+            const state = {state: {form: formInputs, accounts: json}};
             console.log('account - onSubmit - step1 - response state: ', state);
             switch (response.status) {
               case 209:
-                const urlStep2 = accountId ? `step2/${accountId}` : `step2`;
+                const urlStep2 = accountId
+                  ? `/${ACCOUNT_PATH}/step2/${accountId}`
+                  : `/${ACCOUNT_PATH}/step2`;
                 navigate(urlStep2, state);
                 break;
               case 210:
                 const urlStepTan = accountId
-                  ? `stepTan/${accountId}`
-                  : `stepTan`;
+                  ? `/${ACCOUNT_PATH}/stepTan/${accountId}`
+                  : `/${ACCOUNT_PATH}/stepTan`;
                 navigate(urlStepTan, state);
                 break;
               default:

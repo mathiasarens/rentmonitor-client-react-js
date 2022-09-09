@@ -143,6 +143,28 @@ export default function Account() {
                   {accountSettingsItem.bic}
                 </Grid>
               </Grid>
+              <Grid container marginTop={1}>
+                <Grid item xs={4}>
+                  {t('fintsUrl')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {accountSettingsItem.fintsUrl}
+                </Grid>
+
+                <Grid item xs={4}>
+                  {t('fintsBlz')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {accountSettingsItem.fintsBlz}
+                </Grid>
+
+                <Grid item xs={4}>
+                  {t('fintsUser')}:
+                </Grid>
+                <Grid item xs={8}>
+                  {accountSettingsItem.fintsUser}
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12} sm={2}>
               <Grid container spacing={1} marginTop={1}>

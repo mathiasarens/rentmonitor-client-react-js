@@ -21,10 +21,10 @@ import {
 } from './Constants';
 import Contract from './contract/Contract';
 import ContractEditor from './contract/ContractEditor';
-import Account from './fints/account/Account';
 import AccountEditorStepAccountSelection from './fints/account/AccountEditorStepAccountSelection';
 import AccountEditorStepInitial from './fints/account/AccountEditorStepInitial';
 import AccountEditorStepTan from './fints/account/AccountEditorStepTan';
+import Account from './fints/account/Accounts';
 import FintsAccountSynchronisationOverview from './fints/synchronisation/FintsAccountSynchronisationOverview';
 import FintsAccountTransactions from './fints/transaction/FintsAccountTransactions';
 import Overview from './overview/Overview';
@@ -94,7 +94,7 @@ function App() {
             <Route path=":bookingId" element={<BookingEditor />} />
           </Route>
           <Route path={ACCOUNTS_PATH} element={<Account />}></Route>
-          <Route path={ACCOUNT_PATH} element={<AccountEditorStepInitial />}>
+          <Route path={ACCOUNT_PATH}>
             <Route path="step1" element={<AccountEditorStepInitial />}>
               <Route path=":accountId" element={<AccountEditorStepInitial />} />
             </Route>
