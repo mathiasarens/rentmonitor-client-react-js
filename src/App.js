@@ -3,7 +3,7 @@ import {Amplify, Auth} from 'aws-amplify';
 import React, {useCallback, useEffect, useState} from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css';
-import {SignIn} from './authentication/signin/SignIn';
+import {SignIn} from './authentication/signin/Signin';
 import awsExports from './aws-exports';
 import BookingEditor from './booking/BookingEditor';
 import Bookings from './booking/Bookings';
