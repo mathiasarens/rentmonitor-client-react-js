@@ -222,7 +222,10 @@ export default function PageTemplate(props) {
             )}
           </Drawer>
         </Box>
-        <Box component="main">Test</Box>
+        <Box component="main">
+          <Toolbar />
+          {props.children}
+        </Box>
       </Box>
     </React.Fragment>
   );
