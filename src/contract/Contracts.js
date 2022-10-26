@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import format from 'date-fns/format';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -21,21 +20,8 @@ import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent'
 import {openSnackbar} from '../utils/Notifier';
 import {addDueBookingsFromContracts} from './dataaccess/ContractSynchronisation';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-}));
-
 export default function Contract() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const [contracts, setContracts] = useState([]);
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const navigate = useNavigate();
@@ -116,7 +102,7 @@ export default function Contract() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Grid container justifyContent="flex-start">
           <Grid item xs={2}>
             <Typography component="h1" variant="h5">

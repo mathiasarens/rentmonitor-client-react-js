@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate, useParams} from 'react-router-dom';
@@ -22,20 +21,9 @@ import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent'
 import {openSnackbar} from '../utils/Notifier';
 import {Booking} from './Booking';
 import {bookingsLoader} from './dataaccess/bookingLoader';
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-  },
-}));
 
 export default function Bookings() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const [bookings, setBookings] = useState([]);
   const [selectedTenant, setSelectedTenant] = useState(null);
   const [selectedTenantIdOverriden, setSelectedTenantIdOverriden] =
@@ -126,7 +114,7 @@ export default function Bookings() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Grid
           container
           justify="space-between"

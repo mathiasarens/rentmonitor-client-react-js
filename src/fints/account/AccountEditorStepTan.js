@@ -1,8 +1,6 @@
 import Button from '@mui/material/Button';
-import {red} from '@mui/material/colors';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
@@ -12,23 +10,7 @@ import {
 } from '../../authentication/authenticatedFetch';
 import {openSnackbar} from '../../utils/Notifier';
 
-const useStyles = makeStyles((theme) => ({
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function AccountEditorStepTan() {
-  const classes = useStyles();
   const {t} = useTranslation();
   const navigate = useNavigate();
 
@@ -74,7 +56,7 @@ export default function AccountEditorStepTan() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={classes.form} noValidate>
+    <form onSubmit={handleSubmit} noValidate>
       <Typography component="h1" variant="h5">
         {t('newAccountSettings')}
       </Typography>
@@ -86,7 +68,6 @@ export default function AccountEditorStepTan() {
         label="Name"
         name="name"
         autoComplete="Name"
-        className={classes.input}
         autoFocus
         required
       />
@@ -97,7 +78,6 @@ export default function AccountEditorStepTan() {
         name="fintsBlz"
         label={t('fintsBlz')}
         id="fintsBlz"
-        className={classes.input}
         required
       />
       <TextField
@@ -107,7 +87,6 @@ export default function AccountEditorStepTan() {
         name="fintsUrl"
         label={t('fintsUrl')}
         id="fintsUrl"
-        className={classes.input}
         required
       />
       <TextField
@@ -117,7 +96,6 @@ export default function AccountEditorStepTan() {
         name="fintsUser"
         label={t('fintsUser')}
         id="fintsUser"
-        className={classes.input}
         required
       />
       <TextField
@@ -128,7 +106,6 @@ export default function AccountEditorStepTan() {
         label={t('fintsPassword')}
         id="fintsPassword"
         type="password"
-        className={classes.input}
         required
       />
 
@@ -138,7 +115,6 @@ export default function AccountEditorStepTan() {
         size="large"
         variant="contained"
         color="primary"
-        className={classes.submit}
       >
         {t('createTenant')}
       </Button>

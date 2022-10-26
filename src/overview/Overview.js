@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate} from 'react-router-dom';
@@ -20,20 +19,7 @@ import {BOOKINGS_PATH} from '../Constants';
 import {addDueBookingsFromContracts} from '../contract/dataaccess/ContractSynchronisation';
 import {openSnackbar} from '../utils/Notifier';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-}));
-
 export default function Home() {
-  const classes = useStyles();
   const [t] = useTranslation();
   const [bookingSumPerTenants, setBookingSumPerTenants] = useState([]);
   const [
@@ -76,7 +62,7 @@ export default function Home() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Grid container justifyContent="flex-start">
           <Grid item xs={2}>
             <Typography component="h1" variant="h5">

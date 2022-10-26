@@ -4,11 +4,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import InfoIcon from '@mui/icons-material/Info';
 import WarningIcon from '@mui/icons-material/Warning';
 import {SnackbarContent} from '@mui/material';
-import {amber, green} from '@mui/material/colors';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
-import {withStyles} from '@mui/styles';
-import clsx from 'clsx';
 import React from 'react';
 
 let openSnackbarFn;
@@ -19,32 +16,6 @@ const variantIcon = {
   error: ErrorIcon,
   info: InfoIcon,
 };
-
-const styles = (theme) => ({
-  success: {
-    backgroundColor: green[600],
-  },
-  error: {
-    backgroundColor: theme.palette.error.dark,
-  },
-  info: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  warning: {
-    backgroundColor: amber[700],
-  },
-  icon: {
-    fontSize: 20,
-  },
-  iconVariant: {
-    opacity: 0.9,
-    marginRight: theme.spacing(1),
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-});
 
 class Notifier extends React.Component {
   state = {
@@ -69,7 +40,6 @@ class Notifier extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
     const Icon = variantIcon[this.state.variant];
 
     return (
@@ -83,10 +53,9 @@ class Notifier extends React.Component {
         }}
       >
         <SnackbarContent
-          className={clsx(classes[this.state.variant], classes)}
           message={
-            <span id="client-snackbar" className={classes.message}>
-              <Icon className={clsx(classes.icon, classes.iconVariant)} />
+            <span id="client-snackbar">
+              <Icon />
               {this.state.message}
             </span>
           }
@@ -97,7 +66,7 @@ class Notifier extends React.Component {
               color="inherit"
               onClick={this.handleSnackbarRequestClose}
             >
-              <CloseIcon className={classes.icon} />
+              <CloseIcon />
             </IconButton>,
           ]}
         />
@@ -110,4 +79,4 @@ export function openSnackbar({message, variant}) {
   openSnackbarFn({message, variant});
 }
 
-export default withStyles(styles)(Notifier);
+export default Notifier;

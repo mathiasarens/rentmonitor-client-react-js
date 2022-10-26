@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate} from 'react-router-dom';
@@ -18,20 +17,8 @@ import {ACCOUNT_PATH} from '../../Constants';
 import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../../utils/Notifier';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-  },
-}));
-
 export default function Account() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const [accountSettingsList, setAccountSettingsList] = useState([]);
   const navigate = useNavigate();
 
@@ -87,7 +74,7 @@ export default function Account() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography component="h1" variant="h5">

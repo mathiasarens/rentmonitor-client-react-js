@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import {Auth} from 'aws-amplify';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
@@ -18,33 +17,7 @@ import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
 import {OVERVIEW_PATH} from '../../Constants';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export function SignIn(props) {
-  const classes = useStyles();
   const {t} = useTranslation();
   const navigate = useNavigate();
   const [formInputs, setFormInputs] = useState(undefined);
@@ -97,15 +70,14 @@ export function SignIn(props) {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+      <div>
+        <Avatar>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           {t('signinHeadline')}
         </Typography>
         <form
-          className={classes.form}
           noValidate
           onSubmit={(e) => {
             clearErrors();
@@ -128,7 +100,6 @@ export function SignIn(props) {
               <TextField
                 variant="outlined"
                 margin="normal"
-                className={classes.input}
                 required
                 fullWidth
                 label={t('emailAddress')}
@@ -156,7 +127,6 @@ export function SignIn(props) {
               <TextField
                 variant="outlined"
                 margin="normal"
-                className={classes.input}
                 required
                 fullWidth
                 label={t('password')}
@@ -180,7 +150,6 @@ export function SignIn(props) {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
             disabled={!signInButtonActive}
           >
             {t('signinButton')}

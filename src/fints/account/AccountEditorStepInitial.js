@@ -1,10 +1,8 @@
 import Button from '@mui/material/Button';
-import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React, {useEffect} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
@@ -16,35 +14,7 @@ import {
 import {ACCOUNT_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: theme.spacing(4),
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function AccountEditorStepInitial() {
-  const classes = useStyles();
   const {t} = useTranslation();
   const navigate = useNavigate();
   const {
@@ -159,12 +129,8 @@ export default function AccountEditorStepInitial() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
-        >
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Typography component="h1" variant="h5">
             {t('newAccountSettings')}
           </Typography>
@@ -185,7 +151,6 @@ export default function AccountEditorStepInitial() {
                 margin="normal"
                 fullWidth
                 label={t('name')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -218,7 +183,6 @@ export default function AccountEditorStepInitial() {
                 margin="normal"
                 fullWidth
                 label={t('fintsBlz')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -246,7 +210,6 @@ export default function AccountEditorStepInitial() {
                 margin="normal"
                 fullWidth
                 label={t('fintsUrl')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -274,7 +237,6 @@ export default function AccountEditorStepInitial() {
                 margin="normal"
                 fullWidth
                 label={t('fintsUser')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -302,7 +264,6 @@ export default function AccountEditorStepInitial() {
                 margin="normal"
                 fullWidth
                 label={t('fintsPassword')}
-                className={classes.input}
                 type="password"
                 value={value}
                 onChange={(event) => {
@@ -321,7 +282,6 @@ export default function AccountEditorStepInitial() {
             size="large"
             variant="contained"
             color="primary"
-            className={classes.submit}
           >
             {t('connectFints')}
           </Button>

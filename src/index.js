@@ -4,20 +4,21 @@ import {LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import deLocale from 'date-fns/locale/de';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import App from './App';
 import './i18n';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import theme from './theme';
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={deLocale}>
       <App />
     </LocalizationProvider>
   </ThemeProvider>,
-  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -6,7 +6,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
@@ -19,23 +18,8 @@ import {DeleteConfirmationComponent} from '../../utils/DeleteConfirmationCompone
 import {openSnackbar} from '../../utils/Notifier';
 import {FintsAccountTransaction} from './FintsAccountTransaction';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-  },
-  right: {
-    textAlign: 'right',
-  },
-}));
-
 export default function FintsAccountTransactions() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const [accountTransactionLists, setAccountTransactionLists] = useState([]);
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
@@ -187,7 +171,7 @@ export default function FintsAccountTransactions() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography component="h1" variant="h5">

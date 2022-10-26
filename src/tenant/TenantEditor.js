@@ -1,10 +1,8 @@
 import Button from '@mui/material/Button';
-import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
@@ -17,35 +15,8 @@ import {TENANTS_PATH} from '../Constants';
 import {openSnackbar} from '../utils/Notifier';
 import {tenantLoader} from './dataaccess/tenantLoader';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function TenantEditor() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const navigate = useNavigate();
   const [tenant, setTenant] = useState({});
   const {tenantId} = useParams();
@@ -130,15 +101,11 @@ export default function TenantEditor() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Typography component="h1" variant="h5">
           {t('tenant')}
         </Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
-        >
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Controller
             control={control}
             name="name"
@@ -150,7 +117,6 @@ export default function TenantEditor() {
                 id="name"
                 label="Name"
                 autoComplete="Name"
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -173,7 +139,6 @@ export default function TenantEditor() {
                 type="email"
                 id="email"
                 autoComplete="your@email.com"
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -194,7 +159,6 @@ export default function TenantEditor() {
                 type="phone"
                 id="phone"
                 autoComplete="+49 170 123456789"
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -219,7 +183,6 @@ export default function TenantEditor() {
                 fullWidth
                 label={t('tenantAccountSynchronizationName')}
                 id="tenant-account-sync-name"
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -236,7 +199,6 @@ export default function TenantEditor() {
             size="large"
             variant="contained"
             color="primary"
-            className={classes.submit}
           >
             {t('tenantSave')}
           </Button>

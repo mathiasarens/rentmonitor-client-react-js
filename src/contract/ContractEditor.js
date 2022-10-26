@@ -1,11 +1,9 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import {DatePicker} from '@mui/x-date-pickers';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
@@ -19,36 +17,8 @@ import {CONTRACTS_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../utils/Notifier';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function ContractEditor() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const navigate = useNavigate();
   const [tenants, setTenants] = useState([]);
   const [contract, setContract] = useState({});
@@ -181,15 +151,11 @@ export default function ContractEditor() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Typography component="h1" variant="h5">
           {t('contract')}
         </Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
-        >
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Controller
             control={control}
             name="tenant"
@@ -236,7 +202,6 @@ export default function ContractEditor() {
                 variant="outlined"
                 margin="normal"
                 label={t('contractRentDueEveryMonth')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -267,7 +232,6 @@ export default function ContractEditor() {
                 margin="normal"
                 fullWidth
                 label={t('contractRentDueDayOfMonth')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   console.log('contractRentDueDayOfMonth', event.target.value);
@@ -303,7 +267,6 @@ export default function ContractEditor() {
                 margin="normal"
                 fullWidth
                 label={t('contractAmount')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -331,7 +294,6 @@ export default function ContractEditor() {
                 margin="normal"
                 fullWidth
                 label={t('contractDeposit')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -416,7 +378,6 @@ export default function ContractEditor() {
             size="large"
             variant="contained"
             color="primary"
-            className={classes.submit}
           >
             {t('contractSave')}
           </Button>

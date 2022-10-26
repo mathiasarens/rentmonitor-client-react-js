@@ -1,11 +1,9 @@
 import {Button, Skeleton, Stack} from '@mui/material';
 import Box from '@mui/material/Box';
-import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import sub from 'date-fns/sub';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
@@ -20,33 +18,8 @@ import {tenantsLoader} from '../../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../../utils/Notifier';
 import {FintsAccountTransaction} from '../transaction/FintsAccountTransaction';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(2),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function FintsAccountSynchronisationOverview() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const navigate = useNavigate();
   const [accountSettingsItems, setAccountSettingsItems] = useState([]);
   const [synchronizationButtonActive, setSynchronizationButtonActive] =
@@ -212,7 +185,7 @@ export default function FintsAccountSynchronisationOverview() {
   return (
     <Container component="main">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Grid
           container
           justify="space-between"
@@ -223,11 +196,7 @@ export default function FintsAccountSynchronisationOverview() {
             <Typography component="h2" variant="h5">
               {t('fintsAccountSynchronisationTitle')}
             </Typography>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className={classes.form}
-              noValidate
-            >
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <Box>
                 {synchronizationButtonActive &&
                   accountSettingsItems.map((accountSettingsItem) => (
@@ -249,7 +218,6 @@ export default function FintsAccountSynchronisationOverview() {
                   size="large"
                   variant="contained"
                   color="primary"
-                  className={classes.submit}
                   disabled={
                     !(
                       synchronizationButtonActive &&

@@ -1,12 +1,10 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import {DatePicker} from '@mui/x-date-pickers';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
@@ -21,36 +19,8 @@ import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../utils/Notifier';
 import {bookingLoader} from './dataaccess/bookingLoader';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function BookingEditor() {
   const {t} = useTranslation();
-  const classes = useStyles();
   const navigate = useNavigate();
   const [tenants, setTenants] = useState([]);
   const [booking, setBooking] = useState({});
@@ -184,15 +154,11 @@ export default function BookingEditor() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      <div>
         <Typography component="h1" variant="h5">
           {t('booking')}
         </Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
-        >
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Controller
             control={control}
             name="date"
@@ -268,7 +234,6 @@ export default function BookingEditor() {
                 margin="normal"
                 fullWidth
                 label={t('bookingComment')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -298,7 +263,6 @@ export default function BookingEditor() {
                 margin="normal"
                 fullWidth
                 label={t('bookingAmount')}
-                className={classes.input}
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
@@ -316,7 +280,6 @@ export default function BookingEditor() {
               size="large"
               variant="contained"
               color="primary"
-              className={classes.submit}
             >
               {t('bookingSave')}
             </Button>

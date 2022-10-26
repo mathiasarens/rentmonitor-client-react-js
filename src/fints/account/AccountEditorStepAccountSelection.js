@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import {red} from '@mui/material/colors';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControl from '@mui/material/FormControl';
@@ -8,7 +7,6 @@ import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
 import React from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
@@ -20,35 +18,7 @@ import {
 import {ACCOUNTS_PATH} from '../../Constants';
 import {openSnackbar} from '../../utils/Notifier';
 
-const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: theme.spacing(4),
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    '&:invalid': {
-      borderColor: red,
-    },
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 export default function AccountEditorStepAccountSelection() {
-  const classes = useStyles();
   const {t} = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -105,12 +75,8 @@ export default function AccountEditorStepAccountSelection() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
-        >
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Typography component="h1" variant="h5">
             {t('fintsAccountSelectionHead')}
           </Typography>
@@ -151,7 +117,6 @@ export default function AccountEditorStepAccountSelection() {
             size="large"
             variant="contained"
             color="primary"
-            className={classes.submit}
           >
             {t('fintsAccountSynchronisationStep2Button')}
           </Button>
