@@ -222,7 +222,7 @@ export default function PageTemplate(props) {
             )}
           </Drawer>
         </Box>
-        <Box component="main">
+        <Box component="main" sx={{p: 3}}>
           <Toolbar />
           {props.children}
         </Box>
