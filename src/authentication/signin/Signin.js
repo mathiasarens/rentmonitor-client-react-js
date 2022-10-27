@@ -3,8 +3,6 @@ import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -68,106 +66,103 @@ export function SignIn(props) {
   }, [formInputs]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div>
-        <Avatar>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          {t('signinHeadline')}
-        </Typography>
-        <form
-          noValidate
-          onSubmit={(e) => {
-            clearErrors();
-            handleSubmit(onSubmit, onError)(e);
+    <>
+      <Avatar>
+        <LockOutlinedIcon />
+      </Avatar>
+      <Typography component="h1" variant="h5">
+        {t('signinHeadline')}
+      </Typography>
+      <form
+        noValidate
+        onSubmit={(e) => {
+          clearErrors();
+          handleSubmit(onSubmit, onError)(e);
+        }}
+      >
+        {errors.loginState && (
+          <Alert severity="error">{errors.loginState.message}</Alert>
+        )}
+        <Controller
+          control={control}
+          name="email"
+          rules={{
+            maxLength: {
+              value: 255,
+              message: t('bookingErrorMessageComment'),
+            },
           }}
-        >
-          {errors.loginState && (
-            <Alert severity="error">{errors.loginState.message}</Alert>
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label={t('emailAddress')}
+              autoFocus
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+              error={errors.email ? true : false}
+              helperText={errors.email?.message}
+            />
           )}
-          <Controller
-            control={control}
-            name="email"
-            rules={{
-              maxLength: {
-                value: 255,
-                message: t('bookingErrorMessageComment'),
-              },
-            }}
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label={t('emailAddress')}
-                autoFocus
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-                error={errors.email ? true : false}
-                helperText={errors.email?.message}
-              />
-            )}
-          />
+        />
 
-          <Controller
-            control={control}
-            name="password"
-            rules={{
-              maxLength: {
-                value: 255,
-                message: t('bookingErrorMessageComment'),
-              },
-            }}
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label={t('password')}
-                type="password"
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-                error={errors.password ? true : false}
-                helperText={errors.password?.message}
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name="password"
+          rules={{
+            maxLength: {
+              value: 255,
+              message: t('bookingErrorMessageComment'),
+            },
+          }}
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label={t('password')}
+              type="password"
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+              error={errors.password ? true : false}
+              helperText={errors.password?.message}
+            />
+          )}
+        />
 
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label={t('signinRemmeberMe')}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={!signInButtonActive}
-          >
-            {t('signinButton')}
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                {t('forgotPassword')}
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/signup" variant="body2">
-                {t('signinSignup')}
-              </Link>
-            </Grid>
+        <FormControlLabel
+          control={<Checkbox value="remember" color="primary" />}
+          label={t('signinRemmeberMe')}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          disabled={!signInButtonActive}
+        >
+          {t('signinButton')}
+        </Button>
+        <Grid container>
+          <Grid item xs>
+            <Link href="#" variant="body2">
+              {t('forgotPassword')}
+            </Link>
           </Grid>
-        </form>
-      </div>
-    </Container>
+          <Grid item>
+            <Link href="/signup" variant="body2">
+              {t('signinSignup')}
+            </Link>
+          </Grid>
+        </Grid>
+      </form>
+    </>
   );
 }

@@ -1,7 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -152,140 +150,137 @@ export default function BookingEditor() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div>
-        <Typography component="h1" variant="h5">
-          {t('booking')}
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Controller
-            control={control}
-            name="date"
-            rules={{required: true, message: t('bookingErrorMessageDate')}}
-            render={({field: {onChange, value}}) => (
-              <DatePicker
-                disableToolbar
-                label={t('bookingDate')}
-                OpenPickerButtonProps={{
-                  'aria-label': 'change booking date',
-                }}
-                inputFormat={t('dateFormat')}
-                mask="__.__.____"
-                value={value}
-                onChange={(date) => onChange(date)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    margin="normal"
-                    variant="outlined"
-                    error={errors.date ? true : false}
-                    helperText={errors.date?.message}
-                    required
-                    fullWidth
-                  />
-                )}
-              />
-            )}
-          />
+    <>
+      <Typography component="h1" variant="h5">
+        {t('booking')}
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Controller
+          control={control}
+          name="date"
+          rules={{required: true, message: t('bookingErrorMessageDate')}}
+          render={({field: {onChange, value}}) => (
+            <DatePicker
+              disableToolbar
+              label={t('bookingDate')}
+              OpenPickerButtonProps={{
+                'aria-label': 'change booking date',
+              }}
+              inputFormat={t('dateFormat')}
+              mask="__.__.____"
+              value={value}
+              onChange={(date) => onChange(date)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  margin="normal"
+                  variant="outlined"
+                  error={errors.date ? true : false}
+                  helperText={errors.date?.message}
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          )}
+        />
 
-          <Controller
-            control={control}
-            name="tenant"
-            rules={{required: true, message: t('bookingErrorMessageTenantId')}}
-            render={({field: {onChange, value}}) => (
-              <Autocomplete
-                id="teanant-id"
-                options={tenants}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-                value={value}
-                onChange={(event, tenant) => {
-                  console.log('onChange - Tenant: ', tenant);
-                  onChange(tenant);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('tenant')}
-                    margin="normal"
-                    variant="outlined"
-                    error={errors.tenant ? true : false}
-                    helperText={errors.tenant?.message}
-                    required
-                  />
-                )}
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name="tenant"
+          rules={{required: true, message: t('bookingErrorMessageTenantId')}}
+          render={({field: {onChange, value}}) => (
+            <Autocomplete
+              id="teanant-id"
+              options={tenants}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+              value={value}
+              onChange={(event, tenant) => {
+                console.log('onChange - Tenant: ', tenant);
+                onChange(tenant);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('tenant')}
+                  margin="normal"
+                  variant="outlined"
+                  error={errors.tenant ? true : false}
+                  helperText={errors.tenant?.message}
+                  required
+                />
+              )}
+            />
+          )}
+        />
 
-          <Controller
-            control={control}
-            name="comment"
-            rules={{
-              maxLength: {
-                value: 255,
-                message: t('bookingErrorMessageComment'),
-              },
-            }}
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label={t('bookingComment')}
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-                error={errors.comment ? true : false}
-                helperText={errors.comment?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="amount"
-            rules={{
-              required: {
-                value: true,
-                message: t('bookingErrorMessageAmount'),
-              },
-              pattern: {
-                value: '^-?d+(.d{1,2})?$',
-                message: t('bookingErrorMessageAmount'),
-              },
-            }}
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label={t('bookingAmount')}
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-                error={errors.amount ? true : false}
-                helperText={errors.amount?.message}
-                required
-              />
-            )}
-          />
-          <Grid container marginTop={3} marginBottom={3}>
-            <Button
-              type="submit"
+        <Controller
+          control={control}
+          name="comment"
+          rules={{
+            maxLength: {
+              value: 255,
+              message: t('bookingErrorMessageComment'),
+            },
+          }}
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
               fullWidth
-              size="large"
-              variant="contained"
-              color="primary"
-            >
-              {t('bookingSave')}
-            </Button>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+              label={t('bookingComment')}
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+              error={errors.comment ? true : false}
+              helperText={errors.comment?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="amount"
+          rules={{
+            required: {
+              value: true,
+              message: t('bookingErrorMessageAmount'),
+            },
+            pattern: {
+              value: '^-?d+(.d{1,2})?$',
+              message: t('bookingErrorMessageAmount'),
+            },
+          }}
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label={t('bookingAmount')}
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+              error={errors.amount ? true : false}
+              helperText={errors.amount?.message}
+              required
+            />
+          )}
+        />
+        <Grid container marginTop={3} marginBottom={3}>
+          <Button
+            type="submit"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+          >
+            {t('bookingSave')}
+          </Button>
+        </Grid>
+      </form>
+    </>
   );
 }

@@ -2,8 +2,6 @@ import AddIcon from '@mui/icons-material/Add';
 import RefershIcon from '@mui/icons-material/Refresh';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -112,123 +110,113 @@ export default function Bookings() {
   }, []);
 
   return (
-    <Container component="main">
-      <CssBaseline />
-      <div>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          spacing={3}
-        >
-          <Grid item>
-            <Typography component="h1" variant="h5">
-              {t('bookings')}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Grid container spacing={1}>
-              <Grid item>
-                <IconButton
-                  size="small"
-                  aria-label="add"
-                  component={Link}
-                  to={`/${BOOKING_PATH}`}
-                >
-                  <AddIcon />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  size="small"
-                  aria-label="refresh"
-                  onClick={() => {
-                    loadBookings(
-                      selectedTenant ? selectedTenant.id : undefined,
-                    );
-                  }}
-                >
-                  <RefershIcon />
-                </IconButton>
-              </Grid>
+    <>
+      <Grid container justify="space-between" alignItems="flex-end" spacing={3}>
+        <Grid item>
+          <Typography component="h1" variant="h5">
+            {t('bookings')}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Grid container spacing={1}>
+            <Grid item>
+              <IconButton
+                size="small"
+                aria-label="add"
+                component={Link}
+                to={`/${BOOKING_PATH}`}
+              >
+                <AddIcon />
+              </IconButton>
             </Grid>
-          </Grid>
-          <Grid item>
-            <Autocomplete
-              id="teanant-id"
-              name="tenant"
-              options={tenants}
-              getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
-              value={selectedTenant}
-              onChange={(event, tenant, reason) => {
-                console.log('On change: ', tenant);
-                setSelectedTenant(tenant);
-                setSelectedTenantIdOverriden(true);
-                loadBookings(tenant ? tenant.id : undefined);
-              }}
-              style={{width: 300}}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={t('filter')}
-                  margin="none"
-                  variant="standard"
-                  //error={errors.tenantId ? true : false}
-                  //helperText={errors.tenantId?.message}
-                />
-              )}
-            />
+            <Grid item>
+              <IconButton
+                size="small"
+                aria-label="refresh"
+                onClick={() => {
+                  loadBookings(selectedTenant ? selectedTenant.id : undefined);
+                }}
+              >
+                <RefershIcon />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
-
-        {bookings.map((bookingListItem) => (
-          <Grid container marginTop={2} spacing={1} key={bookingListItem.id}>
-            <Grid item xs={12} sm={10}>
-              <Booking
-                bookingListItem={bookingListItem}
-                tenantsMap={tenantsMap}
+        <Grid item>
+          <Autocomplete
+            id="teanant-id"
+            name="tenant"
+            options={tenants}
+            getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
+            value={selectedTenant}
+            onChange={(event, tenant, reason) => {
+              console.log('On change: ', tenant);
+              setSelectedTenant(tenant);
+              setSelectedTenantIdOverriden(true);
+              loadBookings(tenant ? tenant.id : undefined);
+            }}
+            style={{width: 300}}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={t('filter')}
+                margin="none"
+                variant="standard"
+                //error={errors.tenantId ? true : false}
+                //helperText={errors.tenantId?.message}
               />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <Grid container spacing={1} marginTop={1}>
-                <Grid item>
-                  {/* ------ edit booking link ---- */}
+            )}
+          />
+        </Grid>
+      </Grid>
+
+      {bookings.map((bookingListItem) => (
+        <Grid container marginTop={2} spacing={1} key={bookingListItem.id}>
+          <Grid item xs={12} sm={10}>
+            <Booking
+              bookingListItem={bookingListItem}
+              tenantsMap={tenantsMap}
+            />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Grid container spacing={1} marginTop={1}>
+              <Grid item>
+                {/* ------ edit booking link ---- */}
+                <Button
+                  size="small"
+                  variant="outlined"
+                  aria-label="edit"
+                  component={Link}
+                  to={`/${BOOKING_PATH}/${bookingListItem.id}`}
+                >
+                  {t('edit')}
+                </Button>
+              </Grid>
+              <Grid item>
+                <DeleteConfirmationComponent
+                  onDelete={() => {
+                    deleteBooking(bookingListItem.id);
+                  }}
+                />
+              </Grid>
+              {/* ------ contract link ---- */}
+              <Grid item>
+                {bookingListItem.contractId && (
                   <Button
                     size="small"
                     variant="outlined"
                     aria-label="edit"
                     component={Link}
-                    to={`/${BOOKING_PATH}/${bookingListItem.id}`}
+                    to={`${CONTRACT_PATH}/edit/${bookingListItem.contractId}`}
                   >
-                    {t('edit')}
+                    {t('bookingContractLink')}
                   </Button>
-                </Grid>
-                <Grid item>
-                  <DeleteConfirmationComponent
-                    onDelete={() => {
-                      deleteBooking(bookingListItem.id);
-                    }}
-                  />
-                </Grid>
-                {/* ------ contract link ---- */}
-                <Grid item>
-                  {bookingListItem.contractId && (
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      aria-label="edit"
-                      component={Link}
-                      to={`${CONTRACT_PATH}/edit/${bookingListItem.contractId}`}
-                    >
-                      {t('bookingContractLink')}
-                    </Button>
-                  )}
-                </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
-        ))}
-      </div>
-    </Container>
+        </Grid>
+      ))}
+    </>
   );
 }

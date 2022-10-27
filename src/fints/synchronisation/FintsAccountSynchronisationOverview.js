@@ -1,7 +1,5 @@
 import {Button, Skeleton, Stack} from '@mui/material';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import sub from 'date-fns/sub';
@@ -183,120 +181,117 @@ export default function FintsAccountSynchronisationOverview() {
   };
 
   return (
-    <Container component="main">
-      <CssBaseline />
-      <div>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-start"
-          spacing={2}
-        >
-          <Grid item xs={12} sm={4}>
-            <Typography component="h2" variant="h5">
-              {t('fintsAccountSynchronisationTitle')}
-            </Typography>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <>
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-start"
+        spacing={2}
+      >
+        <Grid item xs={12} sm={4}>
+          <Typography component="h2" variant="h5">
+            {t('fintsAccountSynchronisationTitle')}
+          </Typography>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Box>
+              {synchronizationButtonActive &&
+                accountSettingsItems.map((accountSettingsItem) => (
+                  <Box key={accountSettingsItem.id} sx={{display: 'flex'}}>
+                    {accountSettingsItem.name}
+                  </Box>
+                ))}
+              {!synchronizationButtonActive && (
+                <Stack>
+                  <Skeleton variant="text" />
+                  <Skeleton variant="text" />
+                </Stack>
+              )}
+            </Box>
+            <Box marginTop={2} marginBottom={2}>
+              <Button
+                type="submit"
+                fullWidth
+                size="large"
+                variant="contained"
+                color="primary"
+                disabled={
+                  !(
+                    synchronizationButtonActive &&
+                    expectedSyncResults.length === 0
+                  )
+                }
+              >
+                {t('fintsAccountSynchronisationButton')}
+              </Button>
+            </Box>
+          </form>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          {syncResults.map((syncResult) => (
+            <Box key={syncResult.accountSettingsId} marginBottom={2}>
+              <Typography component="h2" variant="h5">
+                {syncResult.accountName}
+              </Typography>
               <Box>
-                {synchronizationButtonActive &&
-                  accountSettingsItems.map((accountSettingsItem) => (
-                    <Box key={accountSettingsItem.id} sx={{display: 'flex'}}>
-                      {accountSettingsItem.name}
-                    </Box>
-                  ))}
-                {!synchronizationButtonActive && (
-                  <Stack>
-                    <Skeleton variant="text" />
-                    <Skeleton variant="text" />
-                  </Stack>
+                {syncResult.newBookings?.length > 0 && (
+                  <Typography component="h3" variant="h7">
+                    {t('fintsAccountSynchronisationResultNewBookings')}
+                  </Typography>
                 )}
+                {syncResult.newBookings?.map((newBooking) => (
+                  <Grid
+                    container
+                    marginTop={2}
+                    spacing={1}
+                    key={`newBookings${syncResult.accountSettingsId}${newBooking.id}`}
+                  >
+                    <Grid item xs={12}>
+                      <Booking
+                        bookingListItem={newBooking}
+                        tenantsMap={tenantsMap}
+                      />
+                    </Grid>
+                  </Grid>
+                ))}
               </Box>
-              <Box marginTop={2} marginBottom={2}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                  disabled={
-                    !(
-                      synchronizationButtonActive &&
-                      expectedSyncResults.length === 0
-                    )
-                  }
-                >
-                  {t('fintsAccountSynchronisationButton')}
-                </Button>
-              </Box>
-            </form>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            {syncResults.map((syncResult) => (
-              <Box key={syncResult.accountSettingsId} marginBottom={2}>
-                <Typography component="h2" variant="h5">
-                  {syncResult.accountName}
-                </Typography>
-                <Box>
-                  {syncResult.newBookings?.length > 0 && (
-                    <Typography component="h3" variant="h7">
-                      {t('fintsAccountSynchronisationResultNewBookings')}
-                    </Typography>
-                  )}
-                  {syncResult.newBookings?.map((newBooking) => (
+              <Box marginTop={2}>
+                {syncResult.unmatchedTransactions?.length > 0 && (
+                  <Typography component="h3" variant="h7">
+                    {t('fintsAccountSynchronisationResultNewTransactions')}
+                  </Typography>
+                )}
+                {syncResult.unmatchedTransactions?.map(
+                  (unmatchedTransaction) => (
                     <Grid
                       container
                       marginTop={2}
                       spacing={1}
-                      key={`newBookings${syncResult.accountSettingsId}${newBooking.id}`}
+                      key={`unmatchedTransaction${syncResult.accountSettingsId}${unmatchedTransaction.id}`}
                     >
                       <Grid item xs={12}>
-                        <Booking
-                          bookingListItem={newBooking}
-                          tenantsMap={tenantsMap}
+                        <FintsAccountTransaction
+                          accountTransactionItem={unmatchedTransaction}
                         />
                       </Grid>
                     </Grid>
-                  ))}
-                </Box>
-                <Box marginTop={2}>
-                  {syncResult.unmatchedTransactions?.length > 0 && (
-                    <Typography component="h3" variant="h7">
-                      {t('fintsAccountSynchronisationResultNewTransactions')}
-                    </Typography>
-                  )}
-                  {syncResult.unmatchedTransactions?.map(
-                    (unmatchedTransaction) => (
-                      <Grid
-                        container
-                        marginTop={2}
-                        spacing={1}
-                        key={`unmatchedTransaction${syncResult.accountSettingsId}${unmatchedTransaction.id}`}
-                      >
-                        <Grid item xs={12}>
-                          <FintsAccountTransaction
-                            accountTransactionItem={unmatchedTransaction}
-                          />
-                        </Grid>
-                      </Grid>
-                    ),
-                  )}
-                </Box>
-                {syncResult.newBookings?.length === 0 &&
-                  syncResult.unmatchedTransactions?.length === 0 && (
-                    <Typography component="h5" variant="h7">
-                      {t('fintsAccountSynchronisationResultNoTransactions')}
-                    </Typography>
-                  )}
+                  ),
+                )}
               </Box>
+              {syncResult.newBookings?.length === 0 &&
+                syncResult.unmatchedTransactions?.length === 0 && (
+                  <Typography component="h5" variant="h7">
+                    {t('fintsAccountSynchronisationResultNoTransactions')}
+                  </Typography>
+                )}
+            </Box>
+          ))}
+          <Stack>
+            {expectedSyncResults.map((item, index) => (
+              <Skeleton key={`expectedSyncResults-${index}`} variant="text" />
             ))}
-            <Stack>
-              {expectedSyncResults.map((item, index) => (
-                <Skeleton key={`expectedSyncResults-${index}`} variant="text" />
-              ))}
-            </Stack>
-          </Grid>
+          </Stack>
         </Grid>
-      </div>
-    </Container>
+      </Grid>
+    </>
   );
 }

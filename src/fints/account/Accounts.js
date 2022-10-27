@@ -1,8 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import RefershIcon from '@mui/icons-material/Refresh';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -72,123 +70,115 @@ export default function Account() {
   }, [load]);
 
   return (
-    <Container component="main">
-      <CssBaseline />
-      <div>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography component="h1" variant="h5">
-              {t('accounts')}
-            </Typography>
+    <>
+      <Grid container justify="space-between" alignItems="flex-end">
+        <Grid item>
+          <Typography component="h1" variant="h5">
+            {t('accounts')}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Grid container spacing={1}>
+            <Grid item>
+              <IconButton
+                size="small"
+                aria-label="add"
+                component={Link}
+                to={`${ACCOUNT_PATH}/edit`}
+              >
+                <AddIcon />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton size="small" aria-label="refresh" onClick={load}>
+                <RefershIcon />
+              </IconButton>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Grid container spacing={1}>
+        </Grid>
+      </Grid>
+
+      {accountSettingsList.map((accountSettingsItem) => (
+        <Grid container marginTop={2} spacing={1} key={accountSettingsItem.id}>
+          <Grid item xs={12} sm={3}>
+            <Grid container marginTop={1}>
+              <Typography variant="h7">{accountSettingsItem.name}</Typography>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <Grid container marginTop={1}>
+              <Grid item xs={4}>
+                {t('iban')}:
+              </Grid>
+              <Grid item xs={8}>
+                {accountSettingsItem.iban}
+              </Grid>
+
+              <Grid item xs={4}>
+                {t('bic')}:
+              </Grid>
+              <Grid item xs={8}>
+                {accountSettingsItem.bic}
+              </Grid>
+            </Grid>
+            <Grid container marginTop={1}>
+              <Grid item xs={4}>
+                {t('fintsUrl')}:
+              </Grid>
+              <Grid item xs={8}>
+                {accountSettingsItem.fintsUrl}
+              </Grid>
+
+              <Grid item xs={4}>
+                {t('fintsBlz')}:
+              </Grid>
+              <Grid item xs={8}>
+                {accountSettingsItem.fintsBlz}
+              </Grid>
+
+              <Grid item xs={4}>
+                {t('fintsUser')}:
+              </Grid>
+              <Grid item xs={8}>
+                {accountSettingsItem.fintsUser}
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Grid container spacing={1} marginTop={1}>
               <Grid item>
-                <IconButton
+                <Button
                   size="small"
-                  aria-label="add"
+                  variant="outlined"
+                  aria-label="edit"
                   component={Link}
-                  to={`${ACCOUNT_PATH}/edit`}
+                  to={`/${ACCOUNT_PATH}/step1/${accountSettingsItem.id}`}
                 >
-                  <AddIcon />
-                </IconButton>
+                  {t('edit')}
+                </Button>
               </Grid>
               <Grid item>
-                <IconButton size="small" aria-label="refresh" onClick={load}>
-                  <RefershIcon />
-                </IconButton>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  aria-label="synchronize"
+                  component={Link}
+                  to={`/${ACCOUNT_PATH}/synchronisation/${accountSettingsItem.id}`}
+                >
+                  {t('synchronize')}
+                </Button>
+              </Grid>
+              <Grid item>
+                <DeleteConfirmationComponent
+                  onDelete={() => {
+                    deleteAccountSettingsItem(accountSettingsItem.id);
+                  }}
+                />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-
-        {accountSettingsList.map((accountSettingsItem) => (
-          <Grid
-            container
-            marginTop={2}
-            spacing={1}
-            key={accountSettingsItem.id}
-          >
-            <Grid item xs={12} sm={3}>
-              <Grid container marginTop={1}>
-                <Typography variant="h7">{accountSettingsItem.name}</Typography>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={7}>
-              <Grid container marginTop={1}>
-                <Grid item xs={4}>
-                  {t('iban')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {accountSettingsItem.iban}
-                </Grid>
-
-                <Grid item xs={4}>
-                  {t('bic')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {accountSettingsItem.bic}
-                </Grid>
-              </Grid>
-              <Grid container marginTop={1}>
-                <Grid item xs={4}>
-                  {t('fintsUrl')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {accountSettingsItem.fintsUrl}
-                </Grid>
-
-                <Grid item xs={4}>
-                  {t('fintsBlz')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {accountSettingsItem.fintsBlz}
-                </Grid>
-
-                <Grid item xs={4}>
-                  {t('fintsUser')}:
-                </Grid>
-                <Grid item xs={8}>
-                  {accountSettingsItem.fintsUser}
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <Grid container spacing={1} marginTop={1}>
-                <Grid item>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    aria-label="edit"
-                    component={Link}
-                    to={`/${ACCOUNT_PATH}/step1/${accountSettingsItem.id}`}
-                  >
-                    {t('edit')}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    aria-label="synchronize"
-                    component={Link}
-                    to={`/${ACCOUNT_PATH}/synchronisation/${accountSettingsItem.id}`}
-                  >
-                    {t('synchronize')}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <DeleteConfirmationComponent
-                    onDelete={() => {
-                      deleteAccountSettingsItem(accountSettingsItem.id);
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        ))}
-      </div>
-    </Container>
+      ))}
+    </>
   );
 }

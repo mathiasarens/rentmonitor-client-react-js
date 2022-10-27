@@ -1,6 +1,4 @@
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, {useEffect, useState} from 'react';
@@ -99,111 +97,108 @@ export default function TenantEditor() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div>
-        <Typography component="h1" variant="h5">
-          {t('tenant')}
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Controller
-            control={control}
-            name="name"
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="name"
-                label="Name"
-                autoComplete="Name"
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-                autoFocus
-                required
-              />
-            )}
-          />
+    <>
+      <Typography component="h1" variant="h5">
+        {t('tenant')}
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Controller
+          control={control}
+          name="name"
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="name"
+              label="Name"
+              autoComplete="Name"
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+              autoFocus
+              required
+            />
+          )}
+        />
 
-          <Controller
-            control={control}
-            name="email"
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label={t('email')}
-                type="email"
-                id="email"
-                autoComplete="your@email.com"
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name="email"
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label={t('email')}
+              type="email"
+              id="email"
+              autoComplete="your@email.com"
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+            />
+          )}
+        />
 
-          <Controller
-            control={control}
-            name="phone"
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label={t('phone')}
-                type="phone"
-                id="phone"
-                autoComplete="+49 170 123456789"
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name="phone"
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label={t('phone')}
+              type="phone"
+              id="phone"
+              autoComplete="+49 170 123456789"
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+            />
+          )}
+        />
 
-          <Controller
-            control={control}
-            name="accountSynchronisationName"
-            rules={{
-              maxLength: {
-                value: 255,
-                message: t('tenantErrorMessageAccountSynchronisationName'),
-              },
-            }}
-            render={({field: {onChange, value}}) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label={t('tenantAccountSynchronizationName')}
-                id="tenant-account-sync-name"
-                value={value}
-                onChange={(event) => {
-                  onChange(event.target.value);
-                }}
-                error={errors.accountSynchronisationName ? true : false}
-                helperText={errors.accountSynchronisationName?.message}
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name="accountSynchronisationName"
+          rules={{
+            maxLength: {
+              value: 255,
+              message: t('tenantErrorMessageAccountSynchronisationName'),
+            },
+          }}
+          render={({field: {onChange, value}}) => (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label={t('tenantAccountSynchronizationName')}
+              id="tenant-account-sync-name"
+              value={value}
+              onChange={(event) => {
+                onChange(event.target.value);
+              }}
+              error={errors.accountSynchronisationName ? true : false}
+              helperText={errors.accountSynchronisationName?.message}
+            />
+          )}
+        />
 
-          <Button
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-          >
-            {t('tenantSave')}
-          </Button>
-        </form>
-      </div>
-    </Container>
+        <Button
+          type="submit"
+          fullWidth
+          size="large"
+          variant="contained"
+          color="primary"
+        >
+          {t('tenantSave')}
+        </Button>
+      </form>
+    </>
   );
 }

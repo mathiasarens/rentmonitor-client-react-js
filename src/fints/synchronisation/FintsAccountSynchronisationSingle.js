@@ -2,8 +2,6 @@ import {Button} from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import {red} from '@mui/material/colors';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import {makeStyles} from '@mui/styles';
@@ -210,127 +208,124 @@ export default function FintsAccountSynchronisationSingle() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          {t('fintsAccountSynchronisationTitle')}
-        </Typography>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={classes.form}
-          noValidate
-        >
-          <Controller
-            control={control}
-            name="accountSettingsItem"
-            rules={{required: true}}
-            render={({field: {onChange, value}}) => (
-              <Autocomplete
-                id="account-settings-item-id"
-                options={accountSettingsItems}
-                getOptionLabel={(accountSettings) =>
-                  accountSettings.name ? accountSettings.name : ''
-                }
-                value={value}
-                onChange={(event, accountSettingsItem) => {
-                  console.log(
-                    'onChange - accountSettingsItem: ',
-                    accountSettingsItem,
-                  );
-                  onChange(accountSettingsItem);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('account')}
-                    margin="normal"
-                    variant="outlined"
-                    error={errors.accountSettingsId ? true : false}
-                    helperText={
-                      errors.accountSettingsId &&
-                      t('fintsAccountSynchronisationErrorAccountSettingsId')
-                    }
-                    required
-                  />
-                )}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="from"
-            rules={{required: true}}
-            render={({field: {onChange, value}}) => (
-              <DatePicker
-                label={t('fintsAccountSyncronisationFrom')}
-                disableToolbar
-                variant="inline"
-                inpuFormat={t('dateFormat')}
-                mask="__.__.____"
-                value={value}
-                onChange={(date) => onChange(date)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    margin="normal"
-                    error={errors.from ? true : false}
-                    helperText={
-                      errors.from && t('fintsAccountSynchronisationErrorFrom')
-                    }
-                    fullWidth
-                    required
-                  />
-                )}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="to"
-            rules={{required: false}}
-            render={({field: {onChange, value}}) => (
-              <DatePicker
-                label={t('fintsAccountSyncronisationTo')}
-                disableToolbar
-                variant="inline"
-                inpuFormat={t('dateFormat')}
-                mask="__.__.____"
-                value={value}
-                onChange={(date) => onChange(date)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    margin="normal"
-                    error={errors.to ? true : false}
-                    helperText={
-                      errors.to && t('fintsAccountSynchronisationToFrom')
-                    }
-                    fullWidth
-                  />
-                )}
-              />
-            )}
-          />
+    <>
+      <Typography component="h1" variant="h5">
+        {t('fintsAccountSynchronisationTitle')}
+      </Typography>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={classes.form}
+        noValidate
+      >
+        <Controller
+          control={control}
+          name="accountSettingsItem"
+          rules={{required: true}}
+          render={({field: {onChange, value}}) => (
+            <Autocomplete
+              id="account-settings-item-id"
+              options={accountSettingsItems}
+              getOptionLabel={(accountSettings) =>
+                accountSettings.name ? accountSettings.name : ''
+              }
+              value={value}
+              onChange={(event, accountSettingsItem) => {
+                console.log(
+                  'onChange - accountSettingsItem: ',
+                  accountSettingsItem,
+                );
+                onChange(accountSettingsItem);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('account')}
+                  margin="normal"
+                  variant="outlined"
+                  error={errors.accountSettingsId ? true : false}
+                  helperText={
+                    errors.accountSettingsId &&
+                    t('fintsAccountSynchronisationErrorAccountSettingsId')
+                  }
+                  required
+                />
+              )}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="from"
+          rules={{required: true}}
+          render={({field: {onChange, value}}) => (
+            <DatePicker
+              label={t('fintsAccountSyncronisationFrom')}
+              disableToolbar
+              variant="inline"
+              inpuFormat={t('dateFormat')}
+              mask="__.__.____"
+              value={value}
+              onChange={(date) => onChange(date)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  margin="normal"
+                  error={errors.from ? true : false}
+                  helperText={
+                    errors.from && t('fintsAccountSynchronisationErrorFrom')
+                  }
+                  fullWidth
+                  required
+                />
+              )}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="to"
+          rules={{required: false}}
+          render={({field: {onChange, value}}) => (
+            <DatePicker
+              label={t('fintsAccountSyncronisationTo')}
+              disableToolbar
+              variant="inline"
+              inpuFormat={t('dateFormat')}
+              mask="__.__.____"
+              value={value}
+              onChange={(date) => onChange(date)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  margin="normal"
+                  error={errors.to ? true : false}
+                  helperText={
+                    errors.to && t('fintsAccountSynchronisationToFrom')
+                  }
+                  fullWidth
+                />
+              )}
+            />
+          )}
+        />
 
-          {tanRequiredJsx}
-          <Box marginTop={2} marginBottom={2}>
-            <Button
-              type="submit"
-              fullWidth
-              size="large"
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              disabled={loading}
-            >
-              {t('fintsAccountSynchronisationButton')}
-            </Button>
-          </Box>
-        </form>
-      </div>
-    </Container>
+        {tanRequiredJsx}
+        <Box marginTop={2} marginBottom={2}>
+          <Button
+            type="submit"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            disabled={loading}
+          >
+            {t('fintsAccountSynchronisationButton')}
+          </Button>
+        </Box>
+      </form>
+    </>
   );
 }

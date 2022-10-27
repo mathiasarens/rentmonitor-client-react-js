@@ -2,7 +2,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import React, {useEffect, useState} from 'react';
@@ -42,15 +41,15 @@ export default function Welcome() {
   }, []);
 
   return (
-    <Container component="main">
-      <div>
+    <>
+      <Box>
         <Avatar>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Rent Monitor
         </Typography>
-      </div>
+      </Box>
       <Grid container mt={5}>
         <Grid item xs style={{textAlign: 'center'}}>
           <Button component={Link} to={`/${SIGNIN_PATH}`}>
@@ -74,6 +73,6 @@ export default function Welcome() {
           Backend version: {version}
         </Typography>
       </Box>
-    </Container>
+    </>
   );
 }

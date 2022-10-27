@@ -1,6 +1,4 @@
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
@@ -73,55 +71,52 @@ export default function AccountEditorStepAccountSelection() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Typography component="h1" variant="h5">
-            {t('fintsAccountSelectionHead')}
-          </Typography>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Typography component="h1" variant="h5">
+          {t('fintsAccountSelectionHead')}
+        </Typography>
 
-          <FormControl component="fieldset">
-            <Controller
-              control={control}
-              name="account"
-              rules={{required: true}}
-              render={({field: {onChange, value}}) => (
-                <RadioGroup
-                  aria-label="account"
-                  value={value}
-                  onChange={(event) => {
-                    onChange(event.target.value);
-                  }}
-                >
-                  <Grid container marginTop={2} spacing={1} marginBottom={2}>
-                    {fintsAccounts.map((fintsAccount) => (
-                      <Grid item xs={12} key={fintsAccount.rawstring}>
-                        <Grid container marginTop={1}>
-                          <FormControlLabel
-                            label={fintsAccount.iban}
-                            value={fintsAccount.iban}
-                            control={<Radio />}
-                          />
-                        </Grid>
+        <FormControl component="fieldset">
+          <Controller
+            control={control}
+            name="account"
+            rules={{required: true}}
+            render={({field: {onChange, value}}) => (
+              <RadioGroup
+                aria-label="account"
+                value={value}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                }}
+              >
+                <Grid container marginTop={2} spacing={1} marginBottom={2}>
+                  {fintsAccounts.map((fintsAccount) => (
+                    <Grid item xs={12} key={fintsAccount.rawstring}>
+                      <Grid container marginTop={1}>
+                        <FormControlLabel
+                          label={fintsAccount.iban}
+                          value={fintsAccount.iban}
+                          control={<Radio />}
+                        />
                       </Grid>
-                    ))}
-                  </Grid>
-                </RadioGroup>
-              )}
-            />
-          </FormControl>
-          <Button
-            type="submit"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-          >
-            {t('fintsAccountSynchronisationStep2Button')}
-          </Button>
-        </form>
-      </div>
-    </Container>
+                    </Grid>
+                  ))}
+                </Grid>
+              </RadioGroup>
+            )}
+          />
+        </FormControl>
+        <Button
+          type="submit"
+          fullWidth
+          size="large"
+          variant="contained"
+          color="primary"
+        >
+          {t('fintsAccountSynchronisationStep2Button')}
+        </Button>
+      </form>
+    </>
   );
 }
