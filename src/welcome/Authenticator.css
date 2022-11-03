@@ -1,0 +1,6 @@
+[data-amplify-authenticator] {
+    --amplify-components-authenticator-router-box-shadow: none;
+    --amplify-components-authenticator-router-border-style: none;
+    --amplify-components-button-primary-background-color: #556cd6;
+    --amplify-components-button-primary-hover-background-color: rgb(59, 75, 149);
+}

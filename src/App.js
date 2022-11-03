@@ -1,8 +1,8 @@
-import {Amplify, Auth} from 'aws-amplify';
-import React, {useCallback, useEffect, useState} from 'react';
+import {useAuthenticator} from '@aws-amplify/ui-react';
+import {Amplify} from 'aws-amplify';
+import React from 'react';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import './App.css';
-import {SignIn} from './authentication/signin/Signin';
 import awsExports from './aws-exports';
 import BookingEditor from './booking/BookingEditor';
 import Bookings from './booking/Bookings';
@@ -14,7 +14,6 @@ import {
   CONTRACTS_PATH,
   CONTRACT_PATH,
   OVERVIEW_PATH,
-  SIGNIN_PATH,
   TENANTS_PATH,
   TRANSACTIONS_PATH,
   WELCOME_PATH,
@@ -36,48 +35,17 @@ import Welcome from './welcome/Welcome';
 Amplify.configure(awsExports);
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const loadCurrentAuthenticatedUser = useCallback(() => {
-    Auth.currentAuthenticatedUser()
-      .then((session) => {
-        console.log(
-          'App - Logged in: ' + session.signInUserSession.idToken.payload.email,
-        );
-        setLoggedIn(true);
-      })
-      .catch(() => {
-        setLoggedIn(false);
-        console.log('App - Not logged In');
-      });
-  }, []);
-
-  useEffect(() => {
-    console.log('App - Auth.currentAuthenticatedUser - effect');
-    loadCurrentAuthenticatedUser();
-  }, [loadCurrentAuthenticatedUser]);
+  const {authStatus} = useAuthenticator((context) => [context.authStatus]);
 
   return (
     <BrowserRouter>
-      <PageTemplate
-        loggedIn={loggedIn}
-        loadCurrentAuthenticatedUser={loadCurrentAuthenticatedUser}
-      >
-        {!loggedIn && (
+      <PageTemplate>
+        {authStatus !== 'authenticated' ? (
           <Routes>
-            <Route
-              path={SIGNIN_PATH}
-              element={
-                <SignIn
-                  loadCurrentAuthenticatedUser={loadCurrentAuthenticatedUser}
-                />
-              }
-            />
             <Route path={WELCOME_PATH} element={<Welcome />} />
             <Route path="*" element={<Welcome />} />
           </Routes>
-        )}
-        {loggedIn && (
+        ) : (
           <Routes>
             <Route path={OVERVIEW_PATH} element={<Overview />} />
             <Route path={TENANTS_PATH}>

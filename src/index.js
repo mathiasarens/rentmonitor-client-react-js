@@ -1,3 +1,4 @@
+import {Authenticator} from '@aws-amplify/ui-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import {LocalizationProvider} from '@mui/x-date-pickers';
@@ -16,7 +17,9 @@ root.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={deLocale}>
-      <App />
+      <Authenticator.Provider>
+        <App />
+      </Authenticator.Provider>
     </LocalizationProvider>
   </ThemeProvider>,
 );

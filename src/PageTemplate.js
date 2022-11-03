@@ -1,3 +1,4 @@
+import {useAuthenticator} from '@aws-amplify/ui-react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MailIcon from '@mui/icons-material/Mail';
@@ -13,7 +14,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import {Auth} from 'aws-amplify';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
@@ -25,7 +25,6 @@ import {
   CONTRACTS_PATH,
   CONTRACT_PATH,
   OVERVIEW_PATH,
-  SIGNIN_PATH,
   TENANTS_PATH,
   TRANSACTIONS_PATH,
   WELCOME_PATH,
@@ -44,15 +43,17 @@ export default function PageTemplate(props) {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const {authStatus, signOut} = useAuthenticator((context) => [
+    context.authStatus,
+    context.signOut,
+  ]);
 
   const logout = useCallback(() => {
     console.log('Auth.signOut - effect');
-    Auth.signOut().then(() => {
-      console.log('logged out');
-      handleDrawerClose();
-      props.loadCurrentAuthenticatedUser();
-      navigate(`/${WELCOME_PATH}`);
-    });
+    signOut();
+    console.log('logged out');
+    handleDrawerClose();
+    navigate(`/${WELCOME_PATH}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -116,14 +117,14 @@ export default function PageTemplate(props) {
               </IconButton>
             </div>
             <Divider />
-            {!props.loggedIn && (
+            {authStatus !== 'authenticated' ? (
               <List>
                 <ListItem
                   button
                   key="signin"
                   onClick={handleDrawerClose}
                   component={Link}
-                  to={SIGNIN_PATH}
+                  to={WELCOME_PATH}
                 >
                   <ListItemIcon>
                     <MailIcon />
@@ -131,8 +132,7 @@ export default function PageTemplate(props) {
                   <ListItemText primary={t('signin')} />
                 </ListItem>
               </List>
-            )}
-            {props.loggedIn && (
+            ) : (
               <List>
                 <ListItem
                   button

@@ -1,16 +1,12 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
+import {Authenticator} from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Link} from 'react-router-dom';
-import {SIGNIN_PATH} from '../Constants';
+import './Authenticator.css';
 
 export default function Welcome() {
-  const {t} = useTranslation();
+  //const {t} = useTranslation();
   const [version, setVersion] = useState('down');
 
   const loadVersion = async (abortController) => {
@@ -42,27 +38,20 @@ export default function Welcome() {
 
   return (
     <>
-      <Box>
-        <Avatar>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
+      <Box mb={2}>
+        <Typography component="h1" variant="h5" align="center">
           Rent Monitor
         </Typography>
       </Box>
-      <Grid container mt={5}>
-        <Grid item xs style={{textAlign: 'center'}}>
-          <Button component={Link} to={`/${SIGNIN_PATH}`}>
-            {t('signin')}
-          </Button>
-        </Grid>
-        <Grid item xs style={{textAlign: 'center'}}>
-          <Button component={Link} to={`/${SIGNIN_PATH}`}>
-            {t('signup')}
-          </Button>
-        </Grid>
-      </Grid>
-      <Box>
+      <Authenticator hideSignUp={true}>
+        {({signOut, user}) => (
+          <main>
+            <h1>Hello {user.username}</h1>
+            <button onClick={signOut}>Sign out</button>
+          </main>
+        )}
+      </Authenticator>
+      <Box mt={2}>
         <Typography variant="body2" color="textSecondary" align="center">
           Version: {process.env.REACT_APP_VERSION}
         </Typography>

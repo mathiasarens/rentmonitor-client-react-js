@@ -8,5 +8,4 @@ export const CONTRACTS_PATH = 'contracts';
 export const TRANSACTIONS_PATH = 'transactions';
 export const OVERVIEW_PATH = 'overview';
 
-export const SIGNIN_PATH = 'signin';
 export const WELCOME_PATH = 'welcome';
