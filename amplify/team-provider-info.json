@@ -10,11 +10,6 @@
       "StackName": "amplify-rentmonitorclient-deveu-61716",
       "StackId": "arn:aws:cloudformation:eu-central-1:613728556879:stack/amplify-rentmonitorclient-deveu-61716/f4066720-331a-11ed-8994-0a64681ecf60",
       "AmplifyAppId": "d1ptuthodsm51v"
-    },
-    "categories": {
-      "auth": {
-        "rentmonitorclient2b496b5a": {}
-      }
     }
   }
 }

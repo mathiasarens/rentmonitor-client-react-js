@@ -1,9 +1,10 @@
 {
   "name": "rentmonitor-client-react-js",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^4.3.2",
+    "@aws-sdk/util-utf8-browser": "^3.188.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
