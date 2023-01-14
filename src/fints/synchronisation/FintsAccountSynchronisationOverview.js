@@ -1,4 +1,5 @@
 import {Button, Skeleton, Stack} from '@mui/material';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -197,7 +198,19 @@ export default function FintsAccountSynchronisationOverview() {
               {synchronizationButtonActive &&
                 accountSettingsItems.map((accountSettingsItem) => (
                   <Box key={accountSettingsItem.id} sx={{display: 'flex'}}>
-                    {accountSettingsItem.name}
+                    <Typography
+                      color={syncResults
+                        .filter(
+                          (syncResult) =>
+                            syncResult.accountSettingsId ===
+                            accountSettingsItem.id,
+                        )
+                        .map((syncResult) =>
+                          syncResult.error === undefined ? 'black' : 'red',
+                        )}
+                    >
+                      {accountSettingsItem.name}
+                    </Typography>
                   </Box>
                 ))}
               {!synchronizationButtonActive && (
@@ -232,6 +245,9 @@ export default function FintsAccountSynchronisationOverview() {
               <Typography component="h2" variant="h5">
                 {syncResult.accountName}
               </Typography>
+              {syncResult.error && (
+                <Alert severity="error">{syncResult.error}</Alert>
+              )}
               <Box>
                 {syncResult.newBookings?.length > 0 && (
                   <Typography component="h3" variant="h7">
@@ -278,7 +294,8 @@ export default function FintsAccountSynchronisationOverview() {
                 )}
               </Box>
               {syncResult.newBookings?.length === 0 &&
-                syncResult.unmatchedTransactions?.length === 0 && (
+                syncResult.unmatchedTransactions?.length === 0 &&
+                syncResult.error === undefined && (
                   <Typography component="h5" variant="h7">
                     {t('fintsAccountSynchronisationResultNoTransactions')}
                   </Typography>
