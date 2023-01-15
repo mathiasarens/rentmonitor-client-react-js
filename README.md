@@ -129,3 +129,15 @@ Update CORS configuration over AWS console
 Open website:
 
 http://rentmonitor-dev.s3-website-us-east-1.amazonaws.com
+
+Amplify URL rewrite
+```
+[
+    {
+        "source": "</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|ttf|map|json)$)([^.]+$)/>",
+        "target": "/index.html",
+        "status": "200",
+        "condition": null
+    }
+]
+```
