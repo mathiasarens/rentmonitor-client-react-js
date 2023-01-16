@@ -15,6 +15,7 @@ import {
   CONTRACT_PATH,
   OVERVIEW_PATH,
   TENANTS_PATH,
+  TENANT_PATH,
   TRANSACTIONS_PATH,
   WELCOME_PATH,
 } from './Constants';
@@ -48,8 +49,9 @@ function App() {
         ) : (
           <Routes>
             <Route path={OVERVIEW_PATH} element={<Overview />} />
-            <Route path={TENANTS_PATH}>
-              <Route index element={<Tenant />} />
+            <Route path={TENANTS_PATH} element={<Tenant />} />
+            <Route path={TENANT_PATH}>
+              <Route index element={<TenantEditor />} />
               <Route path=":tenantId" element={<TenantEditor />} />
             </Route>
             <Route path={CONTRACTS_PATH} element={<Contract />}></Route>

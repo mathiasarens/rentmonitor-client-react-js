@@ -11,7 +11,7 @@ import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {TENANTS_PATH} from '../Constants';
+import {TENANT_PATH} from '../Constants';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
 import {tenantsLoader} from './dataaccess/tenantLoader';
@@ -72,7 +72,7 @@ export default function Tenant() {
                 size="small"
                 aria-label="add"
                 component={Link}
-                to={`/${TENANTS_PATH}/edit`}
+                to={`/${TENANT_PATH}`}
               >
                 <AddIcon />
               </IconButton>
@@ -133,7 +133,7 @@ export default function Tenant() {
                     variant="outlined"
                     aria-label="edit"
                     component={Link}
-                    to={`/${TENANTS_PATH}/${tenantListItem.id}`}
+                    to={`/${TENANT_PATH}/${tenantListItem.id}`}
                   >
                     {t('edit')}
                   </Button>
