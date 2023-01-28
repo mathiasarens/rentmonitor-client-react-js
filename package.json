@@ -1,6 +1,6 @@
 {
   "name": "rentmonitor-client-react-js",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^4.3.2",
