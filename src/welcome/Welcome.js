@@ -26,7 +26,6 @@ export default function Welcome() {
   };
 
   useEffect(() => {
-    console.log('Welcome - useEffect');
     const abortController = new AbortController();
     loadVersion(abortController).then((response) => {
       setVersion(response);

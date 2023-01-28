@@ -15,7 +15,6 @@ import {
 import {BOOKINGS_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {openSnackbar} from '../utils/Notifier';
-import {bookingLoader} from './dataaccess/bookingLoader';
 
 export default function BookingEditor() {
   const {t} = useTranslation();
@@ -40,10 +39,16 @@ export default function BookingEditor() {
   console.log('Given props: ', location.state);
 
   const loadBooking = (id, tenants) => {
-    bookingLoader(
-      id,
-      navigate,
-      (data) => {
+    authenticatedFetch(`/bookings/${id}`, navigate, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
         data.amount = data.amount / 100;
         setBooking(data);
         console.log('Booking loaded: ', data);
@@ -53,15 +58,14 @@ export default function BookingEditor() {
           comment: data.comment,
           amount: data.amount,
         });
-      },
-      (error) => {
+      })
+      .catch((error) => {
         console.log(error);
         openSnackbar({
           message: t(handleAuthenticationError(error)),
           variant: 'error',
         });
-      },
-    );
+      });
   };
 
   const loadTenants = () => {

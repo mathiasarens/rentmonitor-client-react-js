@@ -1,12 +1,13 @@
 import AddIcon from '@mui/icons-material/Add';
 import RefershIcon from '@mui/icons-material/Refresh';
 import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {
@@ -18,7 +19,6 @@ import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
 import {Booking} from './Booking';
-import {bookingsLoader} from './dataaccess/bookingLoader';
 
 export default function Bookings() {
   const {t} = useTranslation();
@@ -30,44 +30,74 @@ export default function Bookings() {
   const [tenants, setTenants] = useState([]);
   const navigate = useNavigate();
   const {tenantId: selectedTenantIdParam} = useParams();
+  const [page, setPage] = useState(0);
+  const [pageSize] = useState(10);
+  const [lastPageSize, setLastPageSize] = useState(10);
+  const [loading, setLoading] = useState(false);
 
-  const loadBookings = useCallback(
-    (tenantId) => {
-      console.log('Load bookings for: ', tenantId);
-      bookingsLoader(tenantId, navigate, setBookings, (error) => {
+  const loadIncrement = () => {
+    setPage(page + 1);
+    loadBookings(selectedTenant ? selectedTenant.id : null, page + 1, pageSize);
+  };
+
+  const loadBookings = (tenantId, page, pageSize) => {
+    const baseUrl = `/bookings?filter[limit]=${pageSize}&filter[skip]=${
+      page * pageSize
+    }`;
+    const url = tenantId
+      ? baseUrl + '&filter[where][tenantId]=' + tenantId
+      : baseUrl;
+    const orderByUrl =
+      url + '&filter[order][0]=date%20DESC&filter[order][1]=id%20ASC';
+    setLoading(true);
+    authenticatedFetch(orderByUrl, navigate, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (page === 0) {
+          setBookings(data);
+        } else {
+          setBookings([...bookings, ...data]);
+        }
+        setLoading(false);
+        setLastPageSize(data.length);
+      })
+      .catch((error) => {
+        openSnackbar({
+          message: t(handleAuthenticationError(error)),
+          variant: 'error',
+        });
+        setLoading(false);
+      });
+  };
+
+  const deleteBooking = (id) => {
+    authenticatedFetch(`/bookings/${id}`, navigate, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.status === 204) {
+          setBookings(bookings.filter((booking) => booking.id !== id));
+        }
+      })
+      .catch((error) => {
         openSnackbar({
           message: t(handleAuthenticationError(error)),
           variant: 'error',
         });
       });
-    },
-    [t, navigate],
-  );
+  };
 
-  const deleteBooking = useCallback(
-    (id) => {
-      authenticatedFetch(`/bookings/${id}`, navigate, {
-        method: 'DELETE',
-        headers: {
-          Accept: 'application/json',
-        },
-      })
-        .then((response) => {
-          if (response.status === 204) {
-            setBookings(bookings.filter((booking) => booking.id !== id));
-          }
-        })
-        .catch((error) => {
-          openSnackbar({
-            message: t(handleAuthenticationError(error)),
-            variant: 'error',
-          });
-        });
-    },
-    [t, navigate, bookings],
-  );
-
-  const loadTenants = useCallback(() => {
+  const loadTenants = () => {
     tenantsLoader(
       navigate,
       (data) => {
@@ -87,7 +117,7 @@ export default function Bookings() {
           console.log('bookings - tenants loaded - selected tenant: ', tenant);
           setSelectedTenant(tenant);
         }
-        loadBookings(selectedTenantIdParam);
+        loadBookings(selectedTenantIdParam, page, pageSize);
       },
       (error) => {
         openSnackbar({
@@ -96,13 +126,7 @@ export default function Bookings() {
         });
       },
     );
-  }, [
-    t,
-    navigate,
-    loadBookings,
-    selectedTenantIdOverriden,
-    selectedTenantIdParam,
-  ]);
+  };
 
   useEffect(() => {
     loadTenants();
@@ -134,7 +158,11 @@ export default function Bookings() {
                 size="small"
                 aria-label="refresh"
                 onClick={() => {
-                  loadBookings(selectedTenant ? selectedTenant.id : undefined);
+                  loadBookings(
+                    selectedTenant ? selectedTenant.id : undefined,
+                    0,
+                    pageSize,
+                  );
                 }}
               >
                 <RefershIcon />
@@ -146,14 +174,14 @@ export default function Bookings() {
           <Autocomplete
             id="teanant-id"
             name="tenant"
+            isOptionEqualToValue={(option, value) => option.id === value.id}
             options={tenants}
             getOptionLabel={(tenant) => (tenant.name ? tenant.name : '')}
             value={selectedTenant}
             onChange={(event, tenant, reason) => {
-              console.log('On change: ', tenant);
               setSelectedTenant(tenant);
               setSelectedTenantIdOverriden(true);
-              loadBookings(tenant ? tenant.id : undefined);
+              loadBookings(tenant ? tenant.id : undefined, 0, pageSize);
             }}
             style={{width: 300}}
             renderInput={(params) => (
@@ -217,6 +245,21 @@ export default function Bookings() {
           </Grid>
         </Grid>
       ))}
+
+      <Box mt={3} mb={3}>
+        <Button
+          disabled={lastPageSize !== pageSize || loading}
+          type="submit"
+          margin="normal"
+          fullWidth
+          size="large"
+          variant="contained"
+          color="primary"
+          onClick={() => loadIncrement(selectedTenantIdParam)}
+        >
+          {t('fintsAccountTransactionLoadNextBookingsButton')}
+        </Button>
+      </Box>
     </>
   );
 }
