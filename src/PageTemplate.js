@@ -226,6 +226,11 @@ export default function PageTemplate(props) {
           <Toolbar />
           {props.children}
         </Box>
+        <Box component="footer" sx={{px: 3, py: 5}}>
+          <Typography variant="body2" color="textSecondary" align="center">
+            Version: {process.env.REACT_APP_VERSION}
+          </Typography>
+        </Box>
       </Box>
     </React.Fragment>
   );
