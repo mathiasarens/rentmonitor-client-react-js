@@ -102,6 +102,7 @@ const resources = {
       contractDeposit: 'Rent deposit',
 
       bookings: 'Bookings',
+      bookingsLoading: 'Loading...',
       booking: 'Booking',
       bookingDate: 'Date',
       bookingComment: 'Comment',
@@ -236,6 +237,7 @@ const resources = {
       contractDeposit: 'Kaution',
 
       bookings: 'Buchungen',
+      bookingsLoading: 'Laden...',
       booking: 'Buchung',
       bookingDate: 'Datum',
       bookingComment: 'Verwendungszweck',

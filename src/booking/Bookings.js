@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {
@@ -24,8 +24,6 @@ export default function Bookings() {
   const {t} = useTranslation();
   const [bookings, setBookings] = useState([]);
   const [selectedTenant, setSelectedTenant] = useState(null);
-  const [selectedTenantIdOverriden, setSelectedTenantIdOverriden] =
-    useState(false);
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const [tenants, setTenants] = useState([]);
   const navigate = useNavigate();
@@ -34,11 +32,23 @@ export default function Bookings() {
   const [pageSize] = useState(10);
   const [lastPageSize, setLastPageSize] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState('');
 
-  const loadIncrement = () => {
-    setPage(page + 1);
-    loadBookings(selectedTenant ? selectedTenant.id : null, page + 1, pageSize);
-  };
+  const observer = useRef();
+  const lastItemCallback = useCallback(
+    (node) => {
+      if (loading) return;
+      if (!node) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && lastPageSize === pageSize) {
+          setPage((prev) => prev + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading],
+  );
 
   const loadBookings = (tenantId, page, pageSize) => {
     const baseUrl = `/bookings?filter[limit]=${pageSize}&filter[skip]=${
@@ -63,16 +73,13 @@ export default function Bookings() {
         if (page === 0) {
           setBookings(data);
         } else {
-          setBookings([...bookings, ...data]);
+          setBookings((prevBookings) => [...prevBookings, ...data]);
         }
         setLoading(false);
         setLastPageSize(data.length);
       })
       .catch((error) => {
-        openSnackbar({
-          message: t(handleAuthenticationError(error)),
-          variant: 'error',
-        });
+        setLoadingError(t(handleAuthenticationError(error)));
         setLoading(false);
       });
   };
@@ -108,16 +115,6 @@ export default function Bookings() {
           }, {}),
         );
         setTenants(data.sort((a, b) => a.name.localeCompare(b.name)));
-
-        if (selectedTenantIdParam && !selectedTenantIdOverriden) {
-          const tenant = data.filter(
-            (tenant) => tenant.id === parseInt(selectedTenantIdParam),
-          )[0];
-          console.log('bookings - tenants loaded - data: ', data);
-          console.log('bookings - tenants loaded - selected tenant: ', tenant);
-          setSelectedTenant(tenant);
-        }
-        loadBookings(selectedTenantIdParam, page, pageSize);
       },
       (error) => {
         openSnackbar({
@@ -130,8 +127,20 @@ export default function Bookings() {
 
   useEffect(() => {
     loadTenants();
+    if (selectedTenantIdParam) {
+      const tenant = tenants.filter(
+        (tenant) => tenant.id === parseInt(selectedTenantIdParam),
+      )[0];
+      console.log('bookings - tenants loaded - selected tenant: ', tenant);
+      setSelectedTenant(tenant);
+    }
     // eslint-disable-next-line
   }, []);
+
+  useEffect(
+    () => loadBookings(selectedTenant?.id, page, pageSize),
+    [page, pageSize, selectedTenant],
+  );
 
   return (
     <>
@@ -180,7 +189,6 @@ export default function Bookings() {
             value={selectedTenant}
             onChange={(event, tenant, reason) => {
               setSelectedTenant(tenant);
-              setSelectedTenantIdOverriden(true);
               loadBookings(tenant ? tenant.id : undefined, 0, pageSize);
             }}
             style={{width: 300}}
@@ -197,9 +205,14 @@ export default function Bookings() {
           />
         </Grid>
       </Grid>
-
-      {bookings.map((bookingListItem) => (
-        <Grid container marginTop={2} spacing={1} key={bookingListItem.id}>
+      {bookings.map((bookingListItem, index) => (
+        <Grid
+          container
+          ref={index + 1 >= bookings.length ? lastItemCallback : undefined}
+          marginTop={2}
+          spacing={1}
+          key={bookingListItem.id}
+        >
           <Grid item xs={12} sm={10}>
             <Booking
               bookingListItem={bookingListItem}
@@ -245,21 +258,32 @@ export default function Bookings() {
           </Grid>
         </Grid>
       ))}
-
-      <Box mt={3} mb={3}>
-        <Button
-          disabled={lastPageSize !== pageSize || loading}
-          type="submit"
-          margin="normal"
-          fullWidth
-          size="large"
-          variant="contained"
-          color="primary"
-          onClick={() => loadIncrement(selectedTenantIdParam)}
-        >
-          {t('fintsAccountTransactionLoadNextBookingsButton')}
-        </Button>
-      </Box>
+      {loadingError && (
+        <Box mt={3} mb={3}>
+          <Typography component="h1" variant="h5">
+            {loadingError}
+          </Typography>
+          <Button
+            disabled={lastPageSize !== pageSize || loading}
+            type="submit"
+            margin="normal"
+            fullWidth
+            size="large"
+            variant="contained"
+            color="primary"
+            onClick={() => loadBookings(selectedTenant?.id, page, pageSize)}
+          >
+            {t('fintsAccountTransactionLoadNextBookingsButton')}
+          </Button>
+        </Box>
+      )}
+      {loading && (
+        <Box mt={3} mb={3}>
+          <Typography component="h1" variant="h5">
+            {t('bookingsLoading')}
+          </Typography>
+        </Box>
+      )}
     </>
   );
 }
