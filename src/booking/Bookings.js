@@ -47,7 +47,7 @@ export default function Bookings() {
       });
       if (node) observer.current.observe(node);
     },
-    [loading],
+    [loading, lastPageSize, pageSize],
   );
 
   const loadBookings = (tenantId, page, pageSize) => {

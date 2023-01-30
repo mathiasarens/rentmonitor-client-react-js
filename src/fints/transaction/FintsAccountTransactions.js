@@ -6,7 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
 import {
@@ -26,68 +26,64 @@ export default function FintsAccountTransactions() {
   const [pageSize] = useState(10);
   const [lastPageSize, setLastPageSize] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState('');
 
-  const loadIncrement = () => {
-    setPage(page + 1);
-    console.log('Page: ', page);
-    load(page + 1, pageSize, accountTransactionLists);
-  };
-
-  const reload = () => {
-    load(0, (page + 1) * pageSize, []);
-  };
-
-  const load = useCallback(
-    (page, pageSize, currentListOfLists) => {
-      setLoading(true);
-      authenticatedFetch(
-        `/account-transactions?filter[limit]=${pageSize}&filter[skip]=${
-          page * pageSize
-        }&filter[order][0]=date%20DESC&filter[order][1]=name%20ASC`,
-        navigate,
-        {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-          },
-        },
-      )
-        .then((response) => {
-          response
-            .json()
-            .then((json) => {
-              console.log('Result list: ', json);
-              console.log('Existing lists: ', currentListOfLists);
-              setAccountTransactionLists([...currentListOfLists, json]);
-              console.log('Number of transactions: ', json.length);
-              setLastPageSize(json.length);
-              setLoading(false);
-            })
-            .catch((error) => {
-              console.log(error);
-              openSnackbar({
-                message: t('connectionError'),
-                variant: 'error',
-              });
-              setLoading(false);
-            });
-        })
-        .catch((error) => {
-          openSnackbar({
-            message: t(handleAuthenticationError(error)),
-            variant: 'error',
-          });
-          setLoading(false);
-        });
+  const observer = useRef();
+  const lastItemCallback = useCallback(
+    (node) => {
+      if (loading) return;
+      if (!node) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && lastPageSize === pageSize) {
+          setPage((prev) => prev + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [loading, lastPageSize, pageSize],
   );
+
+  const load = (page, pageSize) => {
+    setLoading(true);
+    authenticatedFetch(
+      `/account-transactions?filter[limit]=${pageSize}&filter[skip]=${
+        page * pageSize
+      }&filter[order][0]=date%20DESC&filter[order][1]=name%20ASC`,
+      navigate,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      },
+    )
+      .then((response) => {
+        response
+          .json()
+          .then((json) => {
+            setAccountTransactionLists((prevListOfList) => [
+              ...prevListOfList,
+              json,
+            ]);
+            setLastPageSize(json.length);
+            setLoading(false);
+          })
+          .catch((error) => {
+            setLoadingError(t('connectionError'));
+            setLoading(false);
+          });
+      })
+      .catch((error) => {
+        setLoadingError(t(handleAuthenticationError(error)));
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     load(page, pageSize, accountTransactionLists);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [page, pageSize]);
 
   const deleteAccountTransaction = useCallback(
     (id) => {
@@ -181,7 +177,11 @@ export default function FintsAccountTransactions() {
           <Grid item>
             <Grid container spacing={1}>
               <Grid item>
-                <IconButton size="small" aria-label="refresh" onClick={reload}>
+                <IconButton
+                  size="small"
+                  aria-label="refresh"
+                  onClick={() => load(page, pageSize)}
+                >
                   <RefershIcon />
                 </IconButton>
               </Grid>
@@ -197,12 +197,18 @@ export default function FintsAccountTransactions() {
             </Grid>
           </Grid>
         </Grid>
-        {accountTransactionLists.map((accountTransactionList) =>
-          accountTransactionList.map((accountTransactionItem) => (
+        {accountTransactionLists.map((accountTransactionList, indexOuter) =>
+          accountTransactionList.map((accountTransactionItem, indexInner) => (
             <Grid
               container
               marginTop={2}
               spacing={1}
+              ref={
+                indexOuter + 1 >= accountTransactionLists.length &&
+                indexInner + 1 >= accountTransactionList.length
+                  ? lastItemCallback
+                  : undefined
+              }
               key={accountTransactionItem.id}
             >
               <Grid item xs={12} sm={10}>
@@ -241,20 +247,34 @@ export default function FintsAccountTransactions() {
             </Grid>
           )),
         )}
-        <Box mt={3} mb={3}>
-          <Button
-            disabled={lastPageSize !== pageSize && loading}
-            type="submit"
-            margin="normal"
-            fullWidth
-            size="large"
-            variant="contained"
-            color="primary"
-            onClick={loadIncrement}
-          >
-            {t('fintsAccountTransactionLoadNextBookingsButton')}
-          </Button>
-        </Box>
+        {loadingError && (
+          <Box mt={3} mb={3}>
+            <Typography component="h1" variant="h5">
+              {loadingError}
+            </Typography>
+            <Box mt={3} mb={3}>
+              <Button
+                disabled={lastPageSize !== pageSize && loading}
+                type="submit"
+                margin="normal"
+                fullWidth
+                size="large"
+                variant="contained"
+                color="primary"
+                onClick={() => load(page, pageSize)}
+              >
+                {t('fintsAccountTransactionLoadNextBookingsButton')}
+              </Button>
+            </Box>
+          </Box>
+        )}
+        {loading && (
+          <Box mt={3} mb={3}>
+            <Typography component="h1" variant="h5">
+              {t('fintsAccountTransactionsLoading')}
+            </Typography>
+          </Box>
+        )}
       </div>
     </Container>
   );

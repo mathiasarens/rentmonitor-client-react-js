@@ -67,6 +67,7 @@ const resources = {
       fintsAccountTransactionCreateDueBookingsButton: 'Create due bookings',
       fintsAccountTransactionCreateBookingButton: 'Create booking',
       fintsAccountTransactionLoadNextBookingsButton: 'More',
+      fintsAccountTransactionsLoading: 'Loading...',
       fintsAccountSyncronisationFrom: 'from',
       fintsAccountSyncronisationTo: 'to',
       fintsAccountSyncronisationSuccess:
@@ -198,6 +199,7 @@ const resources = {
         'Fällige Buchungen erzeugen',
       fintsAccountTransactionCreateBookingButton: 'Buchung erzeugen',
       fintsAccountTransactionLoadNextBookingsButton: 'Mehr',
+      fintsAccountTransactionsLoading: 'Laden...',
 
       fintsAccountSelectionHead: 'Wählen Sie ein Konto aus',
       fintsAccountSyncronisationFrom: 'von',
