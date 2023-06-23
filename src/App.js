@@ -59,9 +59,7 @@ function App() {
               <Route index element={<ContractEditor />} />
               <Route path=":contractId" element={<ContractEditor />} />
             </Route>
-            <Route path={BOOKINGS_PATH} element={<Bookings />}>
-              <Route path=":tenantId" element={<Bookings />} />
-            </Route>
+            <Route path={BOOKINGS_PATH} element={<Bookings />} />
             <Route path={BOOKING_PATH} element={<BookingEditor />}>
               <Route path=":bookingId" element={<BookingEditor />} />
             </Route>

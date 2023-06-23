@@ -9,12 +9,12 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate, useSearchParams} from 'react-router-dom';
+import {BOOKING_PATH, CONTRACT_PATH} from '../Constants';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {BOOKING_PATH, CONTRACT_PATH} from '../Constants';
 import {tenantsLoader} from '../tenant/dataaccess/tenantLoader';
 import {DeleteConfirmationComponent} from '../utils/DeleteConfirmationComponent';
 import {openSnackbar} from '../utils/Notifier';
@@ -27,7 +27,7 @@ export default function Bookings() {
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const [tenants, setTenants] = useState([]);
   const navigate = useNavigate();
-  const {tenantId: selectedTenantIdParam} = useParams();
+  const {searchParam} = useSearchParams();
   const [page, setPage] = useState(0);
   const [pageSize] = useState(10);
   const [lastPageSize, setLastPageSize] = useState(10);
@@ -47,6 +47,7 @@ export default function Bookings() {
       });
       if (node) observer.current.observe(node);
     },
+    // eslint-disable-next-line
     [loading, lastPageSize, pageSize],
   );
 
@@ -115,6 +116,9 @@ export default function Bookings() {
           }, {}),
         );
         setTenants(data.sort((a, b) => a.name.localeCompare(b.name)));
+        console.log(
+          `bookings - loadTenants() - tenants loaded: ${tenants.length}`,
+        );
       },
       (error) => {
         openSnackbar({
@@ -127,9 +131,16 @@ export default function Bookings() {
 
   useEffect(() => {
     loadTenants();
-    if (selectedTenantIdParam) {
+    console.log(`bookings - useEffect - tenants loading...`);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    let tenantIdSearchParam = searchParam.get('tenantId');
+    console.log('bookings - useEffect() - searchParams: ', tenantIdSearchParam);
+    if (searchParams) {
       const tenant = tenants.filter(
-        (tenant) => tenant.id === parseInt(selectedTenantIdParam),
+        (tenant) => tenant.id === parseInt(searchParams),
       )[0];
       console.log('bookings - tenants loaded - selected tenant: ', tenant);
       setSelectedTenant(tenant);
@@ -138,7 +149,11 @@ export default function Bookings() {
   }, []);
 
   useEffect(
-    () => loadBookings(selectedTenant?.id, page, pageSize),
+    () => {
+      console.log(`bookings - useEffect - Selected tenant: ${selectedTenant}`);
+      loadBookings(selectedTenant?.id, page, pageSize);
+    },
+    // eslint-disable-next-line
     [page, pageSize, selectedTenant],
   );
 

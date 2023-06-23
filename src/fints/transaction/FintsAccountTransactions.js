@@ -106,7 +106,8 @@ export default function FintsAccountTransactions() {
           });
         });
     },
-    [t, navigate, load],
+    // eslint-disable-next-line
+    [t, navigate],
   );
 
   const transactionsToBookings = () => {
