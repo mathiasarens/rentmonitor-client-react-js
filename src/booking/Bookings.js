@@ -27,7 +27,7 @@ export default function Bookings() {
   const [tenantsMap, setTenantsMap] = useState(new Map());
   const [tenants, setTenants] = useState([]);
   const navigate = useNavigate();
-  const {searchParam} = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [page, setPage] = useState(0);
   const [pageSize] = useState(10);
   const [lastPageSize, setLastPageSize] = useState(10);
@@ -52,6 +52,7 @@ export default function Bookings() {
   );
 
   const loadBookings = (tenantId, page, pageSize) => {
+    const abortController = new AbortController();
     const baseUrl = `/bookings?filter[limit]=${pageSize}&filter[skip]=${
       page * pageSize
     }`;
@@ -66,6 +67,7 @@ export default function Bookings() {
       headers: {
         Accept: 'application/json',
       },
+      signal: abortController.signal,
     })
       .then((response) => {
         return response.json();
@@ -83,6 +85,7 @@ export default function Bookings() {
         setLoadingError(t(handleAuthenticationError(error)));
         setLoading(false);
       });
+    return abortController;
   };
 
   const deleteBooking = (id) => {
@@ -106,7 +109,7 @@ export default function Bookings() {
   };
 
   const loadTenants = () => {
-    tenantsLoader(
+    return tenantsLoader(
       navigate,
       (data) => {
         setTenantsMap(
@@ -115,10 +118,12 @@ export default function Bookings() {
             return map;
           }, {}),
         );
-        setTenants(data.sort((a, b) => a.name.localeCompare(b.name)));
+        const tenantsLoaded = data.sort((a, b) => a.name.localeCompare(b.name));
+        setTenants(tenantsLoaded);
         console.log(
-          `bookings - loadTenants() - tenants loaded: ${tenants.length}`,
+          `bookings - loadTenants() - tenants loaded: ${tenantsLoaded.length}`,
         );
+        setTenantByTenantIdSearchParam(tenantsLoaded);
       },
       (error) => {
         openSnackbar({
@@ -129,33 +134,45 @@ export default function Bookings() {
     );
   };
 
-  useEffect(() => {
-    loadTenants();
-    console.log(`bookings - useEffect - tenants loading...`);
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    let tenantIdSearchParam = searchParam.get('tenantId');
-    console.log('bookings - useEffect() - searchParams: ', tenantIdSearchParam);
-    if (searchParams) {
-      const tenant = tenants.filter(
-        (tenant) => tenant.id === parseInt(searchParams),
+  const setTenantByTenantIdSearchParam = (tenantsLoaded) => {
+    let tenantIdSearchParam = searchParams.get('tenantId');
+    console.log(
+      'bookings - setTenantByTenantIdSearchParam() - searchParams: ',
+      tenantIdSearchParam,
+    );
+    if (tenantIdSearchParam) {
+      const tenant = tenantsLoaded.filter(
+        (tenant) => tenant.id === parseInt(tenantIdSearchParam),
       )[0];
-      console.log('bookings - tenants loaded - selected tenant: ', tenant);
-      setSelectedTenant(tenant);
+      console.log(
+        'bookings - setTenantByTenantIdSearchParam() - selected tenant: ',
+        tenant?.id,
+      );
+      if (tenant) {
+        setSelectedTenant(tenant);
+      }
     }
+  };
+
+  useEffect(() => {
+    const abortController = loadTenants();
+    console.log(`bookings - useEffect - tenants loading...`);
+    return () => {
+      abortController.abort();
+    };
     // eslint-disable-next-line
   }, []);
 
-  useEffect(
-    () => {
-      console.log(`bookings - useEffect - Selected tenant: ${selectedTenant}`);
-      loadBookings(selectedTenant?.id, page, pageSize);
-    },
+  useEffect(() => {
+    console.log(
+      `bookings - useEffect - Selected tenant: ${selectedTenant?.id}`,
+    );
+    const abortController = loadBookings(selectedTenant?.id, page, pageSize);
+    return () => {
+      abortController.abort();
+    };
     // eslint-disable-next-line
-    [page, pageSize, selectedTenant],
-  );
+  }, [tenants, selectedTenant, page, pageSize]);
 
   return (
     <>
