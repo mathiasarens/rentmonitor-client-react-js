@@ -3,6 +3,7 @@ import RefershIcon from '@mui/icons-material/Refresh';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -80,6 +81,7 @@ export default function Bookings() {
         }
         setLoading(false);
         setLastPageSize(data.length);
+        setLoadingError('');
       })
       .catch((error) => {
         setLoadingError(t(handleAuthenticationError(error)));
@@ -310,10 +312,8 @@ export default function Bookings() {
         </Box>
       )}
       {loading && (
-        <Box mt={3} mb={3}>
-          <Typography component="h1" variant="h5">
-            {t('bookingsLoading')}
-          </Typography>
+        <Box sx={{display: 'flex', justifyContent: 'center'}} mt={3} mb={3}>
+          <CircularProgress disableShrink />
         </Box>
       )}
     </>
