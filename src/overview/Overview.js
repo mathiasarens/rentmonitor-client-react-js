@@ -9,11 +9,11 @@ import Typography from '@mui/material/Typography';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Link, useNavigate} from 'react-router-dom';
+import {BOOKINGS_PATH} from '../Constants';
 import {
   authenticatedFetch,
   handleAuthenticationError,
 } from '../authentication/authenticatedFetch';
-import {BOOKINGS_PATH} from '../Constants';
 import {addDueBookingsFromContracts} from '../contract/dataaccess/ContractSynchronisation';
 import {openSnackbar} from '../utils/Notifier';
 
@@ -157,7 +157,7 @@ export default function Home() {
                     size="small"
                     aria-label="edit"
                     component={Link}
-                    to={`/${BOOKINGS_PATH}/${bookingSumPerTenantItem.tenant.id}`}
+                    to={`/${BOOKINGS_PATH}?tenantId=${bookingSumPerTenantItem.tenant.id}`}
                   >
                     <EditIcon />
                   </IconButton>
