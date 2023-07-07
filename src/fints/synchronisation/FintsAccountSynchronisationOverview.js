@@ -3,9 +3,10 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import sub from 'date-fns/sub';
 import React, {useCallback, useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {useNavigate} from 'react-router-dom';
 import {
@@ -26,7 +27,7 @@ export default function FintsAccountSynchronisationOverview() {
   const [expectedSyncResults, setExpectedSyncResults] = useState([]);
   const [syncResults, setSyncResults] = useState([]);
   const [tenantsMap, setTenantsMap] = useState(new Map());
-  const {reset, handleSubmit} = useForm({
+  const {control, reset, handleSubmit} = useForm({
     defaultValues: {
       accountSettingsItem: null,
       from: sub(new Date(), {months: 2}),
@@ -88,97 +89,101 @@ export default function FintsAccountSynchronisationOverview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const sync = useCallback(() => {
-    const synchronizeAccount = (request) => {
-      const bodyJson = JSON.stringify(request, null, 2);
-      authenticatedFetch('/account-synchronization/single', navigate, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: bodyJson,
-      })
-        .then((response) => {
-          switch (response.status) {
-            case 200:
-              response.json().then((json) => {
-                console.log(
-                  'Sync result received for: ' +
-                    json.accountName +
-                    ' (' +
-                    json.accountSettingsId +
-                    ')',
-                );
-                console.log(json);
-                //console.log(syncResults);
-                setSyncResults((prevSyncResults) => [...prevSyncResults, json]);
-              });
-              setExpectedSyncResults((arr) => {
-                arr.pop();
-                return arr;
-              });
-              break;
-            case 210:
-              response
-                .json()
-                .then((json) => {
-                  console.log(json);
-                  setExpectedSyncResults((arr) => {
-                    arr.pop();
-                    return arr;
-                  });
-                })
-                .catch((error) => {
-                  console.error(error);
-                  openSnackbar({
-                    message: t('connectionError'),
-                    variant: 'error',
-                  });
-                  setExpectedSyncResults((arr) => {
-                    arr.pop();
-                    return arr;
-                  });
-                });
-              break;
-            default:
-              console.error(response);
-              openSnackbar({
-                message: t('connectionError'),
-                variant: 'error',
-              });
-              setExpectedSyncResults((arr) => {
-                arr.pop();
-                return arr;
-              });
-          }
+  const sync = useCallback(
+    (formInputs) => {
+      const synchronizeAccount = (request) => {
+        const bodyJson = JSON.stringify(request, null, 2);
+        authenticatedFetch('/account-synchronization/single', navigate, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: bodyJson,
         })
-        .catch((error) => {
-          openSnackbar({
-            message: t(handleAuthenticationError(error)),
-            variant: 'error',
+          .then((response) => {
+            switch (response.status) {
+              case 200:
+                response.json().then((json) => {
+                  console.log(
+                    'Sync result received for: ' +
+                      json.accountName +
+                      ' (' +
+                      json.accountSettingsId +
+                      ')',
+                  );
+                  setSyncResults((prevSyncResults) => [
+                    ...prevSyncResults,
+                    json,
+                  ]);
+                });
+                setExpectedSyncResults((arr) => {
+                  arr.pop();
+                  return arr;
+                });
+                break;
+              case 210:
+                response
+                  .json()
+                  .then((json) => {
+                    console.log('Status code 210 - Input for TAN');
+                    console.log(json);
+                    setExpectedSyncResults((arr) => {
+                      arr.pop();
+                      return arr;
+                    });
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    openSnackbar({
+                      message: t('connectionError'),
+                      variant: 'error',
+                    });
+                    setExpectedSyncResults((arr) => {
+                      arr.pop();
+                      return arr;
+                    });
+                  });
+                break;
+              default:
+                console.error(response);
+                openSnackbar({
+                  message: t('connectionError'),
+                  variant: 'error',
+                });
+                setExpectedSyncResults((arr) => {
+                  arr.pop();
+                  return arr;
+                });
+            }
+          })
+          .catch((error) => {
+            openSnackbar({
+              message: t(handleAuthenticationError(error)),
+              variant: 'error',
+            });
+            setExpectedSyncResults((arr) => {
+              arr.pop();
+              return arr;
+            });
           });
-          setExpectedSyncResults((arr) => {
-            arr.pop();
-            return arr;
-          });
-        });
-    };
+      };
 
-    setExpectedSyncResults(new Array(accountSettingsItems.length).fill(0));
-    setSyncResults([]);
-    console.log('Use effect called');
-    accountSettingsItems.forEach((accountSettingsItem) => {
-      const request = {};
-      request.from = sub(new Date(), {months: 2});
-      request.to = new Date();
-      request.accountSettingsId = accountSettingsItem.id;
-      synchronizeAccount(request);
-    });
-  }, [accountSettingsItems, navigate, t]);
+      setExpectedSyncResults(new Array(accountSettingsItems.length).fill(0));
+      setSyncResults([]);
+      accountSettingsItems.forEach((accountSettingsItem) => {
+        const request = {};
+        request.from = formInputs.from;
+        request.to = formInputs.to;
+        request.accountSettingsId = accountSettingsItem.id;
+        synchronizeAccount(request);
+      });
+    },
+    [accountSettingsItems, navigate, t],
+  );
 
   const onSubmit = (formInputs) => {
-    sync();
+    sync(formInputs);
   };
 
   return (
@@ -190,10 +195,10 @@ export default function FintsAccountSynchronisationOverview() {
         spacing={2}
       >
         <Grid item xs={12} sm={4}>
-          <Typography component="h2" variant="h5">
-            {t('fintsAccountSynchronisationTitle')}
-          </Typography>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Typography component="h2" variant="h5">
+              {t('fintsAccountSynchronisationTitle')}
+            </Typography>
             <Box>
               {synchronizationButtonActive &&
                 accountSettingsItems.map((accountSettingsItem) => (
@@ -219,6 +224,37 @@ export default function FintsAccountSynchronisationOverview() {
                   <Skeleton variant="text" />
                 </Stack>
               )}
+            </Box>
+            <Box marginTop={2} marginBottom={2}>
+              <Typography component="h2" variant="h5">
+                {t('fintsAccountSynchronisationPeriod')}
+              </Typography>
+              <Box marginTop={2} marginBottom={2}>
+                <Controller
+                  control={control}
+                  name="from"
+                  render={({field: {onChange, value}}) => (
+                    <DatePicker
+                      label={t('fintsAccountSynchronisationPeriodFrom')}
+                      value={value}
+                      onChange={(date) => onChange(date)}
+                    />
+                  )}
+                />
+              </Box>
+              <Box marginTop={2} marginBottom={2}>
+                <Controller
+                  control={control}
+                  name="to"
+                  render={({field: {onChange, value}}) => (
+                    <DatePicker
+                      label={t('fintsAccountSynchronisationPeriodTo')}
+                      value={value}
+                      onChange={(date) => onChange(date)}
+                    />
+                  )}
+                />
+              </Box>
             </Box>
             <Box marginTop={2} marginBottom={2}>
               <Button
